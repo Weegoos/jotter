@@ -1,25 +1,36 @@
-require('dotenv').config()
-const express = require('express')
-const cors = require('cors')
+import dotenv from "dotenv";
+import express from "express";
+import cors from "cors";
+import { connectDB } from "./database/db.js";
+import userRoutes from './routes/user.js'
 
-const pageRoutes = require('./routes/pages');
-const userRoutes = require('./routes/user')
-const productRoutes = require('./routes/product')
+dotenv.config();
 
-const app = express()
+const app = express();
+const PORT = process.env.PORT || 3001;
 
-app.use(cors({
-    credentials: true,
-    origin: 'http://localhost:9000'
-}))
+// Подключение к базе данных
+(async () => {
+    const db = await connectDB();
+    if (!db) {
+        console.error("❌ База данных не подключена");
+        process.exit(1);
+    }
 
-app.use(express.json())
+    app.use(cors({
+        credentials: true,
+        origin: "http://localhost:9000"
+    }));
 
-app.use('/api/', pageRoutes.mainPage)
-app.use('/sendMessage', pageRoutes.postMessage)
-app.use('/user', userRoutes)
-app.use('/product', productRoutes)
+    app.use(express.json());
 
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {console.log(`Server is running on port ${PORT}`);
-})
+    app.use("/user", userRoutes);
+
+    app.get("/", (req, res) => {
+        res.send("Сервер работает!");
+    });
+
+    app.listen(PORT, () => {
+        console.log(`🚀 Сервер запущен на http://localhost:${PORT}`);
+    });
+})();
