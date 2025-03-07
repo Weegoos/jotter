@@ -1,30 +1,32 @@
 <template>
-  <div>{{ data }}</div>
+<div class="q-pa-md">
+  <q-input v-model="content" autogrow type="text" label="Напиши заметку..." />
+  <q-btn color="green-4"  label="Send" @click="sendNote" />
+</div>
 </template>
 
 <script setup>
-import axios from "axios";
-import { onMounted, ref } from "vue";
+import axios from 'axios';
+import { getCurrentInstance, ref } from 'vue';
 
-const data = ref(null);
-const getMessage = async () => {
+const {proxy} = getCurrentInstance()
+const serverURL = proxy.$serverURL
+console.log(serverURL);
+
+const content = ref('')
+
+const sendNote = async () => {
   try {
-    const response = await axios.get("http://localhost:3000/api", {
-      headers: {
-        "Content-Type": "appliction/json",
-      },
-      withCredentials: true,
-    });
+    const response = await axios.post(`${serverURL}notes/create`, {content: content.value})
     console.log(response.data);
-    data.value = response.data.message;
+
   } catch (error) {
     console.error(error);
-  }
-};
 
-onMounted(() => {
-  getMessage();
-});
+  }
+}
 </script>
 
-<style></style>
+<style>
+
+</style>

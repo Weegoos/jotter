@@ -9,10 +9,5 @@ const User = sequelize.define("User", {
     timestamps: true
 });
 
-const Notes = sequelize.define('Notes', {
-    content: { type: DataTypes.TEXT, allowNull: false, }
-}, {
-    timestamps: true,
-})
 
 export default User;

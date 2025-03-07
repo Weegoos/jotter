@@ -4,7 +4,6 @@ import User from "../models/userSchemas.js";
 
 const router = express.Router();
 
-// Эндпоинт для регистрации пользователя
 router.post("/register", async (req, res) => {
     try {
         const { fullname, email, password } = req.body;
