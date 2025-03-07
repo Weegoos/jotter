@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import { connectDB } from "./database/db.js";
+import setupSwagger from "./swagger.js";
 
 import userRoutes from './controllers/user.js'
 import noteRouters  from './routers/noteRouters.js'
@@ -21,7 +22,7 @@ const PORT = process.env.PORT || 3001;
 
     app.use(cors({
         credentials: true,
-        origin: "http://localhost:9000"
+        origin: "*"
     }));
 
     app.use(express.json());
@@ -33,6 +34,8 @@ const PORT = process.env.PORT || 3001;
     app.get("/", (req, res) => {
         res.send("Сервер работает!");
     });
+
+    setupSwagger(app);
 
     app.listen(PORT, () => {
         console.log(`🚀 Сервер запущен на http://localhost:${PORT}`);
