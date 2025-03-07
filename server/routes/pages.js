@@ -3,8 +3,8 @@ exports.mainPage = (req, res) => {
 }
 
 exports.postMessage = (req, res) => {
-    const {message} = req.body
-    console.log(message);
+    const {name, surname} = req.body
+    console.log(name, surname);
     
-    res.json({message})
+    res.json({name, surname})
 };
