@@ -1,16 +1,19 @@
-const express = require("express");
-const path = require("path");
+require('dotenv').config()
+const express = require('express')
+const cors = require('cors')
 
-const app = express();
+const app = express()
 
-// Указываем, что статические файлы берём из Quasar-сборки
-app.use(express.static(path.join(__dirname, "../client/dist/spa")));
+app.use(cors({
+    credentials: true,
+    origin: 'http://localhost:9000'
+}))
 
-// Обрабатываем все маршруты и отдаём `index.html` (для работы Vue Router)
-app.get("/", (_, res) => {
-    res.sendFile(path.join(__dirname, "../client/dist/spa", "index.html"));
-});
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Сервер запущен: http://localhost:${PORT}`);
-});
+app.use(express.json())
+app.get('/api/message', (req, res) => {
+    res.json({ message: "Привет из Node.js!" });
+})
+
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {console.log(`Server is running on port ${PORT}`);
+})
