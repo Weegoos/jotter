@@ -9,7 +9,7 @@ import { onMounted, ref } from "vue";
 const data = ref(null)
 const getMessage = async () => {
   try {
-    const response = await axios.get("http://localhost:3000/api/message", {
+    const response = await axios.get("http://localhost:3000/api", {
       headers: {
         "Content-Type": "appliction/json",
               },
