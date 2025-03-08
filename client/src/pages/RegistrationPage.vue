@@ -43,23 +43,6 @@
               почты
             </div>
           </q-carousel-slide>
-          <q-carousel-slide name="layers" class="column no-wrap flex-center">
-            <p class="text-h5 text-bold">
-              Индивидуальный идентификационный номер (ИИН)
-            </p>
-            <div class="q-mt-md text-center">
-              Убедитесь, что вы ввели правильный индивидуальный
-              идентификационный номер (ИИН). После ввода изменить ИИН будет
-              невозможно
-            </div>
-          </q-carousel-slide>
-          <q-carousel-slide name="map" class="column no-wrap flex-center">
-            <p class="text-h5 text-bold">Департамент и регион</p>
-            <div class="q-mt-md text-center">
-              Убедитесь, что вы ввели правильный департамент и также выбрали
-              правильный регион
-            </div>
-          </q-carousel-slide>
         </q-carousel>
       </div>
     </div>
@@ -132,33 +115,44 @@
 </template>
 
 <script setup>
-import axios from 'axios';
-import { getMethod } from 'src/composables/api/getApi';
-import { getCurrentInstance, ref } from 'vue';
+import { useQuasar } from 'quasar';
+import { postMethod } from 'src/composables/api/postApi';
+import { getCurrentInstance, onBeforeMount, onMounted, ref } from 'vue';
 
 // global variables
 const {proxy} = getCurrentInstance()
 const serverURL = proxy.$serverURL
+const $q = useQuasar()
+
+const slide = ref("style");
+const slides = ["style", "tv"];
+let slideIndex = 0;
+let interval = null;
 
 const fullname = ref('');
 const email = ref('');
 const password = ref('');
 const isPwd = ref(true)
+
 const createUser = async () => {
-  try {
-    const response = await axios.post(`${serverURL}user/register`, {
-      fullname: fullname.value,
-      email: email.value,
-      password: password.value
-    })
+  const userData = {
+  fullname: fullname?.value?.trim() || "",
+  email: email?.value?.trim() || "",
+  password: password?.value || ""
+};
+  await postMethod(serverURL, "user/register", userData, $q);
+};
 
-    console.log(response.data);
+onMounted(() => {
+  interval = setInterval(() => {
+    slideIndex = (slideIndex + 1) % slides.length;
+    slide.value = slides[slideIndex];
+  }, 5500);
+});
 
-  } catch (error) {
-    console.error(error.request.responseText);
-
-  }
-}
+onBeforeMount(() => {
+  clearInterval(interval);
+});
 </script>
 
 <style scoped>

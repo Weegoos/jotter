@@ -11,10 +11,12 @@ router.post("/register", async (req, res) => {
         const existingUser = await User.findOne({ where: { email } });
         const existingFullname = await User.findOne({where: {fullname}});
         if (existingFullname) {
-            return res.status(400).json({ message: "Этот ользователь уже зарегистрирован!" });
+            return res.status(400).json({ message: "Этот пользователь уже зарегистрирован!" });
         }
         
-        if (email.includes('@') === false){
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const cleanedEmail = email.trim();
+        if (!emailRegex.test(cleanedEmail)){
             return res.status(400).json({ message: "Неверный формат почты" });
         } else if (existingUser) {
             return res.status(400).json({ message: "Этот email уже зарегистрирован!" });

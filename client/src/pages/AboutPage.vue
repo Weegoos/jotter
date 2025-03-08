@@ -16,14 +16,14 @@ const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
 
 const user = ref({
-  name: '',
-  surname: ''
+  name: "",
+  surname: "",
 });
-const finalText = ref('')
+const finalText = ref("");
 
 const sendMessage = async () => {
   try {
-    const response = await axios.post(`${serverURL}sendMessage`, user.value)
+    const response = await axios.post(`${serverURL}sendMessage`, user.value);
     console.log(response.data);
     // finalText.value = response.data.message
   } catch (error) {

@@ -1,29 +1,31 @@
 import { defineStore } from "pinia";
-export const useNotifyStore = defineStore('notify', {
+import { useQuasar } from "quasar";
+export const useNotifyStore = defineStore("notify", {
   actions: {
-    loading ($q, spinner) {
+    loading($q, spinner) {
       $q.loading.show({
         spinner: spinner,
-        message: 'Loading...',
+        message: "Loading...",
         messageColor: "white",
         backgroundColor: "black",
       });
     },
-    success(msg, $q) {
+    success($q, msg) {
       $q.notify({
         message: msg,
-        color: 'green-4',
-        position: 'bottom',
-        icon: 'cloud_done',
-      })
+        color: "green-4",
+        position: "bottom",
+        icon: "cloud_done",
+      });
     },
-    error(msg, $q) {
+    error($q, msg) {
       $q.notify({
         color: "red-5",
         textColor: "white",
         icon: "error",
+        position: "bottom",
         message: msg,
       });
     },
-  }
-})
+  },
+});
