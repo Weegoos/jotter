@@ -3,6 +3,7 @@
     <q-input v-model="content" autogrow type="text" label="Напиши заметку..." />
     <q-btn color="green-4" label="Send" @click="sendNote" />
   </div>
+
 </template>
 
 <script setup>

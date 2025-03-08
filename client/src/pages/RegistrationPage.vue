@@ -118,11 +118,13 @@
 import { useQuasar } from 'quasar';
 import { postMethod } from 'src/composables/api/postApi';
 import { getCurrentInstance, onBeforeMount, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 // global variables
 const {proxy} = getCurrentInstance()
 const serverURL = proxy.$serverURL
 const $q = useQuasar()
+const router = useRouter()
 
 const slide = ref("style");
 const slides = ["style", "tv"];
@@ -142,6 +144,10 @@ const createUser = async () => {
 };
   await postMethod(serverURL, "user/register", userData, $q);
 };
+
+const pushToAuthorization = () => {
+  router.push('/login')
+}
 
 onMounted(() => {
   interval = setInterval(() => {
