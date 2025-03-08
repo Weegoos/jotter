@@ -8,12 +8,21 @@ router.post("/register", async (req, res) => {
     try {
         const { fullname, email, password } = req.body;
 
-        // Проверяем, есть ли уже такой email в базе
         const existingUser = await User.findOne({ where: { email } });
-        if (existingUser) {
+        const existingFullname = await User.findOne({where: {fullname}});
+        if (existingFullname) {
+            return res.status(400).json({ message: "Этот ользователь уже зарегистрирован!" });
+        }
+        
+        if (email.includes('@') === false){
+            return res.status(400).json({ message: "Неверный формат почты" });
+        } else if (existingUser) {
             return res.status(400).json({ message: "Этот email уже зарегистрирован!" });
         }
 
+        if (password.length < 6){
+            return res.status(400).json({ message: "Неверный пароль" });
+        }
         // Хешируем пароль перед сохранением
         const hashedPassword = await bcrypt.hash(password, 10);
 
