@@ -5,15 +5,17 @@
 </template>
 
 <script setup>
-import axios from 'axios';
 import { getMethod } from 'src/composables/api/getApi';
-import { getCurrentInstance, onMounted, ref } from 'vue';
+import { getCurrentInstance, ref } from 'vue';
 
+// global variables
 const {proxy} = getCurrentInstance()
 const serverURL = proxy.$serverURL
-const allNotes = ref([])
-getMethod(serverURL, 'notes/all', allNotes)
 
+const allNotes = ref([])
+
+
+getMethod(serverURL, 'notes/all', allNotes, 'Все заметки успешно загружены!')
 </script>
 
 <style>
