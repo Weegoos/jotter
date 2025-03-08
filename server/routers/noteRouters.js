@@ -3,6 +3,12 @@ import { createNote, getAllNotes } from "../controllers/notes.js";
 
 const router = express.Router();
 
+router.get('/all', getAllNotes);
+
+
+router.post('/create', createNote);
+// -------------------- notes/all -----------------------
+
 /**
  * @swagger
  * tags:
@@ -39,7 +45,8 @@ const router = express.Router();
  *                     example: "2024-03-07T12:34:56.000Z"
  */
 
-router.get('/all', getAllNotes);
+
+// -------------------- notes/create -----------------------
 
 /**
  * @swagger
@@ -83,7 +90,5 @@ router.get('/all', getAllNotes);
  *                       format: date-time
  *                       example: "2024-03-07T12:34:56.000Z"
  */
-
-router.post('/create', createNote);
 
 export default router;
