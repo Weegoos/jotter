@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../database/db.js"; // Подключаем базу
+import { sequelize } from "../database/db.js"; 
 
 const User = sequelize.define("User", {
     fullname: { type: DataTypes.STRING, allowNull: false, unique: true },
