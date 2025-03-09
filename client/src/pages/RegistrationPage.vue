@@ -63,7 +63,6 @@
                 hint="Например: Айсултан Хаббасов Нурланович"
               />
             </div>
-
           </div>
         </q-card-section>
         <q-card-section>
@@ -115,39 +114,39 @@
 </template>
 
 <script setup>
-import { useQuasar } from 'quasar';
-import { postMethod } from 'src/composables/api/postApi';
-import { getCurrentInstance, onBeforeMount, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useQuasar } from "quasar";
+import { postMethod } from "src/composables/api/postApi";
+import { getCurrentInstance, onBeforeMount, onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 
 // global variables
-const {proxy} = getCurrentInstance()
-const serverURL = proxy.$serverURL
-const $q = useQuasar()
-const router = useRouter()
+const { proxy } = getCurrentInstance();
+const serverURL = proxy.$serverURL;
+const $q = useQuasar();
+const router = useRouter();
 
 const slide = ref("style");
 const slides = ["style", "tv"];
 let slideIndex = 0;
 let interval = null;
 
-const fullname = ref('');
-const email = ref('');
-const password = ref('');
-const isPwd = ref(true)
+const fullname = ref("");
+const email = ref("");
+const password = ref("");
+const isPwd = ref(true);
 
 const createUser = async () => {
   const userData = {
-  fullname: fullname?.value?.trim() || "",
-  email: email?.value?.trim() || "",
-  password: password?.value || ""
-};
+    fullname: fullname?.value?.trim() || "",
+    email: email?.value?.trim() || "",
+    password: password?.value || "",
+  };
   await postMethod(serverURL, "user/register", userData, $q);
 };
 
 const pushToAuthorization = () => {
-  router.push('/login')
-}
+  router.push("/login");
+};
 
 onMounted(() => {
   interval = setInterval(() => {

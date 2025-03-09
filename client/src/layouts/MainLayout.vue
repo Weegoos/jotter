@@ -1,96 +1,84 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+  <div>
+    <q-layout view="lHr Lpr lFr" container style="height: 100vh">
+      <q-header reveal elevated>
+        <q-toolbar class="bg-black text-white row" v-if="!isAuthPage">
+          <q-btn flat round dense icon="menu" @click="drawer = !drawer" />
+          <h5 class="q-ml-md">Jotter</h5>
+          <div class="col-10 flex justify-center">
+            <section class="row no-wrap">
+              <q-btn
+                v-for="(btn, index) in headerButtons"
+                :key="index"
+                flat
+                no-caps
+                :label="btn.name"
+                class="q-mx-xs"
+                @click="$router.push(btn.path)"
+              />
+            </section>
+          </div>
+        </q-toolbar>
+      </q-header>
+      <q-drawer v-if="!isAuthPage" v-model="drawer" show-if-above :width="250" :breakpoint="400">
+        <q-scroll-area
+          style="
+            height: calc(100% - 150px);
+            margin-top: 150px;
+            border-right: 1px solid #ddd;
+          "
+          class="bg-black text-white"
+        >
+          <q-list padding>
+            <q-item clickable v-ripple>
+              <q-item-section avatar>
+                <q-icon name="inbox" />
+              </q-item-section>
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+              <q-item-section> Inbox </q-item-section>
+            </q-item>
+          </q-list>
+        </q-scroll-area>
 
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
-
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
-        <q-item-label header> Essential Links </q-item-label>
-
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer>
-
-    <q-page-container>
-      <router-view />
-    </q-page-container>
-  </q-layout>
+        <q-img
+          class="absolute-top"
+          src="https://cdn.quasar.dev/img/material.png"
+          style="height: 150px"
+        >
+          <div class="absolute-bottom bg-transparent" align="center">
+            <div>
+              <q-avatar size="56px" class="q-mb-sm">
+                <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+              </q-avatar>
+            </div>
+            <div class="text-weight-bold">Razvan Stoenescu</div>
+            <div>@rstoenescu</div>
+          </div>
+        </q-img>
+      </q-drawer>
+      <q-page-container>
+        <router-view />
+      </q-page-container>
+    </q-layout>
+  </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
-import EssentialLink from "components/EssentialLink.vue";
+import { computed, ref } from "vue";
+import { useRoute } from "vue-router";
 
-defineOptions({
-  name: "MainLayout",
+const drawer = ref(true);
+
+const route = useRoute();
+const isAuthPage = computed(() => {
+  return route.path === "/login" || route.path === "/registration";
 });
 
-const linksList = [
-  {
-    title: "Docs",
-    caption: "quasar.dev",
-    icon: "school",
-    link: "https://quasar.dev",
-  },
-  {
-    title: "Github",
-    caption: "github.com/quasarframework",
-    icon: "code",
-    link: "https://github.com/quasarframework",
-  },
-  {
-    title: "Discord Chat Channel",
-    caption: "chat.quasar.dev",
-    icon: "chat",
-    link: "https://chat.quasar.dev",
-  },
-  {
-    title: "Forum",
-    caption: "forum.quasar.dev",
-    icon: "record_voice_over",
-    link: "https://forum.quasar.dev",
-  },
-  {
-    title: "Twitter",
-    caption: "@quasarframework",
-    icon: "rss_feed",
-    link: "https://twitter.quasar.dev",
-  },
-  {
-    title: "Facebook",
-    caption: "@QuasarFramework",
-    icon: "public",
-    link: "https://facebook.quasar.dev",
-  },
-  {
-    title: "Quasar Awesome",
-    caption: "Community Quasar projects",
-    icon: "favorite",
-    link: "https://awesome.quasar.dev",
-  },
-];
-
-const leftDrawerOpen = ref(false);
-
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
-}
+const headerButtons = ref([
+  { name: "Домой", path: "/" },
+  { name: "Заметки", path: "/notes" },
+  { name: "Настройки", path: "/settings" },
+]);
 </script>
+
+<style></style>

@@ -34,7 +34,7 @@
       ></video>
 
       <div class="typewriter">
-        <p class="text-body1">«Автоматизация повесток и вызовов»</p>
+        <p class="text-body1">Добро пожаловать в «Jotter»!</p>
       </div>
     </div>
     <div class="content">
@@ -93,40 +93,41 @@
 </template>
 
 <script setup>
-import { Cookies, useQuasar } from 'quasar';
-import { postMethod } from 'src/composables/api/postApi';
-import { getCurrentInstance, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { Cookies, useQuasar } from "quasar";
+import { postMethod } from "src/composables/api/postApi";
+import { getCurrentInstance, ref } from "vue";
+import { useRouter } from "vue-router";
 
 // global variables
-const {proxy} = getCurrentInstance()
-const serverURL = proxy.$serverURL
-const $q =  useQuasar()
-const router = useRouter()
+const { proxy } = getCurrentInstance();
+const serverURL = proxy.$serverURL;
+const clientURL = proxy.$clientURL;
+const $q = useQuasar();
+const router = useRouter();
 
-const email = ref('')
-const password = ref('')
-const isPwd = ref(true)
+const email = ref("");
+const password = ref("");
+const isPwd = ref(true);
 
 const login = async () => {
   const user = {
     email: email.value,
-    password: password.value
+    password: password.value,
   };
 
-  const token = await postMethod(serverURL, 'user/login', user, $q);
+  const token = await postMethod(serverURL, "user/login", user, $q);
 
   if (token) {
-    Cookies.set('accessToken', token)
+    Cookies.set("accessToken", token);
+    window.location.href = `${clientURL}/`;
   } else {
     console.error("Ошибка: токен не получен");
   }
 };
 
-
 const pushToRegistrationPage = () => {
-  router.push('/registration')
-}
+  router.push("/registration");
+};
 </script>
 
 <style scoped>

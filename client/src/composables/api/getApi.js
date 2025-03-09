@@ -17,7 +17,7 @@ export async function getMethod(serverURL, apiURL, variable, msg) {
     notifyStore.success($q, msg);
   } catch (error) {
     console.error(error);
-    notifyStore.error( $q, error);
+    notifyStore.error($q, error);
   } finally {
     $q.loading.hide();
   }
