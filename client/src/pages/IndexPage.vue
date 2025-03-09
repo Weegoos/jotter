@@ -8,24 +8,21 @@
 
 <script setup>
 import axios from "axios";
+import { useQuasar } from "quasar";
+import { postMethod } from "src/composables/api/postApi";
 import { getCurrentInstance, ref } from "vue";
 
+// global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
 console.log(serverURL);
+const $q = useQuasar()
 
 const content = ref("");
 
 const sendNote = async () => {
-  try {
-    const response = await axios.post(`${serverURL}notes/create`, {
-      content: content.value,
-    });
-    console.log(response.data);
-  } catch (error) {
-    console.error(error);
-  }
-};
+  await postMethod(serverURL, 'notes/create', { content: content.value }, $q);
+}
 </script>
 
 <style></style>

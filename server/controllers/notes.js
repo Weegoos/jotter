@@ -1,11 +1,14 @@
 import express from "express";
 import Notes from "../models/notesSchemas.js";
+import authMiddleware from "../middlewares/authMiddleware.js";
+
 const router = express.Router();
 
 export const createNote = async (req, res) => {
     try {
         const { content } = req.body;
-        const userId = 2;
+        const userId = req.user.id; // Получаем userId из токена
+
         if (!content || !userId) {
             return res.status(400).json({ message: "Контент и userId обязательны" });
         }
@@ -17,11 +20,14 @@ export const createNote = async (req, res) => {
         res.status(500).json({ message: "Ошибка сервера" });
     }
 };
-
-
 export const getAllNotes = async (req, res) => {
+    console.log("🔹 Вызван getAllNotes. req.user:", req.user);
+
     try {
-        const userId = 2; // Фиксированный userId
+        const userId = req.user.id;
+        if (!userId) {
+            return res.status(400).json({ message: "Ошибка: userId отсутствует." });
+        }
 
         const notes = await Notes.findAll({ where: { userId } });
         res.json(notes);
@@ -30,5 +36,6 @@ export const getAllNotes = async (req, res) => {
         res.status(500).json({ message: "Ошибка сервера" });
     }
 };
+
 
 export default router

@@ -9,9 +9,18 @@ const options = {
             version: "1.0.0",
             description: "Документация API для приложения заметок"
         },
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: "http",
+                    scheme: "bearer",
+                    bearerFormat: "JWT"
+                }
+            }
+        },
+        security: [{ bearerAuth: [] }] // Глобальное применение авторизации
     },
     apis: ["./routers/*.js", "./models/*.js"]
-
 };
 
 const swaggerSpec = swaggerJSDoc(options);

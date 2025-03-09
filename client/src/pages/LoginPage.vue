@@ -93,7 +93,7 @@
 </template>
 
 <script setup>
-import { useQuasar } from 'quasar';
+import { Cookies, useQuasar } from 'quasar';
 import { postMethod } from 'src/composables/api/postApi';
 import { getCurrentInstance, ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -112,9 +112,17 @@ const login = async () => {
   const user = {
     email: email.value,
     password: password.value
+  };
+
+  const token = await postMethod(serverURL, 'user/login', user, $q);
+
+  if (token) {
+    Cookies.set('accessToken', token)
+  } else {
+    console.error("Ошибка: токен не получен");
   }
-  await postMethod(serverURL, 'user/login', user, $q)
-}
+};
+
 
 const pushToRegistrationPage = () => {
   router.push('/registration')

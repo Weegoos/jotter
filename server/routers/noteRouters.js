@@ -1,12 +1,13 @@
 import express from "express";
 import { createNote, getAllNotes } from "../controllers/notes.js";
-
+import authMiddleware from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
-router.get('/all', getAllNotes);
+router.get("/all", authMiddleware, getAllNotes);
 
 
-router.post('/create', createNote);
+router.post("/create", authMiddleware, createNote);
+
 // -------------------- notes/all -----------------------
 
 /**

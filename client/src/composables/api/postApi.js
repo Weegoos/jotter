@@ -1,5 +1,5 @@
 import axios from "axios";
-import { QSpinnerGears } from "quasar";
+import { Cookies, QSpinnerGears } from "quasar";
 import { useNotifyStore } from "src/stores/notify-store";
 
 export async function postMethod(serverURL, apiURL, data, $q) {
@@ -7,11 +7,14 @@ export async function postMethod(serverURL, apiURL, data, $q) {
   notifyStore.loading($q, QSpinnerGears)
   try {
     const response = await axios.post(`${serverURL}${apiURL}`, data, {
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${Cookies.get("accessToken")}`,
+       },
     });
     notifyStore.success($q, response.data.message )
-    console.log(response.data);
-    return response.data;
+    // console.log(response.data.token);
+    return response.data.token;
   } catch (error) {
     if (error.response) {
       const errorMessage = JSON.parse(error.request.responseText)?.message || "Ошибка";

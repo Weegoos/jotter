@@ -1,6 +1,9 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import User from "../models/userSchemas.js"; 
+import User from "../models/userSchemas.js";
+import jwt from "jsonwebtoken";
+import authMiddleware from "../middlewares/authMiddleware.js";
+import dotenv from "dotenv"; 
 
 const router = express.Router();
 
@@ -47,6 +50,7 @@ export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ where: { email } });
+
         if (!user) {
             return res.status(400).json({ message: "Пользователь не найден" });
         }
@@ -56,12 +60,32 @@ export const loginUser = async (req, res) => {
             return res.status(400).json({ message: "Неверный пароль" });
         }
 
-        res.json({ message: "Успешный вход", user });
+        const token = jwt.sign(
+            { id: user.id, email: user.email }, // Данные, которые вшиваются в токен
+            process.env.JWT_SECRET,
+            { expiresIn: process.env.JWT_EXPIRES_IN || "7d" } // Время жизни токена
+        );
 
+        res.json({ message: "Успешный вход", token });
     } catch (error) {
         console.error("Ошибка при входе:", error);
         res.status(500).json({ message: "Ошибка сервера" });
     }
-}
+};
+
+export const getUserInfo = async (req, res) => {
+    try {
+        const user = await User.findByPk(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({ message: "Пользователь не найден" });
+        }
+
+        res.json(user);
+    } catch (error) {
+        console.error("Ошибка при получении данных:", error);
+        res.status(500).json({ message: "Ошибка сервера" });
+    }
+};
 
 export default router;
