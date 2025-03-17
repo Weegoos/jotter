@@ -27,16 +27,15 @@ export const createNote = async (req, res) => {
         res.status(500).json({ message: "Ошибка сервера" });
     }
 };
-export const getAllNotes = async (req, res) => {
+export const getAllNotesByFileID = async (req, res) => {
     console.log("🔹 Вызван getAllNotes. req.user:", req.user);
 
     try {
-        const userId = req.user.id;
-        if (!userId) {
-            return res.status(400).json({ message: "Ошибка: userId отсутствует." });
+        const {fileId} = req.params;
+        if (!fileId) {
+            return res.status(400).json({ message: "Ошибка: fileID отсутствует." });
         }
-
-        const notes = await Notes.findAll({ where: { userId } });
+        const notes = await Notes.findAll({ where: { fileId: fileId } });
         res.json(notes);
     } catch (error) {
         console.error("Ошибка получения заметок:", error);

@@ -67,10 +67,10 @@ router.get('/allFiles', authMiddleware, getFilesByUserId)
  *   get:
  *     summary: Получить все файлы
  *     tags: [Files]
- *     description: Возвращает массив всех заметок из базы данных.
+ *     description: Возвращает массив всех файлов из базы данных.
  *     responses:
  *       200:
- *         description: Успешный ответ. Возвращает массив заметок.
+ *         description: Успешный ответ. Возвращает массив файлов.
  *         content:
  *           application/json:
  *             schema:
@@ -83,7 +83,7 @@ router.get('/allFiles', authMiddleware, getFilesByUserId)
  *                     example: 1
  *                   content:
  *                     type: string
- *                     example: "Текст заметки"
+ *                     example: "Текст файла"
  *                   createdAt:
  *                     type: string
  *                     format: date-time
@@ -92,5 +92,35 @@ router.get('/allFiles', authMiddleware, getFilesByUserId)
 
 
 router.get('/filesName', authMiddleware, getFilesName)
+
+/**
+ * @swagger
+ * /file/filesName:
+ *   get:
+ *     summary: Получить название файлов
+ *     tags: [Files]
+ *     description: Возвращает массив название всех файлов из базы данных.
+ *     responses:
+ *       200:
+ *         description: Успешный ответ. Возвращает массив название файлов.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   content:
+ *                     type: string
+ *                     example: "Текст файла"
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-03-07T12:34:56.000Z"
+ */
+
 
 export default router;
