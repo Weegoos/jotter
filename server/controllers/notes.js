@@ -1,19 +1,18 @@
 import express from "express";
-import Notes from "../models/notesSchemas.js";
+import Notes from "../schemas/notesSchemas.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
 export const createNote = async (req, res) => {
     try {
-        const { content } = req.body;
-        const userId = req.user.id; // Получаем userId из токена
+        const { content, fileId, fileName } = req.body;
 
-        if (!content || !userId) {
-            return res.status(400).json({ message: "Контент и userId обязательны" });
+        if (!content || !fileId) {
+            return res.status(400).json({ message: "Контент и fileId обязательны" });
         }
 
-        const note = await Notes.create({ content, userId });
+        const note = await Notes.create({ content, fileId, fileName });
         res.status(201).json(note);
     } catch (error) {
         console.error("Ошибка создания заметки:", error);

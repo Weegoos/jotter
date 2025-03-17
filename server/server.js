@@ -1,11 +1,14 @@
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
-import { connectDB } from "./database/db.js";
+import { connectDB, sequelize } from "./database/db.js";
 import setupSwagger from "./swagger.js";
 
 import userRouters from './routers/userRouters.js'
 import noteRouters  from './routers/noteRouters.js'
+import fileRouters from './routers/fileRouters.js'
+
+// schemas
 
 dotenv.config();
 
@@ -28,8 +31,8 @@ const PORT = process.env.PORT || 3001;
     app.use(express.json());
 
     app.use("/user", userRouters);
-
     app.use('/notes', noteRouters)
+    app.use('/file', fileRouters)
 
     app.get("/", (req, res) => {
         res.send("Сервер работает!");
