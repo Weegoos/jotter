@@ -19,6 +19,10 @@ const routes = [
     path: "/createFile",
     component: () => import("pages/CreateFilePage.vue"),
   },
+  {
+    path: "/viewNotes/:fileId",
+    component: () => import("components/Notes/ViewNotes.vue"),
+  },
 
   // Always leave this as last one,
   // but you can also remove it

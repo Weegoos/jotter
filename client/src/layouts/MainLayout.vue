@@ -20,7 +20,13 @@
           </div>
         </q-toolbar>
       </q-header>
-      <q-drawer v-if="!isAuthPage" v-model="drawer" show-if-above :width="250" :breakpoint="400">
+      <q-drawer
+        v-if="!isAuthPage"
+        v-model="drawer"
+        show-if-above
+        :width="250"
+        :breakpoint="400"
+      >
         <q-scroll-area
           style="
             height: calc(100% - 150px);
@@ -30,12 +36,18 @@
           class="bg-black text-white"
         >
           <q-list padding v-if="!createPage">
-            <q-item clickable v-ripple v-for="(files, id) in filesName" :key="id" @click="viewNotes">
+            <q-item
+              clickable
+              v-ripple
+              v-for="(files, id) in filesName"
+              :key="id"
+              @click="viewNotes(files.id)"
+            >
               <q-item-section avatar>
                 <q-icon name="inbox" />
               </q-item-section>
 
-              <q-item-section >
+              <q-item-section>
                 {{ files.name }}
               </q-item-section>
             </q-item>
@@ -71,8 +83,8 @@ import { computed, getCurrentInstance, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 
 // global variables
-const {proxy} = getCurrentInstance()
-const serverURL = proxy.$serverURL
+const { proxy } = getCurrentInstance();
+const serverURL = proxy.$serverURL;
 const drawer = ref(true);
 
 const route = useRoute();
@@ -81,8 +93,8 @@ const isAuthPage = computed(() => {
 });
 
 const createPage = computed(() => {
-  return route.path === "/createFile"
-})
+  return route.path === "/createFile";
+});
 
 const headerButtons = ref([
   { name: "Домой", path: "/" },
@@ -90,14 +102,20 @@ const headerButtons = ref([
   { name: "Настройки", path: "/settings" },
 ]);
 
-const filesName = ref([])
+const filesName = ref([]);
 const getAllFiles = async () => {
-  const files = ref([])
-  await  getMethod(serverURL, 'file/allFiles', files, "Успешно получен")
-  filesName.value = files.value.map(file => file)
-}
+  const files = ref([]);
+  await getMethod(serverURL, "file/allFiles", files, "Успешно получен");
+  filesName.value = files.value.map((file) => file);
+};
 
-onMounted(() => {getAllFiles()})
+const viewNotes = (id) => {
+  window.location.href = `http://localhost:9000/#/viewNotes/${id}`;
+};
+
+onMounted(() => {
+  getAllFiles();
+});
 </script>
 
 <style></style>
