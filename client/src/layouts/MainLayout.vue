@@ -29,13 +29,15 @@
           "
           class="bg-black text-white"
         >
-          <q-list padding>
-            <q-item clickable v-ripple>
+          <q-list padding v-if="!createPage">
+            <q-item clickable v-ripple v-for="(files, id) in filesName" :key="id" @click="viewNotes">
               <q-item-section avatar>
                 <q-icon name="inbox" />
               </q-item-section>
 
-              <q-item-section> Inbox </q-item-section>
+              <q-item-section >
+                {{ files.name }}
+              </q-item-section>
             </q-item>
           </q-list>
         </q-scroll-area>
@@ -64,9 +66,13 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { getMethod } from "src/composables/api/getApi";
+import { computed, getCurrentInstance, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 
+// global variables
+const {proxy} = getCurrentInstance()
+const serverURL = proxy.$serverURL
 const drawer = ref(true);
 
 const route = useRoute();
@@ -74,11 +80,24 @@ const isAuthPage = computed(() => {
   return route.path === "/login" || route.path === "/registration";
 });
 
+const createPage = computed(() => {
+  return route.path === "/createFile"
+})
+
 const headerButtons = ref([
   { name: "Домой", path: "/" },
-  { name: "Заметки", path: "/notes" },
+  { name: "Создать файл", path: "/createFile" },
   { name: "Настройки", path: "/settings" },
 ]);
+
+const filesName = ref([])
+const getAllFiles = async () => {
+  const files = ref([])
+  await  getMethod(serverURL, 'file/allFiles', files, "Успешно получен")
+  filesName.value = files.value.map(file => file)
+}
+
+onMounted(() => {getAllFiles()})
 </script>
 
 <style></style>

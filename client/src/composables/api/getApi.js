@@ -1,5 +1,5 @@
 import axios from "axios";
-import { QSpinnerGears, useQuasar } from "quasar";
+import { Cookies, QSpinnerGears, useQuasar } from "quasar";
 import { useNotifyStore } from "src/stores/notify-store";
 
 export async function getMethod(serverURL, apiURL, variable, msg) {
@@ -10,6 +10,7 @@ export async function getMethod(serverURL, apiURL, variable, msg) {
     const response = await axios.get(`${serverURL}${apiURL}`, {
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${Cookies.get("accessToken")}`,
       },
     });
 
