@@ -1,18 +1,26 @@
 import express from "express";
 import Notes from "../schemas/notesSchemas.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
+import Files from "../schemas/fileSchemas.js";
 
 const router = express.Router();
 
 export const createNote = async (req, res) => {
     try {
-        const { content, fileId, fileName } = req.body;
+        const { content, fileName } = req.body;
+        
 
-        if (!content || !fileId) {
-            return res.status(400).json({ message: "Контент и fileId обязательны" });
+        if (!content || !fileName) {
+            return res.status(400).json({ message: "Контент и fileName обязательны" });
         }
 
-        const note = await Notes.create({ content, fileId, fileName });
+        const file = await Files.findOne({ where: { name: fileName } });
+
+        if (!file) {
+            return res.status(404).json({ message: "Файл не найден" });
+        }
+
+        const note = await Notes.create({ content, fileId: file.id, fileName });
         res.status(201).json(note);
     } catch (error) {
         console.error("Ошибка создания заметки:", error);

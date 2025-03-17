@@ -37,7 +37,23 @@ export const getFilesByUserId = async (req, res) => {
 }
 
 export const getFilesName = async (req, res) => {
-    
-}
+    try {
+        const userId = req.user.id;
+        if (!userId) {
+            return res.status(400).json({ message: "Ошибка: userId отсутствует." });
+        }
+        
+        const files = await Files.findAll({ 
+            where: { userId },
+            attributes: ['name'] 
+        });
+
+        res.json(files.map(file => file.name)); 
+    } catch (error) {
+        console.error("Ошибка:", error);
+        res.status(500).json({ message: "Ошибка сервера" });
+    }
+};
+
 
 export default router;
