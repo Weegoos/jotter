@@ -61,6 +61,36 @@ router.post('/create',authMiddleware,  createFile)
 
 router.get('/allFiles', authMiddleware, getFilesByUserId)
 
+/**
+ * @swagger
+ * /file/allFiles:
+ *   get:
+ *     summary: Получить все файлы
+ *     tags: [Files]
+ *     description: Возвращает массив всех заметок из базы данных.
+ *     responses:
+ *       200:
+ *         description: Успешный ответ. Возвращает массив заметок.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   content:
+ *                     type: string
+ *                     example: "Текст заметки"
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-03-07T12:34:56.000Z"
+ */
+
+
 router.get('/filesName', authMiddleware, getFilesName)
 
 export default router;
