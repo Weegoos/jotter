@@ -2,8 +2,7 @@
   <div class="q-pa-md">
     <q-card class="my-card" v-for="(notes, id) in allNotesByFileId" :key="id">
       <q-card-section>
-        <div class="text-h6">Our Changing Planet</div>
-        <div class="text-subtitle2">by John Doe</div>
+        <div class="text-h6">{{ notes.title }}</div>
       </q-card-section>
       <q-card-section>
         {{ notes.content }}
