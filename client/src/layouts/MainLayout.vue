@@ -47,8 +47,11 @@
                 <q-icon name="inbox" />
               </q-item-section>
 
-              <q-item-section>
+              <q-item-section v-if="items">
                 {{ files.name }}
+              </q-item-section>
+              <q-item-section v-else>
+                Файлы не найдены
               </q-item-section>
             </q-item>
           </q-list>
@@ -78,7 +81,9 @@
 </template>
 
 <script setup>
+import { Cookies } from "quasar";
 import { getMethod } from "src/composables/api/getApi";
+import { checkAccessToken } from "src/composables/javascript-function/checkAccessToken";
 import { computed, getCurrentInstance, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 
@@ -89,11 +94,12 @@ const drawer = ref(true);
 
 const route = useRoute();
 const isAuthPage = computed(() => {
-  return route.path === "/login" || route.path === "/registration";
+  return route.path === "/login" ;
 });
 
 const createPage = computed(() => {
-  return route.path === "/createFile";
+  return route.path === "/createFile" ||
+  route.path === "/login";
 });
 
 const headerButtons = ref([
@@ -114,7 +120,11 @@ const viewNotes = (id) => {
 };
 
 onMounted(() => {
-  getAllFiles();
+  // getAllFiles()
+  if (Cookies.has('accessToken')) {
+    getAllFiles()
+  }
+  checkAccessToken()
 });
 </script>
 

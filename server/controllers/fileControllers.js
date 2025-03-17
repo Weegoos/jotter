@@ -76,5 +76,15 @@ export const deleteFileById = async (req, res) => {
     }
 }
 
+export const deleteAllFiles = async (req, res) => {
+    try {
+        await Files.destroy({ where: {} });
+        res.status(200).json({ message: "Все файлы успешно удалены." });
+    } catch (error) {
+        console.error("Ошибка при удалении всех файлов:", error);
+        res.status(500).json({ message: "Ошибка сервера." });
+    }
+};
+
 
 export default router;

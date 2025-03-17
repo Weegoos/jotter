@@ -1,5 +1,5 @@
 import express from "express";
-import { createFile, deleteFileById, getFilesByUserId, getFilesName } from "../controllers/fileControllers.js";
+import { createFile, deleteAllFiles, deleteFileById, getFilesByUserId, getFilesName } from "../controllers/fileControllers.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
@@ -84,7 +84,6 @@ router.post('/create',authMiddleware,  createFile)
  *                   example: "Ошибка сервера"
  */
 
-
 router.get('/allFiles', authMiddleware, getFilesByUserId)
 
 /**
@@ -115,7 +114,6 @@ router.get('/allFiles', authMiddleware, getFilesByUserId)
  *                     format: date-time
  *                     example: "2024-03-07T12:34:56.000Z"
  */
-
 
 router.get('/filesName', authMiddleware, getFilesName)
 
@@ -153,7 +151,7 @@ router.delete('/deleteFile/:fileId', authMiddleware, deleteFileById)
 
 /**
  * @swagger
- * /deleteFile/{fileId}:
+ * /file/deleteFile/{fileId}:
  *   delete:
  *     summary: Удалить файл по ID
  *     tags: [Files]
@@ -210,5 +208,36 @@ router.delete('/deleteFile/:fileId', authMiddleware, deleteFileById)
  *                   example: "Ошибка сервера."
  */
 
+router.delete('/deleteAll', authMiddleware, deleteAllFiles)
+
+/**
+ * @swagger
+ * /file/deleteAll:
+ *   delete:
+ *     summary: Удалить все файлы
+ *     tags: [Files]
+ *     description: Удаляет все файлы из базы данных.
+ *     responses:
+ *       200:
+ *         description: Все файлы успешно удалены.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Все файлы успешно удалены."
+ *       500:
+ *         description: Ошибка сервера.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка сервера."
+ */
 
 export default router;

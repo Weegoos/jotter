@@ -23,9 +23,9 @@ const sendNote = async () => {
   await postMethod(serverURL, "file/create", { name: fileName.value }, $q);
 };
 
-// onMounted(() => {
-//   checkAccessToken();
-// });
+onMounted(() => {
+  checkAccessToken();
+});
 </script>
 
 <style></style>
