@@ -17,25 +17,28 @@ router.post('/create',authMiddleware,  createFile)
 
 /**
  * @swagger
- * /file/create:
+ * /files/create:
  *   post:
- *     summary: Создать новую папку
+ *     summary: Создать новый файл
  *     tags: [Files]
- *     description: Добавляет новый файл в базу данных.
+ *     description: Создает новый файл и привязывает его к пользователю.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - name
  *             properties:
  *               name:
  *                 type: string
  *                 example: "Новый Файл"
+ *                 description: "Название создаваемого файла"
  *     responses:
  *       201:
- *         description: Файл успешно создан
- *         name:
+ *         description: Файл успешно создан.
+ *         content:
  *           application/json:
  *             schema:
  *               type: object
@@ -51,11 +54,34 @@ router.post('/create',authMiddleware,  createFile)
  *                       example: 1
  *                     name:
  *                       type: string
- *                       example: "Новый файл"
+ *                       example: "Новый Файл"
+ *                     userId:
+ *                       type: integer
+ *                       example: 5
  *                     createdAt:
  *                       type: string
  *                       format: date-time
  *                       example: "2024-03-07T12:34:56.000Z"
+ *       400:
+ *         description: Ошибка запроса (например, отсутствует userId).
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "userId обязателен!"
+ *       500:
+ *         description: Ошибка сервера.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка сервера"
  */
 
 

@@ -15,8 +15,6 @@ const router = express.Router();
 router.get("/:fileId", authMiddleware, getAllNotesByFileID);
 
 
-router.post("/create", authMiddleware, createNote);
-
 // -------------------- notes/all -----------------------
 
 /**
@@ -80,6 +78,7 @@ router.post("/create", authMiddleware, createNote);
 
 
 
+router.post("/create", authMiddleware, createNote);
 // -------------------- notes/create -----------------------
 
 /**
@@ -98,13 +97,20 @@ router.post("/create", authMiddleware, createNote);
  *             required:
  *               - content
  *               - fileName
+ *               - title
  *             properties:
  *               content:
  *                 type: string
  *                 example: "Текст заметки"
+ *                 description: "Содержимое заметки"
  *               fileName:
  *                 type: string
  *                 example: "Документ1"
+ *                 description: "Название файла, к которому привязана заметка"
+ *               title:
+ *                 type: string
+ *                 example: "Моя заметка"
+ *                 description: "Название заметки"
  *     responses:
  *       201:
  *         description: Заметка успешно создана.
@@ -119,6 +125,9 @@ router.post("/create", authMiddleware, createNote);
  *                 content:
  *                   type: string
  *                   example: "Текст заметки"
+ *                 title:
+ *                   type: string
+ *                   example: "Моя заметка"
  *                 fileId:
  *                   type: integer
  *                   example: 5
@@ -130,7 +139,7 @@ router.post("/create", authMiddleware, createNote);
  *                   format: date-time
  *                   example: "2024-03-07T12:34:56.000Z"
  *       400:
- *         description: Ошибка запроса (например, отсутствует content или fileName).
+ *         description: Ошибка запроса (например, отсутствует content, fileName или title).
  *         content:
  *           application/json:
  *             schema:
@@ -138,7 +147,7 @@ router.post("/create", authMiddleware, createNote);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Контент и fileName обязательны"
+ *                   example: "Контент и fileName, title обязательны"
  *       404:
  *         description: Файл не найден.
  *         content:
@@ -160,6 +169,5 @@ router.post("/create", authMiddleware, createNote);
  *                   type: string
  *                   example: "Ошибка сервера"
  */
-
 
 export default router;
