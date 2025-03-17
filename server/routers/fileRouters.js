@@ -1,5 +1,5 @@
 import express from "express";
-import { createFile, getFilesByUserId, getFilesName } from "../controllers/fileControllers.js";
+import { createFile, deleteFileById, getFilesByUserId, getFilesName } from "../controllers/fileControllers.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
@@ -17,7 +17,7 @@ router.post('/create',authMiddleware,  createFile)
 
 /**
  * @swagger
- * /files/create:
+ * /file/create:
  *   post:
  *     summary: Создать новый файл
  *     tags: [Files]
@@ -146,6 +146,68 @@ router.get('/filesName', authMiddleware, getFilesName)
  *                     type: string
  *                     format: date-time
  *                     example: "2024-03-07T12:34:56.000Z"
+ */
+
+
+router.delete('/deleteFile/:fileId', authMiddleware, deleteFileById)
+
+/**
+ * @swagger
+ * /deleteFile/{fileId}:
+ *   delete:
+ *     summary: Удалить файл по ID
+ *     tags: [Files]
+ *     description: Удаляет файл по его ID.
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: fileId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Уникальный идентификатор файла
+ *     responses:
+ *       200:
+ *         description: Файл успешно удален.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Файл успешно удален."
+ *       400:
+ *         description: Ошибка запроса (отсутствует fileId).
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка: fileId отсутствует."
+ *       404:
+ *         description: Файл не найден.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Файл не найден."
+ *       500:
+ *         description: Ошибка сервера.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка сервера."
  */
 
 
