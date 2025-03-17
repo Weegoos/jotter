@@ -1,5 +1,15 @@
 <template>
-  <div>{{ allNotesByFileId }}</div>
+  <div class="q-pa-md">
+    <q-card class="my-card" v-for="(notes, id) in allNotesByFileId" :key="id">
+      <q-card-section>
+        <div class="text-h6">Our Changing Planet</div>
+        <div class="text-subtitle2">by John Doe</div>
+      </q-card-section>
+      <q-card-section>
+        {{ notes.content }}
+      </q-card-section>
+    </q-card>
+  </div>
 </template>
 
 <script setup>
@@ -8,23 +18,28 @@ import { getCurrentInstance, onMounted, ref } from "vue";
 
 // global variables
 const { proxy } = getCurrentInstance();
-const serverURL = proxy.$serverURL
+const serverURL = proxy.$serverURL;
 
 const getIdFromUrl = () => {
   const url = window.location.href;
   const parts = url.split("/");
-  return parts[parts.length - 1]; // Берем последний элемент (3)
+  return parts[parts.length - 1];
 };
 
 const id = getIdFromUrl();
-const allNotesByFileId = ref([])
+const allNotesByFileId = ref([]);
 const getAllNotesByFileId = async () => {
-  getMethod(serverURL, `notes/${id}`, allNotesByFileId, "Заметки успешно получены!")
-}
+  getMethod(
+    serverURL,
+    `notes/${id}`,
+    allNotesByFileId,
+    "Заметки успешно получены!"
+  );
+};
 
 onMounted(() => {
-  getAllNotesByFileId()
-})
+  getAllNotesByFileId();
+});
 </script>
 
 <style></style>
