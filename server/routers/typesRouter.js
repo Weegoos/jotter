@@ -1,6 +1,6 @@
 import express from "express"
 import authMiddleware from "../middlewares/authMiddleware.js"
-import { getAllContentTypes, getAllGeneralTypes, getAllTypes } from "../controllers/typesControllers.js"
+import { getAllAccessLevelTypes, getAllContentTypes, getAllGeneralTypes, getAllTypes } from "../controllers/typesControllers.js"
 
 const router = express.Router()
 
@@ -127,5 +127,47 @@ router.get('/content', authMiddleware, getAllContentTypes)
  *                   type: string
  *                   example: "Ошибка сервера"
  */
+
+router.get('/accessLevel', authMiddleware, getAllAccessLevelTypes)
+
+/**
+ * @swagger
+ * /types/accessLevel:
+ *   get:
+ *     summary: Получить все типы с описанием "accessLevel"
+ *     description: Возвращает список всех типов, у которых `description` равно "accessLevel".
+ *     tags:
+ *       - Types
+ *     responses:
+ *       200:
+ *         description: Успешный ответ. Возвращает массив объектов с типами.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   name:
+ *                     type: string
+ *                     example: "public"
+ *                   description:
+ *                     type: string
+ *                     example: "accessLevel"
+ *       500:
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка сервера"
+ */
+
 
 export default router
