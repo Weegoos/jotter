@@ -1,5 +1,5 @@
 import express from "express";
-import { createNote, getAllNotesByFileID } from "../controllers/notes.js";
+import { createNote, deleteNoteById, getAllNotesByFileID } from "../controllers/notes.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
@@ -169,5 +169,7 @@ router.post("/create", authMiddleware, createNote);
  *                   type: string
  *                   example: "Ошибка сервера"
  */
+
+router.delete('/:noteId', authMiddleware ,deleteNoteById)
 
 export default router;

@@ -47,7 +47,7 @@
                 <q-icon name="inbox" />
               </q-item-section>
 
-              <q-item-section v-if="items">
+              <q-item-section v-if="files">
                 {{ files.name }}
               </q-item-section>
               <q-item-section v-else>
@@ -120,11 +120,7 @@ const viewNotes = (id) => {
 };
 
 onMounted(() => {
-  // getAllFiles()
-  if (Cookies.has('accessToken')) {
-    getAllFiles()
-  }
-  checkAccessToken()
+  getAllFiles()
 });
 </script>
 

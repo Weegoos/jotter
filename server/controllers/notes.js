@@ -44,4 +44,26 @@ export const getAllNotesByFileID = async (req, res) => {
 };
 
 
+export const deleteNoteById = async (req, res) => {
+    try {
+        const {noteId} = req.params;
+
+        if(!noteId) {
+            return res.status(400).json({ message: "Ошибка: nodeId отсутствует." });
+        } 
+
+        const note = await Notes.findByPk(noteId)
+        if (!note) {
+            return res.status(404).json({message: "Заметка не найдена"})
+        }
+
+
+        await note.destroy()
+        res.status(200).json({ message: "Заметка успешно удалена." });
+    } catch (error) {
+        console.error("Ошибка при удалении заметки:", error);
+        res.status(500).json({ message: "Ошибка сервера." });
+    }
+}
+
 export default router

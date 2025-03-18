@@ -130,7 +130,6 @@ const handleKeydown = (event) => {
     login()
   }
 }
-u
 
 const pushToRegistrationPage = () => {
   router.push("/registration");
