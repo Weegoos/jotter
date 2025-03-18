@@ -87,30 +87,27 @@ router.post("/create", authMiddleware, createNote);
  *   post:
  *     summary: Создать новую заметку
  *     tags: [Notes]
- *     description: Создает новую заметку, привязанную к файлу.
+ *     description: Создаёт новую заметку в указанном файле.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - content
- *               - fileName
- *               - title
  *             properties:
  *               content:
  *                 type: string
- *                 example: "Текст заметки"
- *                 description: "Содержимое заметки"
+ *                 example: "Текст новой заметки"
  *               fileName:
  *                 type: string
- *                 example: "Документ1"
- *                 description: "Название файла, к которому привязана заметка"
+ *                 example: "my_notes.txt"
  *               title:
  *                 type: string
- *                 example: "Моя заметка"
- *                 description: "Название заметки"
+ *                 example: "Идея стартапа"
+ *               type:
+ *                 type: string
+ *                 enum: [private, public, shared]
+ *                 example: "private"
  *     responses:
  *       201:
  *         description: Заметка успешно создана.
@@ -124,22 +121,25 @@ router.post("/create", authMiddleware, createNote);
  *                   example: 1
  *                 content:
  *                   type: string
- *                   example: "Текст заметки"
- *                 title:
- *                   type: string
- *                   example: "Моя заметка"
+ *                   example: "Текст новой заметки"
  *                 fileId:
  *                   type: integer
  *                   example: 5
  *                 fileName:
  *                   type: string
- *                   example: "Документ1"
+ *                   example: "my_notes.txt"
+ *                 title:
+ *                   type: string
+ *                   example: "Идея стартапа"
+ *                 type:
+ *                   type: string
+ *                   example: "private"
  *                 createdAt:
  *                   type: string
  *                   format: date-time
- *                   example: "2024-03-07T12:34:56.000Z"
+ *                   example: "2024-03-18T12:34:56.000Z"
  *       400:
- *         description: Ошибка запроса (например, отсутствует content, fileName или title).
+ *         description: Ошибка в запросе (отсутствуют обязательные поля).
  *         content:
  *           application/json:
  *             schema:
@@ -147,7 +147,7 @@ router.post("/create", authMiddleware, createNote);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Контент и fileName, title обязательны"
+ *                   example: "Контент и fileName, title, type обязательны."
  *       404:
  *         description: Файл не найден.
  *         content:
@@ -157,7 +157,7 @@ router.post("/create", authMiddleware, createNote);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Файл не найден"
+ *                   example: "Файл не найден."
  *       500:
  *         description: Ошибка сервера.
  *         content:
@@ -167,9 +167,68 @@ router.post("/create", authMiddleware, createNote);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Ошибка сервера"
+ *                   example: "Ошибка сервера."
  */
 
+
 router.delete('/:noteId', authMiddleware ,deleteNoteById)
+
+/**
+ * @swagger
+ * /notes/{noteId}:
+ *   delete:
+ *     summary: Удаление заметки по ID
+ *     description: Удаляет заметку с указанным noteId из базы данных.
+ *     tags:
+ *       - Notes
+ *     parameters:
+ *       - in: path
+ *         name: noteId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Уникальный идентификатор заметки
+ *     responses:
+ *       200:
+ *         description: Заметка успешно удалена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Заметка успешно удалена."
+ *       400:
+ *         description: Ошибка в запросе (например, отсутствует noteId)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка: noteId отсутствует."
+ *       404:
+ *         description: Заметка не найдена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Заметка не найдена."
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка сервера."
+ */
 
 export default router;

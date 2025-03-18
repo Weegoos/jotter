@@ -7,11 +7,11 @@ const router = express.Router();
 
 export const createNote = async (req, res) => {
     try {
-        const { content, fileName, title } = req.body;
+        const { content, fileName, title, type } = req.body;
         
 
-        if (!content || !fileName || !title) {
-            return res.status(400).json({ message: "Контент и fileName, title обязательны" });
+        if (!content || !fileName || !title || !type) {
+            return res.status(400).json({ message: "Контент и fileName, title, type обязательны" });
         }
 
         const file = await Files.findOne({ where: { name: fileName } });
@@ -20,7 +20,7 @@ export const createNote = async (req, res) => {
             return res.status(404).json({ message: "Файл не найден" });
         }
 
-        const note = await Notes.create({ content, fileId: file.id, fileName, title });
+        const note = await Notes.create({ content, fileId: file.id, fileName, title, type });
         res.status(201).json(note);
     } catch (error) {
         console.error("Ошибка создания заметки:", error);
@@ -63,6 +63,14 @@ export const deleteNoteById = async (req, res) => {
     } catch (error) {
         console.error("Ошибка при удалении заметки:", error);
         res.status(500).json({ message: "Ошибка сервера." });
+    }
+}
+
+export const deleteAllNotes = async (req, res) => {
+    try {
+        await Notes.destroy({where})
+    } catch (error) {
+        
     }
 }
 
