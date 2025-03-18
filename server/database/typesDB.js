@@ -2,12 +2,21 @@ import Types from "../schemas/typeSchemas.js";
 
 
 const initializeTypes = async () => {
-  await Types.sync();
+  await Types.sync({ alter: true });
   await Types.bulkCreate(
     [
-      { name: "private" },
-      { name: "public" },
-      { name: "shared" },
+      { name: "private", description: "general" },
+      { name: "public", description: "general" },
+      { name: "shared", description: "general" },
+      { name: "archived", description: "general" },
+      { name: "deleted", description: "general" },
+      { name: "idea", description: "content" },
+      { name: "note", description: "content" },
+      { name: "reminder", description: "content" },
+      { name: "code", description: "content" },
+      { name: "read_only", description: "accessLevel" },
+      { name: "editable", description: "accessLevel" },
+      { name: "protected", description: "accessLevel" },
     ],
     { ignoreDuplicates: true } 
   );
