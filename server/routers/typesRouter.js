@@ -1,6 +1,6 @@
 import express from "express"
 import authMiddleware from "../middlewares/authMiddleware.js"
-import { getAllGeneralTypes, getAllTypes } from "../controllers/typesControllers.js"
+import { getAllContentTypes, getAllGeneralTypes, getAllTypes } from "../controllers/typesControllers.js"
 
 const router = express.Router()
 
@@ -87,6 +87,45 @@ router.get('/general', authMiddleware, getAllGeneralTypes)
  *                   example: "Ошибка сервера"
  */
 
+router.get('/content', authMiddleware, getAllContentTypes)
 
+/**
+ * @swagger
+ * /types/content:
+ *   get:
+ *     summary: Получить все типы с описанием "content"
+ *     description: Возвращает список всех типов, у которых `description` равно "content".
+ *     tags:
+ *       - Types
+ *     responses:
+ *       200:
+ *         description: Успешный ответ. Возвращает массив объектов с типами.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   name:
+ *                     type: string
+ *                     example: "public"
+ *                   description:
+ *                     type: string
+ *                     example: "content"
+ *       500:
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка сервера"
+ */
 
 export default router

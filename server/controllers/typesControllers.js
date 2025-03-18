@@ -26,5 +26,18 @@ export const getAllGeneralTypes = async (req, res) => {
     }
 };
 
+export const getAllContentTypes = async (req, res) => {
+    try {
+        const generalTypes = await Types.findAll({
+            where: { description: 'content' } 
+        });
+
+        res.json(generalTypes); 
+    } catch (error) {
+        console.error("Ошибка:", error);
+        res.status(500).json({ message: "Ошибка сервера" });
+    }
+};
+
 
 export default router
