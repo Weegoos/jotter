@@ -1,5 +1,5 @@
 import express from "express";
-import { createNote, deleteNoteById, getAllNotesByFileID, getAllPrivateNotes, getAllProtectedNotes, getAllPublicNotes } from "../controllers/notes.js";
+import { createNote, deleteNoteById, getAllIdeaNotes, getAllNotesByFileID, getAllPrivateNotes, getAllProtectedNotes, getAllPublicNotes } from "../controllers/notes.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
@@ -198,6 +198,79 @@ router.get('/protected/:fileId/', authMiddleware, getAllProtectedNotes)
  *                   type:
  *                     type: string
  *                     example: "protected"
+ *                   fileId:
+ *                     type: integer
+ *                     example: 123
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-07-29T12:00:00.000Z"
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-07-29T12:30:00.000Z"
+ *       400:
+ *         description: Ошибка запроса, если `fileId` отсутствует.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка: fileID отсутствует."
+ *       500:
+ *         description: Ошибка сервера.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка сервера"
+ */
+
+router.get('/idea/:fileId/', authMiddleware, getAllIdeaNotes)
+
+/**
+ * @swagger
+ * /notes/idea/{fileId}:
+ *   get:
+ *     summary: Получить все заметки где записани идеи 
+ *     description: Возвращает список всех заметок, у которых `type` равно "idea" и `fileId` соответствует переданному значению.
+ *     tags:
+ *       - Notes
+ *     parameters:
+ *       - in: path
+ *         name: fileId
+ *         required: true
+ *         description: ID файла, к которому относятся заметки.
+ *         schema:
+ *           type: integer
+ *           example: 123
+ *     responses:
+ *       200:
+ *         description: Успешный ответ. Возвращает массив приватных заметок, связанных с указанным `fileId`.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   title:
+ *                     type: string
+ *                     example: "Моя личная заметка"
+ *                   content:
+ *                     type: string
+ *                     example: "Это приватная заметка"
+ *                   type:
+ *                     type: string
+ *                     example: "idea"
  *                   fileId:
  *                     type: integer
  *                     example: 123

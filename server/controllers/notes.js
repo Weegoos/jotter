@@ -27,6 +27,7 @@ export const createNote = async (req, res) => {
         res.status(500).json({ message: "Ошибка сервера" });
     }
 };
+
 export const getAllNotesByFileID = async (req, res) => {
     console.log("🔹 Вызван getAllNotes. req.user:", req.user);
 
@@ -94,7 +95,22 @@ export const getAllProtectedNotes = async (req, res) => {
     }
 }
 
+export const getAllIdeaNotes = async (req, res) => {
+    try {
+        const {fileId} = req.params;
+        if (!fileId) {
+            return res.status(400).json({ message: "Ошибка: fileID отсутствует." });
+        }
+        const privateNotes = await Notes.findAll({
+            where: {type: 'idea', fileId: fileId}
+        });
 
+        res.json(privateNotes)
+    } catch (error) {
+        console.error("Ошибка:", error);
+        res.status(500).json({ message: "Ошибка сервера" });
+    }
+}
 
 export const deleteNoteById = async (req, res) => {
     try {

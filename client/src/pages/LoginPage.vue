@@ -126,10 +126,10 @@ const login = async () => {
 };
 
 const handleKeydown = (event) => {
-  if(event.code === "Enter"){
-    login()
+  if (event.code === "Enter") {
+    login();
   }
-}
+};
 
 const pushToRegistrationPage = () => {
   router.push("/registration");

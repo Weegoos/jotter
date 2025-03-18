@@ -12,6 +12,6 @@ defineOptions({
 });
 
 onMounted(() => {
-  checkAccessToken()
-})
+  checkAccessToken();
+});
 </script>

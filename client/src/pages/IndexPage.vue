@@ -3,12 +3,12 @@
 </template>
 
 <script setup>
-import { checkAccessToken } from 'src/composables/javascript-function/checkAccessToken';
-import { onMounted } from 'vue';
+import { checkAccessToken } from "src/composables/javascript-function/checkAccessToken";
+import { onMounted } from "vue";
 
 onMounted(() => {
-  checkAccessToken()
-})
+  checkAccessToken();
+});
 </script>
 
 <style></style>

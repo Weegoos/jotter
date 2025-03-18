@@ -50,9 +50,7 @@
               <q-item-section v-if="files">
                 {{ files.name }}
               </q-item-section>
-              <q-item-section v-else>
-                Файлы не найдены
-              </q-item-section>
+              <q-item-section v-else> Файлы не найдены </q-item-section>
             </q-item>
           </q-list>
         </q-scroll-area>
@@ -94,12 +92,11 @@ const drawer = ref(true);
 
 const route = useRoute();
 const isAuthPage = computed(() => {
-  return route.path === "/login" ;
+  return route.path === "/login";
 });
 
 const createPage = computed(() => {
-  return route.path === "/createFile" ||
-  route.path === "/login";
+  return route.path === "/createFile" || route.path === "/login";
 });
 
 const headerButtons = ref([
@@ -120,7 +117,7 @@ const viewNotes = (id) => {
 };
 
 onMounted(() => {
-  getAllFiles()
+  getAllFiles();
 });
 </script>
 
