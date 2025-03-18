@@ -6,7 +6,8 @@ import setupSwagger from "./swagger.js";
 
 import userRouters from './routers/userRouters.js'
 import noteRouters  from './routers/noteRouters.js'
-import fileRouters from './routers/fileRouters.js'
+import fileRouters from './routers/fileRouters.js';
+import initializeTypes from "./database/typesDB.js";
 
 // schemas
 
@@ -33,6 +34,7 @@ const PORT = process.env.PORT || 3001;
     app.use("/user", userRouters);
     app.use('/notes', noteRouters)
     app.use('/file', fileRouters)
+    initializeTypes()
 
     app.get("/", (req, res) => {
         res.send("Сервер работает!");

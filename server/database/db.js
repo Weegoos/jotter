@@ -21,5 +21,4 @@ async function connectDB() {
         return null;
     }
 }
-
 export { sequelize, connectDB };
