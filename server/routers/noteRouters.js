@@ -237,7 +237,7 @@ router.get('/idea/:fileId/', authMiddleware, getAllIdeaNotes)
  * @swagger
  * /notes/idea/{fileId}:
  *   get:
- *     summary: Получить все заметки где записани идеи 
+ *     summary: Получить все заметки где записаны идеи 
  *     description: Возвращает список всех заметок, у которых `type` равно "idea" и `fileId` соответствует переданному значению.
  *     tags:
  *       - Notes
@@ -304,6 +304,79 @@ router.get('/idea/:fileId/', authMiddleware, getAllIdeaNotes)
  *                   example: "Ошибка сервера"
  */
 
+router.get('/code/:fileId/', authMiddleware, getAllIdeaNotes)
+
+
+/**
+ * @swagger
+ * /notes/code/{fileId}:
+ *   get:
+ *     summary: Получить все заметки где записаны кода 
+ *     description: Возвращает список всех заметок, у которых `type` равно "code" и `fileId` соответствует переданному значению.
+ *     tags:
+ *       - Notes
+ *     parameters:
+ *       - in: path
+ *         name: fileId
+ *         required: true
+ *         description: ID файла, к которому относятся заметки.
+ *         schema:
+ *           type: integer
+ *           example: 123
+ *     responses:
+ *       200:
+ *         description: Успешный ответ. Возвращает массив заметок, связанных с кодом `fileId`.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   title:
+ *                     type: string
+ *                     example: "Моя личная заметка"
+ *                   content:
+ *                     type: string
+ *                     example: "Это приватная заметка"
+ *                   type:
+ *                     type: string
+ *                     example: "code"
+ *                   fileId:
+ *                     type: integer
+ *                     example: 123
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-07-29T12:00:00.000Z"
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-07-29T12:30:00.000Z"
+ *       400:
+ *         description: Ошибка запроса, если `fileId` отсутствует.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка: fileID отсутствует."
+ *       500:
+ *         description: Ошибка сервера.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка сервера"
+ */
 
 router.get("/:fileId", authMiddleware, getAllNotesByFileID);
 
