@@ -35,7 +35,7 @@
           "
           class="bg-black text-white"
         >
-          <q-list padding v-if="!createPage">
+          <!-- <q-list padding v-if="!createPage">
             <q-item
               clickable
               v-ripple
@@ -52,7 +52,7 @@
               </q-item-section>
               <q-item-section v-else> Файлы не найдены </q-item-section>
             </q-item>
-          </q-list>
+          </q-list> -->
         </q-scroll-area>
 
         <q-img
@@ -82,12 +82,10 @@
 import { Cookies } from "quasar";
 import { getMethod } from "src/composables/api/getApi";
 import { checkAccessToken } from "src/composables/javascript-function/checkAccessToken";
-import { computed, getCurrentInstance, onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 
 // global variables
-const { proxy } = getCurrentInstance();
-const serverURL = proxy.$serverURL;
 const drawer = ref(true);
 
 const route = useRoute();
@@ -96,28 +94,34 @@ const isAuthPage = computed(() => {
 });
 
 const createPage = computed(() => {
-  return route.path === "/createFile" || route.path === "/login";
+  return (
+    route.path === "/createFile" ||
+    route.path === "/login" ||
+    route.path === "/createNote" ||
+    route.path === "/registration"
+  );
 });
 
 const headerButtons = ref([
   { name: "Домой", path: "/" },
   { name: "Создать файл", path: "/createFile" },
+  { name: "Создать заметку", path: "/createNote" },
   { name: "Настройки", path: "/settings" },
 ]);
 
 const filesName = ref([]);
-const getAllFiles = async () => {
-  const files = ref([]);
-  await getMethod(serverURL, "file/allFiles", files, "Успешно получен");
-  filesName.value = files.value.map((file) => file);
-};
+// const getAllFiles = async () => {
+//   const files = ref([]);
+//   await getMethod(serverURL, "file/allFiles", files, "Успешно получен");
+//   filesName.value = files.value.map((file) => file);
+// };
 
 const viewNotes = (id) => {
   window.location.href = `http://localhost:9000/#/viewNotes/${id}`;
 };
 
 onMounted(() => {
-  getAllFiles();
+  // getAllFiles();
 });
 </script>
 

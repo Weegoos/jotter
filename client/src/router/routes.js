@@ -20,6 +20,10 @@ const routes = [
     component: () => import("pages/CreateFilePage.vue"),
   },
   {
+    path: "/createNote",
+    component: () => import("pages/CreateNote.vue"),
+  },
+  {
     path: "/viewNotes/:fileId",
     component: () => import("components/Notes/ViewNotes.vue"),
   },

@@ -3,9 +3,9 @@ import { Cookies, QSpinnerGears, useQuasar } from "quasar";
 import { useNotifyStore } from "src/stores/notify-store";
 
 export async function getMethod(serverURL, apiURL, variable, msg) {
-  const notifyStore = useNotifyStore();
+  // const notifyStore = useNotifyStore();
   const $q = useQuasar();
-  notifyStore.loading($q, QSpinnerGears);
+  // notifyStore.loading($q, QSpinnerGears);
   try {
     const response = await axios.get(`${serverURL}${apiURL}`, {
       headers: {
@@ -15,11 +15,11 @@ export async function getMethod(serverURL, apiURL, variable, msg) {
     });
 
     variable.value = response.data;
-    notifyStore.success($q, msg);
+    // notifyStore.success($q, msg);
   } catch (error) {
     console.error(error);
-    notifyStore.error($q, error);
+    // notifyStore.error($q, error);
   } finally {
-    $q.loading.hide();
+    // $q.loading.hide();
   }
 }

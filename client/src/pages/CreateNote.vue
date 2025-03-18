@@ -1,0 +1,87 @@
+<template>
+  <div class="q-pa-md">
+    <q-card class="my-card">
+      <q-card-section>
+        <div class="row q-gutter-sm">
+          <div class="col">
+            <q-select
+              v-model="fileName"
+              use-input
+              input-debounce="0"
+              label="File Name"
+              :options="fileList"
+              @filter="filterFn"
+              behavior="menu"
+            >
+              <template v-slot:no-option>
+                <q-item>
+                  <q-item-section class="text-grey">
+                    No results
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+          </div>
+          <div class="col">
+            <q-select v-model="type" :options="correctTypeList" label="Types" />
+          </div>
+        </div>
+      </q-card-section>
+      <q-card-section>
+        <q-input v-model="title" autogrow type="text" label="Title" />
+        <q-input v-model="content" autogrow type="text" label="Content" />
+      </q-card-section>
+      <q-card-actions align="center">
+        <q-btn flat label="Create note" />
+      </q-card-actions>
+    </q-card>
+  </div>
+</template>
+
+<script setup>
+import { getMethod } from "src/composables/api/getApi";
+import { getCurrentInstance, onMounted, ref } from "vue";
+
+// global variables
+const { proxy } = getCurrentInstance();
+const serverURL = proxy.$serverURL;
+
+const fileName = ref(null);
+const stringOptions = ref([]);
+const fileList = ref(stringOptions.value);
+
+const type = ref("");
+const typeList = ref([]);
+const correctTypeList = ref([]);
+const getList = async () => {
+  try {
+    await getMethod(serverURL, "file/filesName", stringOptions, null);
+    fileList.value = [...stringOptions.value]; // Обновляем fileList после загрузки
+
+    await getMethod(serverURL, "types", typeList, null);
+    correctTypeList.value = typeList.value.map((type) => type.name);
+    console.log(correctTypeList.value);
+  } catch (error) {
+    console.error("Ошибка при загрузке файлов:", error);
+  }
+};
+
+function filterFn(val, update) {
+  update(() => {
+    if (val === "") {
+      fileList.value = [...stringOptions.value]; // Возвращаем полный список
+    } else {
+      const needle = val.toLowerCase();
+      fileList.value = stringOptions.value.filter((v) =>
+        v.toLowerCase().includes(needle)
+      );
+    }
+  });
+}
+
+onMounted(() => {
+  getList();
+});
+</script>
+
+<style></style>
