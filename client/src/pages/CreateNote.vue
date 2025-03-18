@@ -30,39 +30,56 @@
       <q-card-section>
         <q-input v-model="title" autogrow type="text" label="Title" />
         <q-input v-model="content" autogrow type="text" label="Content" />
-        <q-input v-show="isProtectedType" v-model="password" label="Password for protected note" :type="isPwd ? 'password' : 'text'" hint="Password with toggle">
-        <template v-slot:append>
-          <q-icon
-            :name="isPwd ? 'visibility_off' : 'visibility'"
-            class="cursor-pointer"
-            @click="isPwd = !isPwd"
-          />
-        </template>
-      </q-input>
+        <!-- <q-input
+          v-show="isProtectedType"
+          v-model="password"
+          label="Password for protected note"
+          :type="isPwd ? 'password' : 'text'"
+          hint="Password with toggle"
+        >
+          <template v-slot:append>
+            <q-icon
+              :name="isPwd ? 'visibility_off' : 'visibility'"
+              class="cursor-pointer"
+              @click="isPwd = !isPwd"
+            />
+          </template>
+        </q-input> -->
       </q-card-section>
       <q-card-actions align="center">
-        <q-btn color="green-4" no-caps label="Create note" />
+        <q-btn
+          color="green-4"
+          no-caps
+          label="Create note"
+          @click="createNote"
+        />
       </q-card-actions>
     </q-card>
   </div>
 </template>
 
 <script setup>
+import { useQuasar } from "quasar";
 import { getMethod } from "src/composables/api/getApi";
+import { postMethod } from "src/composables/api/postApi";
 import { getCurrentInstance, onMounted, ref, watch } from "vue";
 
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
+const $q = useQuasar()
 
 const fileName = ref(null);
 const stringOptions = ref([]);
 const fileList = ref(stringOptions.value);
-const isPwd = ref(true)
+const isPwd = ref(true);
 
 const type = ref("");
 const typeList = ref([]);
 const correctTypeList = ref([]);
+
+const title = ref("");
+const content = ref("");
 const getList = async () => {
   try {
     await getMethod(serverURL, "file/filesName", stringOptions, null);
@@ -76,15 +93,25 @@ const getList = async () => {
   }
 };
 
-const isProtectedType = ref(false)
+const isProtectedType = ref(false);
 watch(
   () => type.value,
   (newVal) => {
-    if (newVal == 'protected') {
-      isProtectedType.value = true
+    if (newVal == "protected") {
+      isProtectedType.value = true;
     }
   }
 );
+
+const createNote = async () => {
+  const payload = {
+    content: content.value,
+    fileName: fileName.value,
+    title: title.value,
+    type: type.value,
+  };
+  await postMethod(serverURL, "notes/create", payload, $q);
+};
 
 function filterFn(val, update) {
   update(() => {
