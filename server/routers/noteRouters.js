@@ -1,5 +1,5 @@
 import express from "express";
-import { createNote, deleteNoteById, getAllIdeaNotes, getAllNotesByFileID, getAllPrivateNotes, getAllProtectedNotes, getAllPublicNotes } from "../controllers/notes.js";
+import { createNote, deleteNoteById, getAllIdeaNotes, getAllNotesByFileID, getAllPrivateNotes, getAllProtectedNotes, getAllPublicNotes, updateNote } from "../controllers/notes.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
@@ -441,6 +441,94 @@ router.get("/:fileId", authMiddleware, getAllNotesByFileID);
  *                   example: "Ошибка сервера."
  */
 
+router.put("/update/:noteId", updateNote);
+
+/**
+ * @swagger
+ * /notes/update/{noteId}:
+ *   put:
+ *     summary: Обновление заметки
+ *     description: Обновляет содержимое, заголовок и тип заметки по её ID.
+ *     tags: [Notes]
+ *     parameters:
+ *       - in: path
+ *         name: noteId
+ *         required: true
+ *         description: ID заметки, которую нужно обновить.
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - content
+ *               - title
+ *               - type
+ *             properties:
+ *               content:
+ *                 type: string
+ *                 example: "Обновленное содержание заметки"
+ *               title:
+ *                 type: string
+ *                 example: "Новый заголовок"
+ *               type:
+ *                 type: string
+ *                 enum: [private, public, protected, idea, code]
+ *                 example: "public"
+ *     responses:
+ *       200:
+ *         description: Успешное обновление заметки.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 content:
+ *                   type: string
+ *                   example: "Обновленное содержание заметки"
+ *                 title:
+ *                   type: string
+ *                   example: "Новый заголовок"
+ *                 type:
+ *                   type: string
+ *                   example: "public"
+ *       400:
+ *         description: Некорректные данные в запросе.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Все поля обязательны"
+ *       404:
+ *         description: Заметка не найдена.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Заметка не найдена"
+ *       500:
+ *         description: Ошибка сервера.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка сервера"
+ */
 
 
 router.post("/create", authMiddleware, createNote);

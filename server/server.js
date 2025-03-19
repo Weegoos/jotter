@@ -1,20 +1,23 @@
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
-import { connectDB, sequelize } from "./database/db.js";
+import { createServer } from "http";
+import { WebSocketServer } from "ws";
+import { connectDB } from "./database/db.js";
 import setupSwagger from "./swagger.js";
 
-import userRouters from './routers/userRouters.js'
-import noteRouters  from './routers/noteRouters.js'
+import userRouters from './routers/userRouters.js';
+import noteRouters from './routers/noteRouters.js';
 import fileRouters from './routers/fileRouters.js';
 import typesRouters from './routers/typesRouter.js';
 import initializeTypes from "./database/typesDB.js";
 
-// schemas
-
 dotenv.config();
 
 const app = express();
+const server = createServer(app); // Создаем HTTP-сервер
+const wss = new WebSocketServer({ server }); // Создаем WebSocket-сервер
+
 const PORT = process.env.PORT || 3001;
 
 // Подключение к базе данных
@@ -33,10 +36,11 @@ const PORT = process.env.PORT || 3001;
     app.use(express.json());
 
     app.use("/user", userRouters);
-    app.use('/notes', noteRouters)
-    app.use('/file', fileRouters)
-    app.use('/types', typesRouters)
-    initializeTypes()
+    app.use('/notes', noteRouters);
+    app.use('/file', fileRouters);
+    app.use('/types', typesRouters);
+    
+    initializeTypes();
 
     app.get("/", (req, res) => {
         res.send("Сервер работает!");
@@ -44,7 +48,22 @@ const PORT = process.env.PORT || 3001;
 
     setupSwagger(app);
 
-    app.listen(PORT, () => {
+    // WebSocket обработка подключений
+    wss.on("connection", (ws) => {
+        console.log("🔌 Клиент подключился к WebSocket");
+
+        ws.on("message", (message) => {
+            console.log("📩 Получено сообщение:", message.toString());
+        });
+
+        ws.on("close", () => {
+            console.log("❌ Клиент отключился");
+        });
+    });
+
+    server.listen(PORT, () => {
         console.log(`🚀 Сервер запущен на http://localhost:${PORT}`);
     });
 })();
+
+export { wss }; // Экспортируем WebSocket сервер
