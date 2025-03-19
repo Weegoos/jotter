@@ -67,7 +67,7 @@ import { getCurrentInstance, onMounted, ref, watch } from "vue";
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
-const $q = useQuasar()
+const $q = useQuasar();
 
 const fileName = ref(null);
 const stringOptions = ref([]);

@@ -35,24 +35,20 @@
           "
           class="bg-black text-white"
         >
-          <!-- <q-list padding v-if="!createPage">
+          <q-list bordered>
             <q-item
               clickable
               v-ripple
-              v-for="(files, id) in filesName"
+              v-for="(buttons, id) in navigationButtons"
               :key="id"
-              @click="viewNotes(files.id)"
+              @click="navigateToThePage(buttons.path)"
             >
               <q-item-section avatar>
-                <q-icon name="inbox" />
+                <q-icon  :name="buttons.icon" />
               </q-item-section>
-
-              <q-item-section v-if="files">
-                {{ files.name }}
-              </q-item-section>
-              <q-item-section v-else> Файлы не найдены </q-item-section>
+              <q-item-section>{{ buttons.name }}</q-item-section>
             </q-item>
-          </q-list> -->
+          </q-list>
         </q-scroll-area>
 
         <q-img
@@ -79,16 +75,14 @@
 </template>
 
 <script setup>
-import { Cookies } from "quasar";
-import { getMethod } from "src/composables/api/getApi";
-import { checkAccessToken } from "src/composables/javascript-function/checkAccessToken";
 import { computed, onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 // global variables
 const drawer = ref(true);
-
 const route = useRoute();
+const router = useRouter()
+
 const isAuthPage = computed(() => {
   return route.path === "/login";
 });
@@ -109,20 +103,17 @@ const headerButtons = ref([
   { name: "Настройки", path: "/settings" },
 ]);
 
-const filesName = ref([]);
-// const getAllFiles = async () => {
-//   const files = ref([]);
-//   await getMethod(serverURL, "file/allFiles", files, "Успешно получен");
-//   filesName.value = files.value.map((file) => file);
-// };
+const navigationButtons = ref([
+  {
+    name: "Файлы",
+    path: "files",
+    icon: "note",
+  },
+]);
 
-const viewNotes = (id) => {
-  window.location.href = `http://localhost:9000/#/viewNotes/${id}`;
-};
-
-onMounted(() => {
-  // getAllFiles();
-});
+const navigateToThePage =  (route) => {
+  router.push(route)
+}
 </script>
 
 <style></style>
