@@ -16,7 +16,11 @@
         <q-btn flat color="red" icon="delete" />
       </q-card-actions>
     </q-card>
-    <EditNote :isOpenEditPage="isOpenEditPage" @closeEditPage="closeEditPage"/>
+    <EditNote
+      :isOpenEditPage="isOpenEditPage"
+      :noteIdentification="noteIdentification"
+      @closeEditPage="closeEditPage"
+    />
   </div>
 </template>
 
@@ -35,8 +39,39 @@ const getIdFromUrl = () => {
   return parts[parts.length - 1];
 };
 
-const id = getIdFromUrl();
+let ws = null;
 const allNotesByFileId = ref([]);
+onMounted(() => {
+  getAllNotesByFileId(); // Загружаем заметки при загрузке страницы
+
+  // 🔌 Подключаем WebSocket
+  ws = new WebSocket("ws://localhost:3000"); // ⚠ Укажи свой WebSocket URL
+
+  ws.onopen = () => {
+    console.log("🔌 WebSocket подключен");
+  };
+
+  ws.onmessage = (event) => {
+  const message = JSON.parse(event.data);
+
+  if (message.event === "notes_list" && message.fileId === Number(id)) {
+    console.log("📜 WebSocket прислал новые заметки:", message.notes);
+    allNotesByFileId.value = message.notes;
+  }
+
+  // 📌 Если пришло обновление заметки — перезагружаем список
+  if (message.event === "update_note") {
+    console.log("🔄 Обновление списка заметок по WebSocket...");
+    getAllNotesByFileId(); // Загружаем обновлённые заметки
+  }
+};
+
+  ws.onclose = () => {
+    console.log("❌ WebSocket отключен");
+  };
+});
+
+const id = getIdFromUrl();
 const getAllNotesByFileId = async () => {
   getMethod(
     serverURL,
@@ -47,17 +82,15 @@ const getAllNotesByFileId = async () => {
 };
 
 const isOpenEditPage = ref(false);
+const noteIdentification = ref(0);
 const openEditPage = async (noteID) => {
   isOpenEditPage.value = true;
+  noteIdentification.value = Number(noteID);
 };
 
 const closeEditPage = () => {
-  isOpenEditPage.value = false
-}
-
-onMounted(() => {
-  getAllNotesByFileId();
-});
+  isOpenEditPage.value = false;
+};
 </script>
 
 <style></style>
