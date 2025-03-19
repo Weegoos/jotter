@@ -59,10 +59,9 @@ onMounted(() => {
     allNotesByFileId.value = message.notes;
   }
 
-  // 📌 Если пришло обновление заметки — перезагружаем список
   if (message.event === "update_note") {
     console.log("🔄 Обновление списка заметок по WebSocket...");
-    getAllNotesByFileId(); // Загружаем обновлённые заметки
+    getAllNotesByFileId();
   }
 };
 

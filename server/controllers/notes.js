@@ -38,6 +38,13 @@ export const getAllNotesByFileID = async (req, res) => {
             return res.status(400).json({ message: "Ошибка: fileID отсутствует." });
         }
         const notes = await Notes.findAll({ where: { fileId: fileId } });
+
+        wss.clients.forEach(client => {
+            if (client.readyState === 1) {
+                client.send(JSON.stringify({ event: "notes_list", fileId, notes }));
+            }
+        });
+
         res.json(notes);
     } catch (error) {
         console.error("Ошибка получения заметок:", error);
@@ -149,10 +156,17 @@ export const updateNote = async (req, res) => {
         note.type = type;
         await note.save();
 
-        // Отправляем обновленную заметку всем подключенным WebSocket-клиентам
+        // 🔥 Запрашиваем обновленный список заметок
+        const notes = await Notes.findAll({ where: { fileId: note.fileId } });
+
+        // 🔥 Отправляем обновленный список ВСЕМ клиентам через WebSocket
         wss.clients.forEach(client => {
             if (client.readyState === 1) {
-                client.send(JSON.stringify({ event: "note_updated", note }));
+                client.send(JSON.stringify({ 
+                    event: "notes_list", 
+                    fileId: note.fileId, 
+                    notes 
+                }));
             }
         });
 
@@ -162,6 +176,7 @@ export const updateNote = async (req, res) => {
         res.status(500).json({ message: "Ошибка сервера" });
     }
 };
+
 
 export const deleteNoteById = async (req, res) => {
     try {
