@@ -15,18 +15,14 @@ export async function putMethod(
 ) {
   // notifyStore.loading($q, "Подождите, идет обновление", QSpinnerGears);
   try {
-    const response = await axios.put(
-      `${serverURL}${url}/${id}`,
-      variableRef,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${Cookies.get("accessToken")}`,
-        },
-        params,
-      }
-    );
+    const response = await axios.put(`${serverURL}${url}/${id}`, variableRef, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${Cookies.get("accessToken")}`,
+      },
+      params,
+    });
 
     console.log("Ответ сервера:", response.data);
     // notifyStore.nofifySuccess($q, successMessage);

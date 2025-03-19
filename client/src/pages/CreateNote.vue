@@ -103,6 +103,31 @@ watch(
   }
 );
 
+let ws = null;
+onMounted(() => {
+  // getAllNotesByFileId(); // Загружаем заметки при загрузке страницы
+
+  // 🔌 Подключаем WebSocket
+  ws = new WebSocket("ws://localhost:3000"); // ⚠ Укажи свой WebSocket URL
+
+  ws.onopen = () => {
+    console.log("🔌 WebSocket подключен");
+  };
+
+  ws.onmessage = (event) => {
+    const message = JSON.parse(event.data);
+    console.log("📩 Получено сообщение от WebSocket:", message); // 🔍 Логируем ВСЁ сообщение
+
+    if (message.event === "create_note") {
+      console.log("📜 Новая заметка от WebSocket:", message.note);
+    }
+  };
+
+  ws.onclose = () => {
+    console.log("❌ WebSocket отключен");
+  };
+});
+
 const createNote = async () => {
   const payload = {
     content: content.value,

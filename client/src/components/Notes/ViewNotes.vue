@@ -13,7 +13,7 @@
       </q-card-section>
       <q-card-actions align="right">
         <q-btn flat icon="edit" @click="openEditPage(notes.id)" />
-        <q-btn flat color="red" icon="delete" />
+        <q-btn flat color="red" icon="delete" @click="deleteNote(notes.id)" />
       </q-card-actions>
     </q-card>
     <EditNote
@@ -28,6 +28,7 @@
 import { getMethod } from "src/composables/api/getApi";
 import { getCurrentInstance, onMounted, ref, watch } from "vue";
 import EditNote from "./EditNote.vue";
+import { deleteMethod } from "src/composables/api/delete";
 
 // global variables
 const { proxy } = getCurrentInstance();
@@ -52,18 +53,25 @@ onMounted(() => {
   };
 
   ws.onmessage = (event) => {
-  const message = JSON.parse(event.data);
+    const message = JSON.parse(event.data);
+    console.log("📩 WebSocket Message:", message);
+    if (message.event === "notes_list") {
+      console.log("📜 Обновляем список заметок:", message.notes);
+      allNotesByFileId.value = [...message.notes].sort(
+        (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt) // Сортировка по дате обновления (новые сверху)
+      );
 
-  if (message.event === "notes_list" && message.fileId === Number(id)) {
-    console.log("📜 WebSocket прислал новые заметки:", message.notes);
-    allNotesByFileId.value = message.notes;
-  }
+      console.log(
+        "🔍 allNotesByFileId после обновления:",
+        allNotesByFileId.value
+      );
+    }
 
-  if (message.event === "update_note") {
-    console.log("🔄 Обновление списка заметок по WebSocket...");
-    getAllNotesByFileId();
-  }
-};
+    if (message.event === "create_note") {
+      console.log("🔄 Обновление списка заметок по WebSocket...");
+      getAllNotesByFileId();
+    }
+  };
 
   ws.onclose = () => {
     console.log("❌ WebSocket отключен");
@@ -89,6 +97,10 @@ const openEditPage = async (noteID) => {
 
 const closeEditPage = () => {
   isOpenEditPage.value = false;
+};
+
+const deleteNote = (noteId) => {
+  deleteMethod(serverURL, "notes", noteId);
 };
 </script>
 

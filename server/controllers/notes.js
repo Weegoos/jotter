@@ -9,7 +9,6 @@ const router = express.Router();
 export const createNote = async (req, res) => {
     try {
         const { content, fileName, title, type } = req.body;
-        
 
         if (!content || !fileName || !title || !type) {
             return res.status(400).json({ message: "Контент и fileName, title, type обязательны" });
@@ -22,23 +21,42 @@ export const createNote = async (req, res) => {
         }
 
         const note = await Notes.create({ content, fileId: file.id, fileName, title, type });
+
+        // ✅ Теперь WebSocket отправляет новую заметку
+        wss.clients.forEach(client => {
+            if (client.readyState === 1) {
+                client.send(JSON.stringify({ 
+                    event: "create_note",
+                    note: note  // 🔥 Отправляем созданную заметку
+                }));
+            }
+        });
+
         res.status(201).json(note);
     } catch (error) {
         console.error("Ошибка создания заметки:", error);
         res.status(500).json({ message: "Ошибка сервера" });
     }
 };
-
 export const getAllNotesByFileID = async (req, res) => {
     console.log("🔹 Вызван getAllNotes. req.user:", req.user);
 
     try {
-        const {fileId} = req.params;
+        const { fileId } = req.params;
         if (!fileId) {
             return res.status(400).json({ message: "Ошибка: fileID отсутствует." });
         }
-        const notes = await Notes.findAll({ where: { fileId: fileId } });
 
+        // 📌 Получаем заметки с сортировкой (по обновлению, затем по созданию)
+        const notes = await Notes.findAll({
+            where: { fileId: fileId },
+            order: [
+                ["updatedAt", "DESC"], // Сначала самые последние обновленные
+                ["createdAt", "DESC"]  // Если даты обновления одинаковые — сортируем по дате создания
+            ]
+        });
+
+        // 🔹 Отправляем обновленный список через WebSocket
         wss.clients.forEach(client => {
             if (client.readyState === 1) {
                 client.send(JSON.stringify({ event: "notes_list", fileId, notes }));
@@ -51,6 +69,7 @@ export const getAllNotesByFileID = async (req, res) => {
         res.status(500).json({ message: "Ошибка сервера" });
     }
 };
+
 
 export const getAllPrivateNotes = async (req, res) => {
     try {

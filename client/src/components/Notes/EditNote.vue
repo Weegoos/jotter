@@ -74,15 +74,18 @@ onMounted(() => {
   ws.onmessage = (event) => {
     const message = JSON.parse(event.data);
 
-    if (message.event === "note_updated" && message.note.id === props.noteIdentification) {
-        console.log("🔄 Обновление заметки через WebSocket:", message.note);
+    if (
+      message.event === "note_updated" &&
+      message.note.id === props.noteIdentification
+    ) {
+      console.log("🔄 Обновление заметки через WebSocket:", message.note);
 
-        // 🔥 Обновляем реактивные переменные напрямую
-        content.value = message.note.content;
-        title.value = message.note.title;
-        type.value = message.note.type;
+      // 🔥 Обновляем реактивные переменные напрямую
+      content.value = message.note.content;
+      title.value = message.note.title;
+      type.value = message.note.type;
     }
-};
+  };
 
   ws.onclose = () => {
     console.log("❌ WebSocket отключен");
