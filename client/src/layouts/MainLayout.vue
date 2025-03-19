@@ -44,7 +44,7 @@
               @click="navigateToThePage(buttons.path)"
             >
               <q-item-section avatar>
-                <q-icon  :name="buttons.icon" />
+                <q-icon :name="buttons.icon" />
               </q-item-section>
               <q-item-section>{{ buttons.name }}</q-item-section>
             </q-item>
@@ -81,7 +81,7 @@ import { useRoute, useRouter } from "vue-router";
 // global variables
 const drawer = ref(true);
 const route = useRoute();
-const router = useRouter()
+const router = useRouter();
 
 const isAuthPage = computed(() => {
   return route.path === "/login";
@@ -111,9 +111,9 @@ const navigationButtons = ref([
   },
 ]);
 
-const navigateToThePage =  (route) => {
-  router.push(route)
-}
+const navigateToThePage = (route) => {
+  router.push(route);
+};
 </script>
 
 <style></style>
