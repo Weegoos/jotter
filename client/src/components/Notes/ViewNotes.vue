@@ -22,16 +22,17 @@
         </div>
       </div>
     </q-scroll-area>
-    <q-card-section v-if="allNotesByFileId.length == 0">
+    <!-- <q-card-section v-if="allTypes != [] && allNotesByFileId != []">
       <p class="text-body1" align="center">
         Create notes and your notes will be displayed here.
+        {{ allNotesByFileId }}
       </p>
     </q-card-section>
-    <q-card-section v-else-if="!currentType && allNotesByFileId.length != 0">
+    <q-card-section v-else-if="!currentType">
       <p class="text-body1" align="center">
         Click on one of the buttons to view the notes
       </p>
-    </q-card-section>
+    </q-card-section> -->
     <q-scroll-area style="height: 100vh">
       <q-card
         class="my-card q-ma-sm"
@@ -50,9 +51,9 @@
           <q-btn flat color="red" icon="delete" @click="deleteNote(notes.id)" />
         </q-card-actions>
       </q-card>
-      <div v-if="!allNotesByFileId.length && currentType">
+      <!-- <div v-if="!allNotesByFileId.length && currentType">
         <p class="text-body1" align="center">Notes are missing</p>
-      </div>
+      </div> -->
     </q-scroll-area>
     <EditNote
       :isOpenEditPage="isOpenEditPage"
@@ -72,6 +73,8 @@ import { useMeta } from "quasar";
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
+const webSocketURL = proxy.$webSocketURL;
+
 const getIdFromUrl = () => {
   const url = window.location.href;
   const parts = url.split("/");
@@ -93,7 +96,6 @@ onMounted(() => {
   }
   getAllTypes();
 
-  // 🔌 Подключаем WebSocket
   ws = new WebSocket("ws://localhost:3000"); // ⚠ Укажи свой WebSocket URL
 
   ws.onopen = () => {
@@ -103,17 +105,6 @@ onMounted(() => {
   ws.onmessage = (event) => {
     const message = JSON.parse(event.data);
     console.log("📩 WebSocket Message:", message);
-    if (message.event === "private_list") {
-      console.log("📜 Обновляем список заметок:", message.notes);
-      allNotesByFileId.value = [...message.notes].sort(
-        (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt) // Сортировка по дате обновления (новые сверху)
-      );
-
-      console.log(
-        "🔍 allNotesByFileId после обновления:",
-        allNotesByFileId.value
-      );
-    }
 
     if (message.event === "types_userUsed") {
       // getAllTypes()
@@ -145,6 +136,8 @@ onMounted(() => {
       allNotesByFileId.value = allNotesByFileId.value.filter(
         (note) => note.id !== message.note.id
       );
+
+      allTypes.value = message.types;
 
       console.log(
         "🔍 allNotesByFileId после удаления:",
