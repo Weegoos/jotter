@@ -1,7 +1,7 @@
 <template>
   <div class="">
-    <section class="row q-gutter-sm q-pa-md" v-if="isTyping == true">
-      <div class="col">
+    <q-scroll-area style="height: 70px">
+      <section class="row q-gutter-sm q-pa-md no-wrap" v-if="isTyping">
         <q-select
           v-model="fileName"
           use-input
@@ -18,58 +18,70 @@
             </q-item>
           </template>
         </q-select>
-      </div>
-      <div class="col">
+
         <q-select
           dense
           v-model="type"
           :options="correctTypeList"
           label="Types"
+          style="width: 100px"
         />
-      </div>
-      <div class="col" align="right">
-        <q-btn flat icon="send" @click="createNote">
-          <q-tooltip> Send note </q-tooltip>
-        </q-btn>
-      </div>
-    </section>
-    <q-card class="my-card">
-      <q-card-section> </q-card-section>
-      <q-card-section class="q-mx-xl">
-        <q-input
-          v-model="title"
-          autogrow
-          type="text"
-          placeholder="New Note"
-          class="q-mb-md title"
-          borderless
-          @update:modelValue="handleTyping"
-        />
-        <q-input
-          v-model="content"
-          autogrow
-          type="text"
-          placeholder="Write something..."
-          borderless
-          @update:modelValue="handleTyping"
-        />
-        <!-- <q-input
-          v-show="isProtectedType"
-          v-model="password"
-          label="Password for protected note"
-          :type="isPwd ? 'password' : 'text'"
-          hint="Password with toggle"
-        >
-          <template v-slot:append>
-            <q-icon
-              :name="isPwd ? 'visibility_off' : 'visibility'"
-              class="cursor-pointer"
-              @click="isPwd = !isPwd"
+        <div class="col" align="right">
+          <q-btn flat icon="send" @click="createNote">
+            <q-tooltip> Send note </q-tooltip>
+          </q-btn>
+          <q-btn-dropdown icon="settings" flat>
+            <CreateNotesSettings
+              @fullWidth="handleFullWidth"
+              @smallText="handleSmallText"
             />
-          </template>
-        </q-input> -->
-      </q-card-section>
-    </q-card>
+          </q-btn-dropdown>
+        </div>
+      </section>
+    </q-scroll-area>
+    <section class="row">
+      <q-card class="my-card col" align="center">
+        <q-card-section
+          class="q-mx-xl q-mt-xl"
+          :class="toggleFullWidth ? 'fullWidth' : 'mediumWidth'"
+        >
+          <q-input
+            v-model="title"
+            autogrow
+            type="text"
+            placeholder="New Note"
+            class="q-mb-md"
+            :class="toggleSmallText ? 'titleSmallText' : 'titleNormalText'"
+            @update:modelValue="handleTyping"
+            borderless
+          />
+          <q-input
+            v-model="content"
+            autogrow
+            type="text"
+            placeholder="Write something..."
+            :class="toggleSmallText ? 'contentSmallText' : 'contentNormalText'"
+            @update:modelValue="handleTyping"
+            borderless
+          />
+          <q-input
+            v-show="isProtectedType"
+            v-model="password"
+            label="Password for protected note"
+            :type="isPwd ? 'password' : 'text'"
+            hint="Password with toggle"
+          >
+            <template v-slot:append>
+              <q-icon
+                :name="isPwd ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="isPwd = !isPwd"
+              />
+            </template>
+          </q-input>
+        </q-card-section>
+      </q-card>
+    </section>
   </div>
 </template>
 
@@ -78,6 +90,8 @@ import { useQuasar } from "quasar";
 import { getMethod } from "src/composables/api/getApi";
 import { postMethod } from "src/composables/api/postApi";
 import { getCurrentInstance, onMounted, ref, watch } from "vue";
+import CreateNotesSettings from "../components/Notes/CreateNotesSettings.vue";
+import { meta } from "src/composables/javascript-function/meta";
 
 // global variables
 const { proxy } = getCurrentInstance();
@@ -95,6 +109,7 @@ const correctTypeList = ref([]);
 
 const title = ref("");
 const content = ref("");
+const password = ref("");
 const getList = async () => {
   try {
     await getMethod(serverURL, "file/filesName", stringOptions, null);
@@ -108,13 +123,23 @@ const getList = async () => {
   }
 };
 
+const toggleFullWidth = ref("");
+const handleFullWidth = (value) => {
+  toggleFullWidth.value = value;
+};
+
+const toggleSmallText = ref("");
+const handleSmallText = (value) => {
+  console.log("Получено от дочернего компонента:", value);
+  toggleSmallText.value = value;
+};
+
 const isTyping = ref(true);
 let typingTimeout = null;
 
 const handleTyping = (e) => {
   isTyping.value = false;
-
-  // Если пользователь перестаёт печатать, сбрасываем состояние через 1 секунду
+  // meta("Batyr")
   clearTimeout(typingTimeout);
   typingTimeout = setTimeout(() => {
     isTyping.value = true;
@@ -127,14 +152,14 @@ watch(
   (newVal) => {
     if (newVal == "protected") {
       isProtectedType.value = true;
+    } else {
+      isProtectedType.value = false;
     }
   }
 );
 
 let ws = null;
 onMounted(() => {
-  // getAllNotesByFileId(); // Загружаем заметки при загрузке страницы
-
   // 🔌 Подключаем WebSocket
   ws = new WebSocket("ws://localhost:3000"); // ⚠ Укажи свой WebSocket URL
 
@@ -185,7 +210,11 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.title {
-  font-size: 26px;
+.mediumWidth {
+  width: 850px;
+}
+
+.fullWidth {
+  width: 80vw;
 }
 </style>

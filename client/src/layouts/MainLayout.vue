@@ -75,25 +75,18 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, getCurrentInstance, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 // global variables
 const drawer = ref(true);
 const route = useRoute();
 const router = useRouter();
+const { proxy } = getCurrentInstance();
+const clientURL = proxy.$clientURL;
 
 const isAuthPage = computed(() => {
   return route.path === "/login" || route.path === "/registration";
-});
-
-const createPage = computed(() => {
-  return (
-    route.path === "/createFile" ||
-    route.path === "/login" ||
-    route.path === "/createNote" ||
-    route.path === "/registration"
-  );
 });
 
 const headerButtons = ref([
@@ -112,7 +105,7 @@ const navigationButtons = ref([
 ]);
 
 const navigateToThePage = (route) => {
-  router.push(route);
+  window.location.href = `${clientURL}${route}`;
 };
 </script>
 
