@@ -1,5 +1,6 @@
 import express from "express";
 import Files from "../schemas/fileSchemas.js";
+import { wss } from "../server.js";
 
 const router = express.Router();
 
@@ -15,6 +16,15 @@ export const createFile = async (req, res) => {
             userId
         });
 
+        wss.clients.forEach(client => {
+            if (client.readyState === 1){
+                client.send(JSON.stringify({
+                    event: 'create_file',
+                    newFile: newFile,
+                }))
+            }
+        })
+
         res.status(201).json({ message: "Файл создан!", file: newFile });
     } catch (error) {
         console.error("Ошибка при создании папки:", error);
@@ -29,6 +39,12 @@ export const getFilesByUserId = async (req, res) => {
             return res.status(400).json({ message: "Ошибка: userId отсутствует." });
         }
         const files = await Files.findAll({ where: { userId } });
+   
+        wss.clients.forEach(client => {
+            if (client.readyState === 1){
+                client.send(JSON.stringify({event: "get_files", userId, files}))
+            }
+        })
         res.json(files);
     } catch (error) {
         console.error("Ошибка:", error);
@@ -57,6 +73,7 @@ export const getFilesName = async (req, res) => {
 
 export const deleteFileById = async (req, res) => {
     try {
+        console.log("🔹 req.params:", req.params); 
         const {fileId} = req.params
 
         if (!fileId) {
@@ -69,6 +86,15 @@ export const deleteFileById = async (req, res) => {
         }
 
         await file.destroy()
+
+        wss.clients.forEach(client => {
+            if (client.readyState === 1){
+                client.send(JSON.stringify({
+                    event: "deleteFileByID",
+                    file: file
+                }))
+            }
+        })
         res.status(200).json({ message: "Файл успешно удален." });
     } catch (error) {
         console.error("Ошибка при удалении файла:", error);

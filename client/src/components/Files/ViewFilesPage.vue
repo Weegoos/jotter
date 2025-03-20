@@ -36,7 +36,7 @@
       </q-table>
     </div>
     <div v-else data-testid="noData">
-      <p>No data</p>
+      <p>No data. Create a file</p>
     </div>
   </div>
 </template>
@@ -54,10 +54,56 @@ const clientURL = proxy.$clientURL;
 const columns = [
   { name: "id", label: "ID", align: "left", field: "id", sortable: true },
   { name: "name", label: "Name", align: "left", field: "name", sortable: true },
-  { name: "createdAt", label: "Created At", align: "left", field: "createdAt", sortable: true },
-  { name: "updatedAt", label: "Updated At", align: "left", field: "updatedAt", sortable: true },
-  { name: "actions", label: "Действия", align: "center", field: "actions" } // ✅ Добавил колонку
+  {
+    name: "createdAt",
+    label: "Created At",
+    align: "left",
+    field: "createdAt",
+    sortable: true,
+  },
+  {
+    name: "updatedAt",
+    label: "Updated At",
+    align: "left",
+    field: "updatedAt",
+    sortable: true,
+  },
+  { name: "actions", label: "Действия", align: "center", field: "actions" }, // ✅ Добавил колонку
 ];
+
+let ws = null;
+onMounted(() => {
+  allFilesRelatedToThisUser();
+
+  ws = new WebSocket("ws://localhost:3000");
+
+  ws.onopen = () => {
+    console.log("🔌 WebSocket подключен");
+  };
+
+  ws.onmessage = (event) => {
+    const message = JSON.parse(event.data);
+    console.log("📩 WebSocket Message:", message);
+
+    if (message.event === "get_files") {
+      console.log("📜 Обновляем список заметок:", message.files);
+      rows.value = message.files;
+    }
+
+    if (message.event === "create_file") {
+      console.log("🔄 Обновление списка заметок по WebSocket...");
+      allFilesRelatedToThisUser();
+    }
+
+    if (message.event === "deleteFileByID") {
+      allFilesRelatedToThisUser();
+    }
+  };
+
+  ws.onclose = () => {
+    console.log("❌ WebSocket отключен");
+  };
+});
 
 const rows = ref([]);
 
@@ -65,16 +111,12 @@ const allFilesRelatedToThisUser = async () => {
   await getMethod(serverURL, "file/allFiles", rows, null);
 };
 
-onMounted(() => {
-  allFilesRelatedToThisUser();
-});
-
 const viewAllNotes = (evt, row, index) => {
   window.location.href = `${clientURL}viewNotes/${row.id}`;
 };
 
 const deleteRow = async (id) => {
-  await deleteMethod(serverURL, 'file/deleteFile', id)
+  await deleteMethod(serverURL, "file/deleteFile", id);
 };
 </script>
 

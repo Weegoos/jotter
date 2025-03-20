@@ -73,7 +73,6 @@ import { useMeta } from "quasar";
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
-const webSocketURL = proxy.$webSocketURL;
 
 const getIdFromUrl = () => {
   const url = window.location.href;
