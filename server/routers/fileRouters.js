@@ -157,7 +157,7 @@ router.delete('/deleteFile/:fileId', authMiddleware, deleteFileById)
  *     tags: [Files]
  *     description: Удаляет файл по его ID.
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: fileId

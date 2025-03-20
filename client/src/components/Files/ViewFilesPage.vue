@@ -42,6 +42,7 @@
 </template>
 
 <script setup>
+import { deleteMethod } from "src/composables/api/delete";
 import { getMethod } from "src/composables/api/getApi";
 import { getCurrentInstance, onMounted, ref } from "vue";
 
@@ -70,6 +71,10 @@ onMounted(() => {
 
 const viewAllNotes = (evt, row, index) => {
   window.location.href = `${clientURL}viewNotes/${row.id}`;
+};
+
+const deleteRow = async (id) => {
+  await deleteMethod(serverURL, 'file/deleteFile', id)
 };
 </script>
 
