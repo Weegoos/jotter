@@ -1,35 +1,58 @@
 <template>
-  <div class="q-pa-md">
+  <div class="">
+    <section class="row q-gutter-sm q-pa-md" v-if="isTyping == true">
+      <div class="col">
+        <q-select
+          v-model="fileName"
+          use-input
+          input-debounce="0"
+          label="File Name"
+          :options="fileList"
+          @filter="filterFn"
+          behavior="menu"
+          dense
+        >
+          <template v-slot:no-option>
+            <q-item>
+              <q-item-section class="text-grey"> No results </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
+      </div>
+      <div class="col">
+        <q-select
+          dense
+          v-model="type"
+          :options="correctTypeList"
+          label="Types"
+        />
+      </div>
+      <div class="col" align="right">
+        <q-btn flat icon="send" @click="createNote">
+          <q-tooltip> Send note </q-tooltip>
+        </q-btn>
+      </div>
+    </section>
     <q-card class="my-card">
-      <q-card-section>
-        <div class="row q-gutter-sm">
-          <div class="col">
-            <q-select
-              v-model="fileName"
-              use-input
-              input-debounce="0"
-              label="File Name"
-              :options="fileList"
-              @filter="filterFn"
-              behavior="menu"
-            >
-              <template v-slot:no-option>
-                <q-item>
-                  <q-item-section class="text-grey">
-                    No results
-                  </q-item-section>
-                </q-item>
-              </template>
-            </q-select>
-          </div>
-          <div class="col">
-            <q-select v-model="type" :options="correctTypeList" label="Types" />
-          </div>
-        </div>
-      </q-card-section>
-      <q-card-section>
-        <q-input v-model="title" autogrow type="text" label="Title" />
-        <q-input v-model="content" autogrow type="text" label="Content" />
+      <q-card-section> </q-card-section>
+      <q-card-section class="q-mx-xl">
+        <q-input
+          v-model="title"
+          autogrow
+          type="text"
+          placeholder="New Note"
+          class="q-mb-md title"
+          borderless
+          @update:modelValue="handleTyping"
+        />
+        <q-input
+          v-model="content"
+          autogrow
+          type="text"
+          placeholder="Write something..."
+          borderless
+          @update:modelValue="handleTyping"
+        />
         <!-- <q-input
           v-show="isProtectedType"
           v-model="password"
@@ -46,14 +69,6 @@
           </template>
         </q-input> -->
       </q-card-section>
-      <q-card-actions align="center">
-        <q-btn
-          color="green-4"
-          no-caps
-          label="Create note"
-          @click="createNote"
-        />
-      </q-card-actions>
     </q-card>
   </div>
 </template>
@@ -91,6 +106,19 @@ const getList = async () => {
   } catch (error) {
     console.error("Ошибка при загрузке файлов:", error);
   }
+};
+
+const isTyping = ref(true);
+let typingTimeout = null;
+
+const handleTyping = (e) => {
+  isTyping.value = false;
+
+  // Если пользователь перестаёт печатать, сбрасываем состояние через 1 секунду
+  clearTimeout(typingTimeout);
+  typingTimeout = setTimeout(() => {
+    isTyping.value = true;
+  }, 1000);
 };
 
 const isProtectedType = ref(false);
@@ -156,4 +184,8 @@ onMounted(() => {
 });
 </script>
 
-<style></style>
+<style scoped>
+.title {
+  font-size: 26px;
+}
+</style>
