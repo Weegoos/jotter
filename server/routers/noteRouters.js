@@ -1,5 +1,5 @@
 import express from "express";
-import { createNote, deleteNoteById, getAllIdeaNotes, getAllNotesByFileID, getAllPrivateNotes, getAllProtectedNotes, getAllPublicNotes, updateNote } from "../controllers/notes.js";
+import { createNote, deleteNoteById, getAllCodeNotes, getAllDraftedNotes, getAllIdeaNotes, getAllNotesByFileID, getAllPrivateNotes, getAllProtectedNotes, getAllPublicNotes, updateNote } from "../controllers/notes.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
@@ -367,7 +367,7 @@ router.get('/idea/:fileId/', authMiddleware, getAllIdeaNotes)
  *                   example: "Ошибка сервера"
  */
 
-router.get('/code/:fileId/', authMiddleware, getAllIdeaNotes)
+router.get('/code/:fileId/', authMiddleware, getAllCodeNotes)
 
 
 /**
@@ -441,7 +441,7 @@ router.get('/code/:fileId/', authMiddleware, getAllIdeaNotes)
  *                   example: "Ошибка сервера"
  */
 
-router.get('/draft/:fileId/', authMiddleware, getAllIdeaNotes)
+router.get('/draft/:fileId/', authMiddleware, getAllDraftedNotes)
 
 
 /**

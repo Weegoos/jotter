@@ -145,11 +145,12 @@ export const getAllCodeNotes = async (req, res) => {
         if (!fileId) {
             return res.status(400).json({ message: "Ошибка: fileID отсутствует." });
         }
-        const privateNotes = await Notes.findAll({
-            where: {type: 'code', fileId: fileId}
+        const codeNotes = await Notes.findAll({
+            where: { type: "code", fileId: Number(fileId) },
+            logging: console.log 
         });
 
-        res.json(privateNotes)
+        res.json(codeNotes)
     } catch (error) {
         console.error("Ошибка:", error);
         res.status(500).json({ message: "Ошибка сервера" });
@@ -162,11 +163,11 @@ export const getAllDraftedNotes = async (req, res) => {
         if (!fileId) {
             return res.status(400).json({ message: "Ошибка: fileID отсутствует." });
         }
-        const privateNotes = await Notes.findAll({
+        const draftedNotes = await Notes.findAll({
             where: {type: 'draft', fileId: fileId}
         });
 
-        res.json(privateNotes)
+        res.json(draftedNotes)
     } catch (error) {
         console.error("Ошибка:", error);
         res.status(500).json({ message: "Ошибка сервера" });

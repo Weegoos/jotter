@@ -12,10 +12,10 @@
             no-caps
             flat
             dense
-            :class="currentType == types.name ? 'active-scroll-button' : 'scroll-button'"
+            :class="currentType == types.type ? 'active-scroll-button' : 'scroll-button'"
             color="primary"
-            :label="types.name"
-            @click="getCurrentTypeNotes(types.name)"
+            :label="types.type"
+            @click="getCurrentTypeNotes(types.type)"
           />
         </div>
       </div>
@@ -73,7 +73,7 @@ const getIdFromUrl = () => {
 
 const allTypes = ref([]);
 const getAllTypes = async () => {
-  await getMethod(serverURL, "types", allTypes, null);
+  await getMethod(serverURL, "types/usedByUser", allTypes, null);
   console.log(allTypes.value);
 };
 

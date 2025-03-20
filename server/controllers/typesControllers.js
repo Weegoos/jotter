@@ -1,5 +1,6 @@
 import  express  from "express";
 import Types from "../schemas/typeSchemas.js";
+import Notes from "../schemas/notesSchemas.js";
 
 const router = express.Router()
 
@@ -12,6 +13,16 @@ export const getAllTypes = async (req, res) => {
         res.status(500).json({ message: "Ошибка сервера" });
     }
 }
+
+export const getAllTypeUsedByUser = async (req, res) => {
+    try {
+        const typesUsedByUser = await Notes.findAll({attributes: ['type']})
+        res.json(typesUsedByUser)
+    } catch (error) {
+        console.error("Ошибка:", error);
+        res.status(500).json({ message: "Ошибка сервера" });
+    }
+} 
 
 export const getAllGeneralTypes = async (req, res) => {
     try {

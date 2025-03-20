@@ -1,6 +1,6 @@
 import express from "express"
 import authMiddleware from "../middlewares/authMiddleware.js"
-import { getAllAccessLevelTypes, getAllContentTypes, getAllGeneralTypes, getAllTypes } from "../controllers/typesControllers.js"
+import { getAllAccessLevelTypes, getAllContentTypes, getAllGeneralTypes, getAllTypes, getAllTypeUsedByUser } from "../controllers/typesControllers.js"
 
 const router = express.Router()
 
@@ -45,6 +45,42 @@ router.get('', authMiddleware, getAllTypes)
  *                   type: string
  *                   example: "Ошибка сервера."
  */
+
+router.get('/usedByUser', authMiddleware, getAllTypeUsedByUser)
+
+/**
+ * @swagger
+ * /types/usedByUser:
+ *   get:
+ *     summary: Получить все используемые типы заметок
+ *     description: Возвращает список всех типов заметок, которые используются в базе данных.
+ *     tags:
+ *       - Types
+ *     responses:
+ *       200:
+ *         description: Успешный ответ с массивом типов заметок.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   type:
+ *                     type: string
+ *                     example: "code"
+ *       500:
+ *         description: Ошибка сервера.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка сервера"
+ */
+
 
 router.get('/general', authMiddleware, getAllGeneralTypes)
 
