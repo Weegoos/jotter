@@ -13,9 +13,7 @@
             flat
             dense
             :class="
-              currentType == types
-                ? 'active-scroll-button'
-                : 'scroll-button'
+              currentType == types ? 'active-scroll-button' : 'scroll-button'
             "
             color="primary"
             :label="types"
@@ -120,12 +118,9 @@ onMounted(() => {
     if (message.event === "types_userUsed") {
       // getAllTypes()
       console.log("📜 Обновляем список заметок:", message.types);
-      allTypes.value = message.types
+      allTypes.value = message.types;
 
-      console.log(
-        "🔍 allTypes после обновления:",
-        allTypes.value
-      );
+      console.log("🔍 allTypes после обновления:", allTypes.value);
     }
 
     if (message.event === "create_note") {
@@ -133,6 +128,28 @@ onMounted(() => {
       if (currentType.value) {
         getCurrentTypeNotes();
       }
+    }
+
+    if (message.event === "delete_note") {
+      console.log("🔄 Удаление заметки по WebSocket...", message.note);
+
+      if (!Array.isArray(allNotesByFileId.value)) {
+        console.error(
+          "❌ Ошибка: allNotesByFileId не массив!",
+          allNotesByFileId.value
+        );
+        return;
+      }
+
+      // Фильтруем список, убирая удалённую заметку
+      allNotesByFileId.value = allNotesByFileId.value.filter(
+        (note) => note.id !== message.note.id
+      );
+
+      console.log(
+        "🔍 allNotesByFileId после удаления:",
+        allNotesByFileId.value
+      );
     }
   };
 
@@ -143,13 +160,13 @@ onMounted(() => {
 
 const id = getIdFromUrl();
 const getCurrentTypeNotes = async (name) => {
-  const setCurrentTypeValue = name || 'private'
-  localStorage.setItem('currentType', setCurrentTypeValue)
-  currentType.value = localStorage.getItem('currentType');
+  const setCurrentTypeValue = name || "private";
+  localStorage.setItem("currentType", setCurrentTypeValue);
+  currentType.value = localStorage.getItem("currentType");
   console.log(name);
   await getMethod(
     serverURL,
-    `notes/${localStorage.getItem('currentType')}/${id}`,
+    `notes/${localStorage.getItem("currentType")}/${id}`,
     allNotesByFileId,
     "Заметки успешно получены!"
   );

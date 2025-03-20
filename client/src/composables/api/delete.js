@@ -10,8 +10,8 @@ export async function deleteMethod(serverURL, url, id) {
         Authorization: `Bearer ${Cookies.get("accessToken")}`,
       },
     });
-    window.location.reload();
-    console.log(`${successMsg}`, response.data);
+    // window.location.reload();
+    // console.log(`${successMsg}`, response.data);
     return response.data;
   } catch (error) {
     console.error("Ошибка при удалении турнира:", error);
