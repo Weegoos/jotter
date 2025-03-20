@@ -10,7 +10,30 @@
         row-key="id"
         @row-click="viewAllNotes"
         hide-bottom
-      />
+      >
+        <template v-slot:body-cell-actions="props">
+          <q-td :props="props">
+            <q-btn
+              size="sm"
+              color="primary"
+              icon="edit"
+              @click.stop="editRow(props.row)"
+            >
+              <q-tooltip>Редактировать</q-tooltip>
+            </q-btn>
+
+            <q-btn
+              size="sm"
+              color="negative"
+              icon="delete"
+              class="q-ml-sm"
+              @click.stop="deleteRow(props.row.id)"
+            >
+              <q-tooltip>Удалить</q-tooltip>
+            </q-btn>
+          </q-td>
+        </template>
+      </q-table>
     </div>
     <div v-else data-testid="noData">
       <p>No data</p>

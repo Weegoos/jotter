@@ -2,6 +2,7 @@ import  express  from "express";
 import Types from "../schemas/typeSchemas.js";
 import Notes from "../schemas/notesSchemas.js";
 import { wss } from "../server.js";
+import { Sequelize } from "sequelize";
 
 const router = express.Router()
 
@@ -17,14 +18,24 @@ export const getAllTypes = async (req, res) => {
 
 export const getAllTypeUsedByUser = async (req, res) => {
     try {
+        console.log(req.params);
+        
+        const { fileId } = req.params;  // Получаем fileId
+
+        if (!fileId) {
+            return res.status(400).json({ message: "Ошибка: fileID отсутствует." });
+        }
+
+        // Находим уникальные типы заметок в файле с данным fileId
         const types = await Notes.findAll({
-            attributes: ['type'],
-            group: ['type'], 
-            raw: true 
+            attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('type')), 'type']],
+            where: { fileId },
+            raw: true
         });
 
         const uniqueTypes = types.map(t => t.type);
 
+        // Отправляем обновленные типы по WebSocket
         wss.clients.forEach(client => {
             if (client.readyState === 1) {
                 client.send(JSON.stringify({ event: "types_userUsed", types: uniqueTypes }));
@@ -36,7 +47,7 @@ export const getAllTypeUsedByUser = async (req, res) => {
         console.error("Ошибка:", error);
         res.status(500).json({ message: "Ошибка сервера" });
     }
-} 
+};
 
 export const getAllGeneralTypes = async (req, res) => {
     try {

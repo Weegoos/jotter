@@ -75,13 +75,12 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { computed, getCurrentInstance, ref } from "vue";
+import { useRoute } from "vue-router";
 
 // global variables
 const drawer = ref(true);
 const route = useRoute();
-const router = useRouter();
 const { proxy } = getCurrentInstance();
 const clientURL = proxy.$clientURL;
 

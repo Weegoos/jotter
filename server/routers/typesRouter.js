@@ -46,29 +46,43 @@ router.get('', authMiddleware, getAllTypes)
  *                   example: "Ошибка сервера."
  */
 
-router.get('/usedByUser', authMiddleware, getAllTypeUsedByUser)
+router.get('/usedByUser/:fileId', getAllTypeUsedByUser);
 
 /**
  * @swagger
- * /types/usedByUser:
+ * /types/usedByUser/{fileId}:
  *   get:
- *     summary: Получить все используемые типы заметок
- *     description: Возвращает список всех типов заметок, которые используются в базе данных.
+ *     summary: Получить все используемые типы заметок для указанного файла
+ *     description: Возвращает список всех уникальных типов заметок, относящихся к конкретному файлу.
  *     tags:
  *       - Types
+ *     parameters:
+ *       - name: fileID
+ *         in: path
+ *         required: true
+ *         description: ID файла, для которого нужно получить типы заметок.
+ *         schema:
+ *           type: integer
  *     responses:
  *       200:
- *         description: Успешный ответ с массивом типов заметок.
+ *         description: Успешный ответ с массивом уникальных типов заметок.
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 type: object
- *                 properties:
- *                   type:
- *                     type: string
- *                     example: "code"
+ *                 type: string
+ *                 example: "private"
+ *       400:
+ *         description: Ошибка в запросе (например, отсутствует fileID).
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка: fileID отсутствует."
  *       500:
  *         description: Ошибка сервера.
  *         content:

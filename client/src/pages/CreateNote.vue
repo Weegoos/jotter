@@ -209,12 +209,4 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
-.mediumWidth {
-  width: 850px;
-}
-
-.fullWidth {
-  width: 80vw;
-}
-</style>
+<style scoped></style>
