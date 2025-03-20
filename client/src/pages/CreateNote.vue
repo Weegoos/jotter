@@ -92,6 +92,12 @@ import { postMethod } from "src/composables/api/postApi";
 import { getCurrentInstance, onMounted, ref, watch } from "vue";
 import CreateNotesSettings from "../components/Notes/CreateNotesSettings.vue";
 import { meta } from "src/composables/javascript-function/meta";
+import hljs from "highlight.js";
+import javascript from "highlight.js/lib/languages/javascript";
+import python from "highlight.js/lib/languages/python";
+
+hljs.registerLanguage("javascript", javascript);
+hljs.registerLanguage("python", python);
 
 // global variables
 const { proxy } = getCurrentInstance();

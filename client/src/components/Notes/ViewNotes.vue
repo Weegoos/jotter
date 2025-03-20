@@ -42,7 +42,7 @@
         <q-card-section>
           <div class="text-h6">{{ notes.title }}</div>
         </q-card-section>
-        <q-card-section>
+        <q-card-section style="white-space: pre-wrap;">
           {{ notes.content }}
         </q-card-section>
 
