@@ -51,34 +51,11 @@ const serverURL = proxy.$serverURL;
 const clientURL = proxy.$clientURL;
 
 const columns = [
-  {
-    name: "id",
-    label: "ID",
-    align: "left",
-    field: `id`,
-    sortable: true,
-  },
-  {
-    name: "name",
-    label: "Name",
-    align: "left",
-    field: `name`,
-    sortable: true,
-  },
-  {
-    name: "createdAt",
-    label: "Created At",
-    align: "left",
-    field: `createdAt`,
-    sortable: true,
-  },
-  {
-    name: "updatedAt",
-    label: "Updated At",
-    align: "left",
-    field: `updatedAt`,
-    sortable: true,
-  },
+  { name: "id", label: "ID", align: "left", field: "id", sortable: true },
+  { name: "name", label: "Name", align: "left", field: "name", sortable: true },
+  { name: "createdAt", label: "Created At", align: "left", field: "createdAt", sortable: true },
+  { name: "updatedAt", label: "Updated At", align: "left", field: "updatedAt", sortable: true },
+  { name: "actions", label: "Действия", align: "center", field: "actions" } // ✅ Добавил колонку
 ];
 
 const rows = ref([]);
