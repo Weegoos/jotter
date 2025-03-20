@@ -156,6 +156,24 @@ export const getAllCodeNotes = async (req, res) => {
     }
 }
 
+export const getAllDraftedNotes = async (req, res) => {
+    try {
+        const {fileId} = req.params;
+        if (!fileId) {
+            return res.status(400).json({ message: "Ошибка: fileID отсутствует." });
+        }
+        const privateNotes = await Notes.findAll({
+            where: {type: 'draft', fileId: fileId}
+        });
+
+        res.json(privateNotes)
+    } catch (error) {
+        console.error("Ошибка:", error);
+        res.status(500).json({ message: "Ошибка сервера" });
+    }
+}
+
+
 export const updateNote = async (req, res) => {
     try {
         const { noteId } = req.params;
