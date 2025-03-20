@@ -84,7 +84,7 @@ const route = useRoute();
 const router = useRouter();
 
 const isAuthPage = computed(() => {
-  return route.path === "/login";
+  return route.path === "/login" || route.path === "/registration";
 });
 
 const createPage = computed(() => {

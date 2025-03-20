@@ -82,10 +82,6 @@ const getIdFromUrl = () => {
 };
 
 const allTypes = ref([]);
-const getAllTypes = async () => {
-  await getMethod(serverURL, "types/usedByUser", allTypes, null);
-  console.log(allTypes.value);
-};
 
 let ws = null;
 const allNotesByFileId = ref([]);
@@ -163,6 +159,11 @@ const getCurrentTypeNotes = async (name) => {
     allNotesByFileId,
     "Заметки успешно получены!"
   );
+};
+
+const getAllTypes = async () => {
+  await getMethod(serverURL, `types/usedByUser/${id}`, allTypes, null);
+  console.log(allTypes.value);
 };
 
 const isOpenEditPage = ref(false);
