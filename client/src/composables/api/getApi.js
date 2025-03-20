@@ -4,7 +4,6 @@ import { useNotifyStore } from "src/stores/notify-store";
 
 export async function getMethod(serverURL, apiURL, variable, msg) {
   // const notifyStore = useNotifyStore();
-  const $q = useQuasar();
   // notifyStore.loading($q, QSpinnerGears);
   try {
     const response = await axios.get(`${serverURL}${apiURL}`, {

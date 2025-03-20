@@ -7,15 +7,10 @@ const initializeTypes = async () => {
     [
       { name: "private", description: "general" },
       { name: "public", description: "general" },
-      { name: "shared", description: "general" },
-      { name: "archived", description: "general" },
-      { name: "deleted", description: "general" },
+      { name: "draft", description: "general" },
       { name: "idea", description: "content" },
-      { name: "note", description: "content" },
-      { name: "reminder", description: "content" },
+      { name: "goal", description: "content" },
       { name: "code", description: "content" },
-      { name: "read_only", description: "accessLevel" },
-      { name: "editable", description: "accessLevel" },
       { name: "protected", description: "accessLevel" },
     ],
     { ignoreDuplicates: true } 

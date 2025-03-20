@@ -2,37 +2,50 @@
   <div class="q-pa-md">
     <q-scroll-area style="height: 70px">
       <div class="row no-wrap">
-        <div v-for="(types, index) in allTypes" :key="index" class="q-pa-sm">
+        <div
+          align="center"
+          v-for="(types, index) in allTypes"
+          :key="index"
+          class="q-pa-sm"
+        >
           <q-btn
             no-caps
             flat
             dense
-            class="scroll-button"
+            :class="currentType == types.name ? 'active-scroll-button' : 'scroll-button'"
             color="primary"
             :label="types.name"
-            @click="getCurrentTypeNotes"
+            @click="getCurrentTypeNotes(types.name)"
           />
         </div>
       </div>
     </q-scroll-area>
-
+    <q-card-section v-if="!currentType">
+        <p class="text-body1" align="center">Click on one of the buttons to view the notes</p>
+      </q-card-section>
     <q-scroll-area style="height: 100vh">
       <q-card
         class="my-card q-ma-sm"
         v-for="(notes, id) in allNotesByFileId"
         :key="id"
       >
-        <q-card-section>
-          <div class="text-h6">{{ notes.title }}</div>
-        </q-card-section>
-        <q-card-section>
-          {{ notes.content }}
-        </q-card-section>
+
+            <q-card-section>
+            <div class="text-h6">{{ notes.title }}</div>
+          </q-card-section>
+          <q-card-section>
+            {{ notes.content }}
+          </q-card-section>
+
         <q-card-actions align="right">
           <q-btn flat icon="edit" @click="openEditPage(notes.id)" />
           <q-btn flat color="red" icon="delete" @click="deleteNote(notes.id)" />
         </q-card-actions>
+
       </q-card>
+     <div v-if="!allNotesByFileId.length  && currentType">
+      <p class="text-body1" align="center">Notes are missing</p>
+     </div>
     </q-scroll-area>
     <EditNote
       :isOpenEditPage="isOpenEditPage"
@@ -52,8 +65,6 @@ import { deleteMethod } from "src/composables/api/delete";
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
 
-const panel = ref("mails");
-
 const getIdFromUrl = () => {
   const url = window.location.href;
   const parts = url.split("/");
@@ -68,8 +79,11 @@ const getAllTypes = async () => {
 
 let ws = null;
 const allNotesByFileId = ref([]);
+const currentType = ref('')
 onMounted(() => {
-  getAllNotesByFileId();
+  if (currentType.value) {
+    getCurrentTypeNotes();
+  }
   getAllTypes();
 
   // 🔌 Подключаем WebSocket
@@ -96,7 +110,9 @@ onMounted(() => {
 
     if (message.event === "create_note") {
       console.log("🔄 Обновление списка заметок по WebSocket...");
-      getAllNotesByFileId();
+      if (currentType.value) {
+    getCurrentTypeNotes();
+  }
     }
   };
 
@@ -105,13 +121,13 @@ onMounted(() => {
   };
 });
 
-const getCurrentTypeNotes = () => {};
-
 const id = getIdFromUrl();
-const getAllNotesByFileId = async () => {
+const getCurrentTypeNotes = (name) => {
+  currentType.value = name
+  console.log(name);
   getMethod(
     serverURL,
-    `notes/${id}`,
+    `notes/${name}/${id}`,
     allNotesByFileId,
     "Заметки успешно получены!"
   );
@@ -135,8 +151,15 @@ const deleteNote = (noteId) => {
 
 <style scoped>
 .scroll-button {
-  border: solid 1px green;
-  border-radius: 15px;
-  width: 70px;
+  border: solid 1px #6495ED;
+  border-radius: 20px;
+  width: 120px;
+}
+
+.active-scroll-button{
+  border: solid 1px #9FE2BF;
+  border-radius: 20px;
+  width: 120px;
+  text-decoration: underline;
 }
 </style>
