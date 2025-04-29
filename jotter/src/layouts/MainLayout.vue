@@ -1,20 +1,27 @@
 <template>
   <div>
     <q-layout view="hHr LpR lFf" container class="w-screen h-screen">
-      <q-header v-model="header" reveal elevated bordered>
-        <div class="grid grid-cols-3 grid-rows-1 gap-4">
-          <div>
-            <q-icon name="print" />
-          </div>
-          <div>2</div>
-          <div>3</div>
-        </div>
-      </q-header>
+      <BaseHeader @toggleDrawer="toggleDrawer" />
+      <BaseDrawer :drawer="drawer" />
+      <q-page-container>
+        <q-page padding>
+          <router-view />
+        </q-page>
+      </q-page-container>
     </q-layout>
   </div>
 </template>
 
 <script setup>
+import { ref } from "vue";
+import BaseDrawer from "../components/atoms/BaseDrawer.vue";
+import BaseHeader from "../components/atoms/BaseHeader.vue";
+
+const drawer = ref(null);
+const toggleDrawer = (newDrawerState) => {
+  console.log(newDrawerState);
+  drawer.value = newDrawerState;
+};
 </script>
 
 <style></style>
