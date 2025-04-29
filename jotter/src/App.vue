@@ -1,13 +1,12 @@
-<script setup lang="ts">
-
-</script>
-
 <template>
-<div class="text-red-500 bg-black" style="width: 100%;">
-  batyr
-</div>
+  <div>
+    <MainLayout />
+  </div>
 </template>
 
-<style scoped>
-
-</style>
+<script setup>
+import MainLayout from "./layouts/MainLayout.vue";
+defineOptions({
+  name: "App",
+});
+</script>
