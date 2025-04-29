@@ -1,1 +1,1 @@
-# fullstack
+# Jotter project

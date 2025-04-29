@@ -11,6 +11,7 @@ const router = express.Router();
  *   description: API для управления заметками
  */
 
+
 router.get("/:fileId", authMiddleware, getAllNotesByFileID);
 
 // -------------------- notes/all -----------------------
