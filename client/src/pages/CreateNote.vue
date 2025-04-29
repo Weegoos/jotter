@@ -26,7 +26,8 @@
           label="Types"
           style="width: 100px"
         />
-        <div class="col" align="right">
+
+         <div class="col" align="right">
           <q-btn flat icon="send" @click="createNote">
             <q-tooltip> Send note </q-tooltip>
           </q-btn>
@@ -36,11 +37,12 @@
               @smallText="handleSmallText"
             />
           </q-btn-dropdown>
-        </div>
+         </div>
+
       </section>
     </q-scroll-area>
     <section class="row">
-      <q-card class="my-card col" align="center">
+      <q-card class="my-card col" align="center" style="width: 100%;">
         <q-card-section
           class="q-mx-xl q-mt-xl"
           :class="toggleFullWidth ? 'fullWidth' : 'mediumWidth'"
@@ -92,12 +94,6 @@ import { postMethod } from "src/composables/api/postApi";
 import { getCurrentInstance, onMounted, ref, watch } from "vue";
 import CreateNotesSettings from "../components/Notes/CreateNotesSettings.vue";
 import { meta } from "src/composables/javascript-function/meta";
-import hljs from "highlight.js";
-import javascript from "highlight.js/lib/languages/javascript";
-import python from "highlight.js/lib/languages/python";
-
-hljs.registerLanguage("javascript", javascript);
-hljs.registerLanguage("python", python);
 
 // global variables
 const { proxy } = getCurrentInstance();

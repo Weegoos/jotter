@@ -2,6 +2,17 @@
   <div class="q-pa-md">
     <q-scroll-area style="height: 70px" v-if="allTypes">
       <div class="row no-wrap">
+        <q-btn
+          no-caps
+          flat
+          dense
+          color="primary"
+          label="All"
+          :class="
+            currentType == null ? 'active-scroll-button' : 'scroll-button'
+          "
+          @click="getAllNotesById"
+        />
         <div
           align="center"
           v-for="(types, index) in allTypes"
@@ -22,17 +33,6 @@
         </div>
       </div>
     </q-scroll-area>
-    <!-- <q-card-section v-if="allTypes != [] && allNotesByFileId != []">
-      <p class="text-body1" align="center">
-        Create notes and your notes will be displayed here.
-        {{ allNotesByFileId }}
-      </p>
-    </q-card-section>
-    <q-card-section v-else-if="!currentType">
-      <p class="text-body1" align="center">
-        Click on one of the buttons to view the notes
-      </p>
-    </q-card-section> -->
     <q-scroll-area style="height: 100vh">
       <q-card
         class="my-card q-ma-sm"
@@ -42,8 +42,12 @@
         <q-card-section>
           <div class="text-h6">{{ notes.title }}</div>
         </q-card-section>
-        <q-card-section style="white-space: pre-wrap;">
-          {{ notes.content }}
+        <q-card-section style="white-space: pre-wrap">
+          {{
+            notes.content.length > 200
+              ? notes.content.slice(0, 200) + "..."
+              : notes.content
+          }}
         </q-card-section>
 
         <q-card-actions align="right">
@@ -51,9 +55,6 @@
           <q-btn flat color="red" icon="delete" @click="deleteNote(notes.id)" />
         </q-card-actions>
       </q-card>
-      <!-- <div v-if="!allNotesByFileId.length && currentType">
-        <p class="text-body1" align="center">Notes are missing</p>
-      </div> -->
     </q-scroll-area>
     <EditNote
       :isOpenEditPage="isOpenEditPage"
@@ -84,7 +85,7 @@ const allTypes = ref([]);
 
 let ws = null;
 const allNotesByFileId = ref([]);
-const currentType = ref("");
+const currentType = ref(localStorage.getItem("currentType"));
 onMounted(() => {
   if (currentType.value) {
     getCurrentTypeNotes();
@@ -157,6 +158,15 @@ const getCurrentTypeNotes = async (name) => {
     `notes/${localStorage.getItem("currentType")}/${id}`,
     allNotesByFileId,
     "Заметки успешно получены!"
+  );
+};
+
+const getAllNotesById = async () => {
+  await getMethod(
+    serverURL,
+    `notes/${id}`,
+    allNotesByFileId,
+    "Все заметки успешно получены!"
   );
 };
 

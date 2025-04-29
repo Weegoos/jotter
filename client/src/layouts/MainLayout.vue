@@ -2,7 +2,7 @@
   <div>
     <q-layout view="lHr Lpr lFr" container style="height: 100vh">
       <q-header reveal elevated>
-        <q-toolbar class="bg-black text-white row" v-if="!isAuthPage">
+        <q-toolbar class="bg-black text-white row" v-if="!isAuthPage && $q.screen.width >= mobileWidth">
           <q-btn flat round dense icon="menu" @click="drawer = !drawer" />
           <h5 class="q-ml-md">Jotter</h5>
           <div class="col-10 flex justify-center">
@@ -14,7 +14,7 @@
                 no-caps
                 :label="btn.name"
                 class="q-mx-xs"
-                @click="$router.push(btn.path)"
+                @click="navigateToThePage(btn.path)"
               />
             </section>
           </div>
@@ -26,6 +26,7 @@
         show-if-above
         :width="250"
         :breakpoint="400"
+        behavior="mobile"
       >
         <q-scroll-area
           style="
@@ -35,6 +36,22 @@
           "
           class="bg-black text-white"
         >
+
+        <q-list bordered v-if="$q.screen.width < mobileWidth">
+            <q-item
+              clickable
+              v-ripple
+              v-for="(buttons, id) in headerButtons"
+              :key="id"
+              @click="navigateToThePage(buttons.path)"
+            >
+              <q-item-section avatar>
+                <q-icon :name="buttons.icon" />
+              </q-item-section>
+              <q-item-section>{{ buttons.name }}</q-item-section>
+            </q-item>
+          </q-list>
+          <q-space />
           <q-list bordered>
             <q-item
               clickable
@@ -70,6 +87,11 @@
       <q-page-container>
         <router-view />
       </q-page-container>
+      <q-footer v-if="$q.screen.width < 850"  reveal elevated>
+        <q-toolbar class="bg-black text-white">
+          <q-btn flat round dense icon="menu" @click="drawer = !drawer"/>
+        </q-toolbar>
+      </q-footer>
     </q-layout>
   </div>
 </template>
@@ -83,16 +105,17 @@ const drawer = ref(true);
 const route = useRoute();
 const { proxy } = getCurrentInstance();
 const clientURL = proxy.$clientURL;
+const mobileWidth = proxy.$mobileWidth;
 
 const isAuthPage = computed(() => {
   return route.path === "/login" || route.path === "/registration";
 });
 
 const headerButtons = ref([
-  { name: "Домой", path: "/" },
-  { name: "Создать файл", path: "/createFile" },
-  { name: "Создать заметку", path: "/createNote" },
-  { name: "Настройки", path: "/settings" },
+  { name: "Домой", path: "", icon: 'home' },
+  { name: "Создать файл", path: "createFile", icon: "create" },
+  { name: "Создать заметку", path: "createNote", icon: "create" },
+  { name: "Настройки", path: "settings", icon: "settings" },
 ]);
 
 const navigationButtons = ref([
