@@ -1,10 +1,10 @@
 <template>
   <div>
     <q-layout view="hHr LpR lFf" container class="w-screen h-screen">
-      <BaseHeader @toggleDrawer="toggleDrawer" />
+      <BaseHeader v-if="!authPage" @toggleDrawer="toggleDrawer" />
       <BaseDrawer :drawer="drawer" />
       <q-page-container>
-        <q-page padding>
+        <q-page>
           <router-view />
         </q-page>
       </q-page-container>
@@ -13,15 +13,21 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import BaseDrawer from "../components/atoms/BaseDrawer.vue";
 import BaseHeader from "../components/atoms/BaseHeader.vue";
+import { useRoute } from "vue-router";
 
 const drawer = ref(null);
 const toggleDrawer = (newDrawerState) => {
   console.log(newDrawerState);
   drawer.value = newDrawerState;
 };
+
+const route = useRoute();
+const authPage = computed(() => {
+  return route.path === "/login" || route.path === "/authorization";
+});
 </script>
 
 <style></style>

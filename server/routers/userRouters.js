@@ -41,6 +41,59 @@ router.get("/me", authMiddleware, getUserInfo);
  */
 
 
+// user/login
+/**
+ * @swagger
+ * /user/login:
+ *   post:
+ *     summary: Вход пользователя
+ *     tags: 
+ *       - User
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: user@example.com
+ *               password:
+ *                 type: string
+ *                 example: secret123
+ *     responses:
+ *       200:
+ *         description: Успешный вход
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Успешный вход
+ *                 token:
+ *                   type: string
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *       400:
+ *         description: Неверный email или пароль
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Неверный пароль
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
 // -------------------- user/me -----------------------
 /**
  * @swagger
@@ -61,5 +114,7 @@ router.get("/me", authMiddleware, getUserInfo);
  *       500:
  *         description: Ошибка сервера
  */
+
+
 
 export default router;

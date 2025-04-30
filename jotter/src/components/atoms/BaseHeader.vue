@@ -11,7 +11,7 @@
           />
         </div>
         <div
-          align="left"
+          align="center"
           :class="$q.screen.width < mobileWidth ? 'hidden' : 'row'"
         >
           <Popover v-slot="{ open }" class="relative">
@@ -125,7 +125,22 @@
           align="right"
           :class="$q.screen.width < mobileWidth ? 'hidden' : ''"
         >
-          3
+          <q-btn
+            class="rounded-full q-mr-sm"
+            color="black"
+            no-caps
+            label="Register"
+            icon-right="mdi-arrow-right"
+            @click="onClick"
+          />
+          <q-btn
+            class="rounded-full"
+            color="black"
+            no-caps
+            label="Log in"
+            icon-right="mdi-login"
+            @click="$router.push('/login')"
+          />
         </div>
       </div>
     </q-header>
