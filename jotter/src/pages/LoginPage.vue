@@ -43,15 +43,21 @@
 <script setup>
 import { getCurrentInstance, ref } from "vue";
 import BaseIcon from "../components/atoms/BaseIcon.vue";
+import { useQuasar } from "quasar";
+import { successMessage } from "src/composables/notify/successMessage";
 
 // global variables
 const { proxy } = getCurrentInstance();
 const mobileWidth = proxy.$mobileWidth;
+const $q = useQuasar();
 
 const password = ref("");
 const email = ref("");
 const login = () => {
-  console.log(email.value, password.value);
+  try {
+  } catch (error) {
+    console.error(error);
+  }
 };
 </script>
 
