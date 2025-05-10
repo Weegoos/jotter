@@ -61,12 +61,12 @@ export const loginUser = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { id: user.id, email: user.email }, // Данные, которые вшиваются в токен
+            { id: user.id, email: user.email, fullname: 'Batyr' }, // Данные, которые вшиваются в токен
             process.env.JWT_SECRET,
             { expiresIn: process.env.JWT_EXPIRES_IN || "7d" } // Время жизни токена
         );
 
-        res.json({ message: "Успешный вход", token });
+        res.json({ message: "Успешный вход", user, token });
     } catch (error) {
         console.error("Ошибка при входе:", error);
         res.status(500).json({ message: "Ошибка сервера" });
@@ -87,5 +87,42 @@ export const getUserInfo = async (req, res) => {
         res.status(500).json({ message: "Ошибка сервера" });
     }
 };
+
+export const editUserInfo = async (req, res) => {
+    try {
+        const { fullname, email, password } = req.query; // теперь данные берутся из query
+        const user = await User.findByPk(req.user.id);
+        if (!user) {
+            return res.status(404).json({ message: "Пользователь не найден" });
+        }
+
+        if (fullname) {
+            user.fullname = fullname;
+        }
+
+        if (email) {
+            const existingUser = await User.findOne({ where: { email } });
+            if (existingUser && existingUser.id !== user.id) {
+                return res.status(400).json({ message: "Этот email уже зарегистрирован!" });
+            }
+            user.email = email;
+        }
+
+        if (password) {
+            if (password.length < 6) {
+                return res.status(400).json({ message: "Пароль слишком короткий" });
+            }
+            user.password = await bcrypt.hash(password, 10);
+        }
+
+        await user.save();
+        res.json({ message: "Данные пользователя успешно обновлены", user });
+
+    } catch (error) {
+        console.error("Ошибка при редактировании данных:", error);
+        res.status(500).json({ message: "Ошибка сервера" });
+    }
+};
+
 
 export default router;

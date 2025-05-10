@@ -1,11 +1,13 @@
 import express from "express";
-import { createUser, getUserInfo, loginUser } from "../controllers/user.js";
+import { createUser, editUserInfo, getUserInfo, loginUser } from "../controllers/user.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 const router = express.Router()
 
 router.post('/register', createUser)
 
 router.post('/login', loginUser)
+
+router.put('/edit',authMiddleware,  editUserInfo)
 
 router.get("/me", authMiddleware, getUserInfo);
 
@@ -91,6 +93,65 @@ router.get("/me", authMiddleware, getUserInfo);
  *                   example: Неверный пароль
  *       500:
  *         description: Внутренняя ошибка сервера
+ */
+
+
+// -------------------- user/edit -----------------------
+
+/**
+ * @swagger
+ * /user/edit:
+ *   put:
+ *     summary: Обновление данных пользователя
+ *     tags: 
+ *       - User
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: fullname
+ *         schema:
+ *           type: string
+ *         description: Новое полное имя пользователя
+ *       - in: query
+ *         name: email
+ *         schema:
+ *           type: string
+ *         description: Новый email пользователя
+ *       - in: query
+ *         name: password
+ *         schema:
+ *           type: string
+ *         description: Новый пароль (не менее 6 символов)
+
+ *     responses:
+ *       200:
+ *         description: Данные пользователя успешно обновлены
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Данные пользователя успешно обновлены
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     fullname:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *       400:
+ *         description: Ошибка валидации (например, короткий пароль или email уже существует)
+ *       401:
+ *         description: Неавторизован
+ *       404:
+ *         description: Пользователь не найден
+ *       500:
+ *         description: Ошибка сервера
  */
 
 
