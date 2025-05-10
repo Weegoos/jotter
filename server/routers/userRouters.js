@@ -1,7 +1,7 @@
 import express from "express";
 import { createUser, editUserInfo, getUserInfo, loginUser } from "../controllers/user.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
-import "./swagger/auserSwagger.js"; 
+import "./swagger/_userSwagger.js"; 
 const router = express.Router()
 
 router.post('/register', createUser)
