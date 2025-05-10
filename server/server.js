@@ -63,54 +63,66 @@ passport.use(new GoogleStrategy({
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
-      const { displayName, emails, photos } = profile;
+      const { displayName, emails } = profile;
       const email = emails[0].value;
-  
-      // Подключение к базе данных
+      
       const db = await connectDB();
       if (!db) {
         return done(new Error('Ошибка подключения к базе данных'));
       }
-  
-      // Проверяем, есть ли такой пользователь в базе данных
+
       const existingUser = await User.findOne({ where: { email } });
-  
+
       if (existingUser) {
-        // Если пользователь существует, возвращаем его
-        return done(null, existingUser);
+        // Добавляем accessToken в объект пользователя
+        return done(null, { ...existingUser, accessToken });
       } else {
-        // Если пользователя нет, создаем нового
         const newUser = await User.create({
           fullname: displayName,
           email: email,
           password: null 
         });
-  
-        return done(null, newUser);
+
+        console.log('AccessToken:', accessToken);
+
+        // Добавляем accessToken в объект пользователя
+        return done(null, { ...newUser, accessToken });
       }
     } catch (error) {
       console.error('Ошибка при создании пользователя: ', error);
       return done(error);
     }
-  }));
+  }
+));
 
-// 🔗 Роут на старт авторизации
 app.get('/auth/google',
     passport.authenticate('google', { scope: ['profile', 'email'] })
   );
   
-  // 🔙 Роут на callback от Google
-  app.get('/auth/google/callback',
-    passport.authenticate('google', { failureRedirect: '/login' }),
-    (req, res) => {
-      // Успешный вход
-      res.redirect('/');
-    console.log('Успешный вход')
-    
+app.get('/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  (req, res) => {
+    if (req.user && req.user.accessToken) {
+      const accessToken = req.user.accessToken;
+      console.log('Access token:', accessToken); 
+
+       res.cookie('access_token', accessToken, {
+        httpOnly: true,        // Нельзя получить через JS
+        secure: false,         // Включить true, если используешь HTTPS
+        sameSite: 'lax',       // Или 'strict' / 'none' при необходимости
+        maxAge: 3600 * 1000    // 1 час
+      });
+
+
+      res.redirect(`http://localhost:9000/#/login?access_token=${accessToken}`);
+    } else {
+      console.log('Ошибка: accessToken не найден');
+      res.redirect('http://localhost:9000/#/login');
     }
-  );
-  
-  
+  }
+);
+
+
 
 // Подключение к базе данных
 (async () => {
