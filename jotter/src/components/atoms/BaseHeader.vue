@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-header v-model="header" reveal elevated class="bg-white p-4 text-black">
-      <div class="grid grid-cols-3 grid-rows-1 gap-4">
+      <div class="grid grid-rows-1 gap-4" :class="userFullname ? 'grid-cols-3' : 'grid-cols-2'">
         <div>
           <img
             @click="toggleDrawer"
@@ -11,7 +11,8 @@
           />
         </div>
         <div
-          align="center"
+          v-if="userFullname"
+          align="right"
           :class="$q.screen.width < mobileWidth ? 'hidden' : 'row'"
         >
           <Popover v-slot="{ open }" class="relative">
@@ -123,6 +124,7 @@
         </div>
         <div
           align="right"
+          v-if="!userFullname"
           :class="$q.screen.width < mobileWidth ? 'hidden' : ''"
         >
           <q-btn
@@ -131,7 +133,7 @@
             no-caps
             label="Register"
             icon-right="mdi-arrow-right"
-            @click="onClick"
+            @click="$router.push('/register')"
           />
           <q-btn
             class="rounded-full"
@@ -148,12 +150,17 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, ref } from "vue";
+import { getCurrentInstance, onMounted, ref } from "vue";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 import { ChevronDownIcon } from "@heroicons/vue/20/solid";
+import { useApiStore } from "src/router/api-store";
+import { useQuasar } from "quasar";
 // global variables
 const { proxy } = getCurrentInstance();
 const mobileWidth = proxy.$mobileWidth;
+const serverURL = proxy.$serverURL;
+const apiStore = useApiStore();
+const $q = useQuasar();
 
 const header = ref(true);
 const drawer = ref(false);
@@ -194,6 +201,20 @@ const document = [
     icon: "mdi-file-eye", // Иконка для просмотра файла
   },
 ];
+
+const userFullname = ref("");
+const getUserInfo = async () => {
+  try {
+    await apiStore.getUserInfo(serverURL, $q);
+    userFullname.value = apiStore.userData.fullname;
+  } catch (error) {
+    // console.error("Error fetching user info:", error);
+  }
+};
+
+onMounted(() => {
+  getUserInfo();
+});
 </script>
 
 <style></style>

@@ -67,12 +67,15 @@ import BaseIcon from "../components/atoms/BaseIcon.vue";
 import { Cookies, useQuasar } from "quasar";
 import { successMessage } from "src/composables/notify/successMessage";
 import axios from "axios";
+import { useRouter } from "vue-router";
 
 // global variables
 const { proxy } = getCurrentInstance();
 const mobileWidth = proxy.$mobileWidth;
-const $q = useQuasar();
 const serverURL = proxy.$serverURL;
+const clientURL = proxy.$clientURL;
+const $q = useQuasar();
+const router = useRouter()
 
 const password = ref("");
 const email = ref("");
@@ -85,6 +88,7 @@ const login = async () => {
     });
     successMessage($q, `Добро пожаловать, ${response.data.user.fullname}`);
     Cookies.set("access_token", response.data.token);
+    router.push('/')
   } catch (error) {
     console.error(error);
   }

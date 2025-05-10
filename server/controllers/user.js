@@ -28,10 +28,8 @@ export const createUser = async (req, res) => {
     if (password.length < 6){
         return res.status(400).json({ message: "Неверный пароль" });
     }
-    // Хешируем пароль перед сохранением
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Создаем нового пользователя
     const newUser = await User.create({
         fullname,
         email,
@@ -61,9 +59,9 @@ export const loginUser = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { id: user.id, email: user.email, fullname: 'Batyr' }, // Данные, которые вшиваются в токен
+            { id: user.id, email: user.email}, 
             process.env.JWT_SECRET,
-            { expiresIn: process.env.JWT_EXPIRES_IN || "7d" } // Время жизни токена
+            { expiresIn: process.env.JWT_EXPIRES_IN || "7d" } 
         );
 
         res.json({ message: "Успешный вход", user, token });
