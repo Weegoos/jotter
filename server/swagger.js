@@ -20,7 +20,11 @@ const options = {
         },
         security: [{ bearerAuth: [] }] // Глобальное применение авторизации
     },
-    apis: ["./routers/*.js", "./models/*.js"]
+   apis: [
+        "./routers/**/*.js",       // Пути до всех роутеров
+        "./models/**/*.js",        // Пути до всех моделей
+        "./swagger/**/*.js"        // Путь до папки с Swagger-комментариями
+    ]
 };
 
 const swaggerSpec = swaggerJSDoc(options);

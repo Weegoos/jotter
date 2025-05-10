@@ -15,9 +15,6 @@ import setupGoogleAuth from './controllers/google.js';
 
 dotenv.config();
 
-// const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || 'fallback-id';
-// const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || 'fallback-secret';
-
 const app = express();
 const server = createServer(app); // Создаем HTTP-сервер
 const wss = new WebSocketServer({ server }); // Создаем WebSocket-сервер
