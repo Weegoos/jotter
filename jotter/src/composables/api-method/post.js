@@ -16,8 +16,12 @@ export async function postMethod(serverURL, url, variableRef, $q, successMsg) {
     successMessage($q, successMsg);
     return response.data;
   } catch (error) {
-    console.error("Ошибка:", error.response?.data);
-    errorMessage($q, `Ошибка: ${error}`);
+    if (error.response) {
+      console.error("Ошибка:", error.response.data);
+    } else {
+      console.error("Ошибка:", error.message);
+    }
+    errorMessage($q, `Ошибка: ${error.message || error}`);
   } finally {
     $q.loading.hide();
   }

@@ -56,8 +56,8 @@
             label="Create account"
             @click="register"
           />
-              <q-btn
-            class=" text-black w-[100%] q-mt-sm"
+          <q-btn
+            class="text-black w-[100%] q-mt-sm"
             no-caps
             label="Do you have an account? Log in to your account"
             @click="$router.push('/login')"

@@ -11,7 +11,7 @@ const routes = [
     path: "/register",
     component: () => import("pages/RegistrationPage.vue"),
   },
-    {
+  {
     path: "/create-file",
     component: () => import("pages/File/CreateFile.vue"),
   },
