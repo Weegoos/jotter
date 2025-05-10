@@ -44,7 +44,7 @@
                     <a
                       v-for="item in file"
                       :key="item.name"
-                      :href="item.href"
+                      @click="$router.push(item.href)"
                       class="-m-3 flex items-center rounded-lg p-2 transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50"
                     >
                       <div
@@ -151,7 +151,7 @@
 import { getCurrentInstance, onMounted, ref } from "vue";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 import { ChevronDownIcon } from "@heroicons/vue/20/solid";
-import { useApiStore } from "src/router/api-store";
+import { useApiStore } from "src/stores/api-store";
 import { useQuasar } from "quasar";
 import BaseIcon from "./BaseIcon.vue";
 // global variables
@@ -175,7 +175,7 @@ const file = [
   {
     name: "Create file",
     description: "Create a new file in the system",
-    href: "",
+    href: "/create-file",
     icon: "mdi-file-plus",
   },
   {
