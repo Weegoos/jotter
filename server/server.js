@@ -5,6 +5,7 @@ import { createServer } from "http";
 import { WebSocketServer } from "ws";
 import { connectDB } from "./database/db.js";
 import setupSwagger from "./swagger.js";
+
 import userRouters from './routers/userRouters.js';
 import noteRouters from './routers/noteRouters.js';
 import fileRouters from './routers/fileRouters.js';
@@ -16,8 +17,8 @@ import setupGoogleAuth from './controllers/google.js';
 dotenv.config();
 
 const app = express();
-const server = createServer(app); // Создаем HTTP-сервер
-const wss = new WebSocketServer({ server }); // Создаем WebSocket-сервер
+const server = createServer(app); 
+const wss = new WebSocketServer({ server });
 
 const PORT = process.env.PORT || 3001;
 
@@ -51,7 +52,6 @@ const PORT = process.env.PORT || 3001;
 
     setupSwagger(app);
 
-    // WebSocket обработка подключений
     wss.on("connection", (ws) => {
         console.log("🔌 Клиент подключился к WebSocket");
 

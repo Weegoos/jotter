@@ -6,7 +6,7 @@ const options = {
         openapi: "3.0.0",
         info: {
             title: "API Заметок",
-            version: "1.0.0",
+            version: "1.0.1",
             description: "Документация API для приложения заметок"
         },
         components: {
@@ -18,12 +18,12 @@ const options = {
                 }
             }
         },
-        security: [{ bearerAuth: [] }] // Глобальное применение авторизации
+        security: [{ bearerAuth: [] }] 
     },
    apis: [
-        "./routers/**/*.js",       // Пути до всех роутеров
-        "./models/**/*.js",        // Пути до всех моделей
-        "./swagger/**/*.js"        // Путь до папки с Swagger-комментариями
+        "./routers/**/*.js",       
+        "./models/**/*.js",       
+        "./swagger/**/*.js"       
     ]
 };
 
