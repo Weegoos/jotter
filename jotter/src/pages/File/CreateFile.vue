@@ -1,6 +1,7 @@
 <template>
   <div>
-    <BaseQEditor @saveWork="saveWork" @sendWork="sendWork" />
+    <q-input class="m-[16px]" v-model="fileName" type="text" placeholder="Write file name" autogrow/>
+    <BaseQEditor @saveWork="saveWork" @sendWork="sendWork" placeholder="Write description for file"/>
   </div>
 </template>
 
@@ -8,7 +9,7 @@
 import { successMessage } from "src/composables/notify/successMessage";
 import BaseQEditor from "../../components/atoms/BaseQEditor.vue";
 import { useQuasar } from "quasar";
-import { getCurrentInstance } from "vue";
+import { getCurrentInstance, ref } from "vue";
 import { postMethod } from "src/composables/api-method/post";
 
 // global variables
@@ -21,19 +22,21 @@ const saveWork = (data) => {
   console.log(data);
 };
 
+const fileName = ref('')
 const sendWork = (data) => {
   console.log(data);
   try {
     const payload = {
-      name: data,
+      name: fileName.value,
+      description: data
     };
+
     postMethod(
       serverURL,
       "file/create",
       payload,
       $q,
       "File created successfully",
-      "Error creating file"
     );
   } catch (error) {
     console.error(error);

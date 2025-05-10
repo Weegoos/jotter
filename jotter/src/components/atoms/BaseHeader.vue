@@ -181,7 +181,7 @@ const file = [
   {
     name: "View file",
     description: "View an existing file in the system",
-    href: "",
+    href: "/get-file",
     icon: "mdi-file-eye",
   },
 ];

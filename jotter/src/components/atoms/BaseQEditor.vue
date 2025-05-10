@@ -3,6 +3,7 @@
     <q-editor
       v-model="qeditor"
       :dense="$q.screen.lt.md"
+      :placeholder="placeholder"
       :definitions="{
         save: {
           tip: 'Save your work',
@@ -103,6 +104,13 @@ import { ref } from "vue";
 const qeditor = ref("");
 
 const $q = useQuasar();
+
+defineProps({
+  placeholder: {
+    type: String,
+    default: 'Type something...'
+  }
+})
 
 const emit = defineEmits(["saveWork", "sendWork"]);
 const saveWork = () => {
