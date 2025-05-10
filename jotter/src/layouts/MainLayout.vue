@@ -26,7 +26,7 @@ const toggleDrawer = (newDrawerState) => {
 
 const route = useRoute();
 const authPage = computed(() => {
-  return route.path === "/login" || route.path === "/authorization";
+  return route.path === "/login" || route.path === "/register";
 });
 </script>
 

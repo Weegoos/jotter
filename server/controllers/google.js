@@ -90,7 +90,7 @@ export default function setupGoogleAuth(app) {
           maxAge: 3600 * 1000,
         });
 
-        res.redirect(`${process.env.CLIENT_URL}#/login`);
+        res.redirect(`${process.env.CLIENT_URL}#/`);
       } else {
         console.log("Ошибка: accessToken не найден");
         res.redirect("http://localhost:9000/#/login");

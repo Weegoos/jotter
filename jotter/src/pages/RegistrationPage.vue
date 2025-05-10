@@ -7,7 +7,7 @@
           class="flex justify-center text-bold font-medium p-[16px]"
           :class="$q.screen.width < mobileWidth ? 'text-xl' : 'text-2xl'"
         >
-          Sign in to your account
+          Create your account
         </p>
       </div>
       <q-card
@@ -17,15 +17,23 @@
         @keypress="
           (e) => {
             if (e.key === 'Enter') {
-              login();
+              register();
             }
           }
         "
       >
         <q-card-section>
+          <p class="text-1md">Full Name</p>
+          <q-input
+            class="q-mt-sm"
+            dense
+            outlined
+            v-model="fullname"
+            type="text"
+          />
           <p class="text-1md">Email address</p>
           <q-input class="q-mt-sm" dense outlined v-model="email" type="text" />
-          <p class="text-1md q-mt-lg">Password</p>
+          <p class="text-1md q-mt-sm">Password</p>
           <q-input
             class="q-mt-sm"
             dense
@@ -45,19 +53,19 @@
           <q-btn
             class="bg-violet-700 text-white w-[99%] q-ml-sm"
             no-caps
-            label="Sign in"
-            @click="login"
+            label="Create account"
+            @click="register"
           />
-                 <q-btn
+              <q-btn
             class=" text-black w-[100%] q-mt-sm"
             no-caps
-            label="Don't have an account? Create here"
-            @click="$router.push('/register')"
+            label="Do you have an account? Log in to your account"
+            @click="$router.push('/login')"
           />
           <q-btn
             icon="mdi-google"
             no-caps
-            label="Sign up with Google Account"
+            label="Create with Google Account"
             @click="authGoogle"
             class="q-mt-sm w-[100%]"
           />
@@ -82,24 +90,26 @@ const serverURL = proxy.$serverURL;
 const $q = useQuasar();
 const router = useRouter();
 
+const fullname = ref("");
 const password = ref("");
 const email = ref("");
 const isPwd = ref(true);
-const login = async () => {
+
+const register = async () => {
   try {
-    const response = await axios.post(`${serverURL}user/login`, {
+    const response = await axios.post(`${serverURL}user/register`, {
+      fullname: fullname.value,
       email: email.value,
       password: password.value,
     });
-    successMessage($q, `Добро пожаловать, ${response.data.user.fullname}`);
-    Cookies.set("access_token", response.data.token);
-    router.push("/");
+    successMessage($q, `${response.data.user.fullname} добро пожаловать`);
+    router.push("/login");
   } catch (error) {
     console.error(error);
   }
 };
 
 const authGoogle = () => {
-  window.location.href = "http://localhost:3000/auth/google";
+  window.location.href = `${serverURL}auth/google`;
 };
 </script>

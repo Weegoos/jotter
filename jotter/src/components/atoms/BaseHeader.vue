@@ -1,18 +1,16 @@
 <template>
   <div>
     <q-header v-model="header" reveal elevated class="bg-white p-4 text-black">
-      <div class="grid grid-rows-1 gap-4" :class="userFullname ? 'grid-cols-3' : 'grid-cols-2'">
+      <div
+        class="grid grid-rows-1 gap-4"
+        :class="userFullname ? 'grid-cols-3' : 'grid-cols-2'"
+      >
         <div>
-          <img
-            @click="toggleDrawer"
-            class="h-8 w-auto"
-            src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-            alt=""
-          />
+          <BaseIcon @click="toggleDrawer" />
         </div>
         <div
           v-if="userFullname"
-          align="right"
+          align="left"
           :class="$q.screen.width < mobileWidth ? 'hidden' : 'row'"
         >
           <Popover v-slot="{ open }" class="relative">
@@ -155,6 +153,7 @@ import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 import { ChevronDownIcon } from "@heroicons/vue/20/solid";
 import { useApiStore } from "src/router/api-store";
 import { useQuasar } from "quasar";
+import BaseIcon from "./BaseIcon.vue";
 // global variables
 const { proxy } = getCurrentInstance();
 const mobileWidth = proxy.$mobileWidth;
@@ -192,13 +191,13 @@ const document = [
     name: "Create document",
     description: "Create a new document in the system",
     href: "",
-    icon: "mdi-file-document-plus", // Обновленная иконка для создания документа
+    icon: "mdi-file-document-plus",
   },
   {
     name: "View file",
     description: "View an existing document",
     href: "",
-    icon: "mdi-file-eye", // Иконка для просмотра файла
+    icon: "mdi-file-eye",
   },
 ];
 
