@@ -46,7 +46,7 @@
         </q-td>
       </template>
     </q-table>
-        <BasePagination
+    <BasePagination
       :variableName="Object(filesByStatus)"
       @pagination="pagination"
     />
@@ -80,7 +80,7 @@ socket.onmessage = (event) => {
   if (data.event === "change_status") {
     getTrashedFiles(1);
   }
-    if (data.event === "deleteFileByID") {
+  if (data.event === "deleteFileByID") {
     getTrashedFiles(1);
   }
 };
@@ -143,7 +143,6 @@ const pagination = (page) => {
   getTrashedFiles(current.value);
 };
 
-
 const filesByStatus = ref([]);
 const getTrashedFiles = async (page) => {
   try {
@@ -176,13 +175,14 @@ const restoreFile = async (info) => {
   }
 };
 
-const deleteFile = async (info) => {""
+const deleteFile = async (info) => {
+  "";
   try {
-    await deleteMethod(serverURL, 'file/deleteFile', `${info.id}`)
+    await deleteMethod(serverURL, "file/deleteFile", `${info.id}`);
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-}
+};
 
 onMounted(() => {
   getTrashedFiles();

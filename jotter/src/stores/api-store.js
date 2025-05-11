@@ -6,6 +6,8 @@ import { getMethod } from "src/composables/api-method/get";
 export const useApiStore = defineStore("api", {
   state: () => ({
     userData: null,
+    fileNames: [],
+    noteTypes: [],
   }),
   actions: {
     async getUserInfo(serverURL, $q) {
@@ -20,6 +22,30 @@ export const useApiStore = defineStore("api", {
         this.userData = response.data;
       } catch (error) {
         // console.error(error);
+      }
+    },
+    async getFileName(serverURL, $q) {
+      try {
+        this.fileNames = await getMethod(
+          serverURL,
+          "file/filesName",
+          $q,
+          "Файлы успешно получены"
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async getNoteTypes(serverURL, $q) {
+      try {
+        this.noteTypes = await getMethod(
+          serverURL,
+          "types",
+          $q,
+          "Типы заметок успешно получены"
+        );
+      } catch (error) {
+        console.error(error);
       }
     },
   },

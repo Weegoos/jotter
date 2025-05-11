@@ -23,6 +23,10 @@ const routes = [
     path: "/trash",
     component: () => import("pages/File/TrashedFile.vue"),
   },
+  {
+    path: "/create-document",
+    component: () => import("pages/Document/CreateDocument.vue"),
+  },
 
   // Always leave this as last one,
   // but you can also remove it

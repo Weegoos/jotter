@@ -97,7 +97,7 @@
                     <a
                       v-for="item in document"
                       :key="item.name"
-                      :href="item.href"
+                      @click="$router.push(item.href)"
                       class="-m-3 flex items-center rounded-lg p-2 transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50"
                     >
                       <div
@@ -196,7 +196,7 @@ const document = [
   {
     name: "Create document",
     description: "Create a new document in the system",
-    href: "",
+    href: "/create-document",
     icon: "mdi-file-document-plus",
   },
   {
