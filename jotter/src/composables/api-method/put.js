@@ -27,8 +27,8 @@ export async function putMethod(
     });
 
     console.log("Ответ сервера:", response.data);
-    successMessage(successMsg);
-    window.location.reload();
+    // successMessage(successMsg);
+    // window.location.reload();
   } catch (error) {
     console.error("Ошибка при обновлении события:", error);
     console.error("Детали ошибки:", error.response?.data);

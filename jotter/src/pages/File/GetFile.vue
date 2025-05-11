@@ -36,7 +36,7 @@
           />
         </q-td>
       </template>
-      <template v-slot:body-cell-reject="props">
+      <template v-slot:body-cell-trash="props">
         <q-td align="center">
           <q-btn
             class="bg-rose-500 hover:bg-rose-600 text-white"
@@ -47,7 +47,7 @@
         </q-td>
       </template>
     </q-table>
-    <BasePagination :variableName="Array(filesByStatus)" @pagination="pagination" />
+    <BasePagination :variableName="Object(filesByStatus)" @pagination="pagination" />
     <DetailedInformationAboutFile
       :informationAboutFile="Object(informationAboutFile)"
     />
@@ -59,6 +59,7 @@ import { useQuasar } from "quasar";
 import BasePagination from "src/components/atoms/BasePagination.vue";
 import DetailedInformationAboutFile from "src/components/organisims/DetailedInformationAboutFile.vue";
 import { getMethod } from "src/composables/api-method/get";
+import { putMethod } from "src/composables/api-method/put";
 import { computed, getCurrentInstance, onMounted, ref, watch } from "vue";
 // global variables
 const { proxy } = getCurrentInstance();
@@ -104,7 +105,7 @@ const columns = computed(() => [
     field: "id",
   },
   {
-    name: "reject",
+    name: "trash",
     label: "Move to Trash",
     align: "center",
     field: "id",
@@ -137,6 +138,15 @@ const informationAboutFile = ref([]);
 const viewDetailedInformation = (info, row) => {
   informationAboutFile.value = row;
 };
+
+const changeFileStatus  = async (info) => {
+  try {
+    await putMethod(serverURL, `file/editStatus?fileId=${info.id}&status=deleted`, '', $q, 'Changed', 'Error: ', {})
+
+  } catch (error) {
+
+  }
+}
 
 onMounted(() => {
   getFiles(1);

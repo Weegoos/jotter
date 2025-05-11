@@ -151,7 +151,6 @@
 
 // -------------------- file/filesStatus -----------------------
 
-// -------------------- file/filesStatus -----------------------
 
 /**
  * @swagger
@@ -223,6 +222,49 @@
  *         description: "Ошибка: userId отсутствует или статус не передан"
  *       500:
  *         description: "Ошибка сервера"
+ */
+
+// -------------------- file/editStatus -----------------------
+
+/**
+ * @swagger
+ * /file/editStatus:
+ *   put:
+ *     summary: Обновить статус файла
+ *     tags: [Files]
+ *     description: Обновляет статус файла по его ID и ID пользователя через query-параметры.
+ *     parameters:
+ *       - in: query
+ *         name: fileId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID файла
+ *       - in: query
+ *         name: status
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Новый статус файла
+ *     responses:
+ *       200:
+ *         description: Статус успешно обновлен
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Статус обновлен"
+ *                 file:
+ *                   type: object
+ *       400:
+ *         description: Некорректный запрос (например, отсутствует userId, fileId или status)
+ *       404:
+ *         description: Файл не найден
+ *       500:
+ *         description: Ошибка сервера
  */
 
 

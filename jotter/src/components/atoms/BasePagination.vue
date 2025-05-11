@@ -13,7 +13,7 @@
 import { getCurrentInstance, ref, watch, defineEmits } from "vue";
 const props = defineProps({
   variableName: {
-    type: Array,
+    type: Object,
     required: true,
   },
 });
@@ -32,6 +32,7 @@ watch(
       maxPage.value = 1;
     }
   }
+
 );
 
 const emit = defineEmits(["pagination"]);
