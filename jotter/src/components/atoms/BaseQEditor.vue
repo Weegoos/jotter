@@ -108,9 +108,9 @@ const $q = useQuasar();
 defineProps({
   placeholder: {
     type: String,
-    default: 'Type something...'
-  }
-})
+    default: "Type something...",
+  },
+});
 
 const emit = defineEmits(["saveWork", "sendWork"]);
 const saveWork = () => {

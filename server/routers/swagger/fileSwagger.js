@@ -6,14 +6,13 @@
  */
 
 // -------------------- file/create -----------------------
-
 /**
  * @swagger
  * /file/create:
  *   post:
  *     summary: Создать новый файл
  *     tags: [Files]
- *     description: Создает новый файл и привязывает его к пользователю.
+ *     description: Создает новый файл с указанием имени и описания, и привязывает его к пользователю.
  *     requestBody:
  *       required: true
  *       content:
@@ -25,8 +24,12 @@
  *             properties:
  *               name:
  *                 type: string
- *                 example: "Новый Файл"
- *                 description: "Название создаваемого файла"
+ *                 example: "Программирование"
+ *                 description: Название создаваемого файла (может содержать HTML-теги)
+ *               description:
+ *                 type: string
+ *                 example: "Описание файла"
+ *                 description: Краткое описание файла
  *     responses:
  *       201:
  *         description: Файл успешно создан.
@@ -43,17 +46,24 @@
  *                   properties:
  *                     id:
  *                       type: integer
- *                       example: 1
+ *                       example: 2
  *                     name:
  *                       type: string
- *                       example: "Новый Файл"
+ *                       example: "<pre>Программирование</pre>"
+ *                     description:
+ *                       type: string
+ *                       example: "Описание файла"
  *                     userId:
  *                       type: integer
- *                       example: 5
+ *                       example: 1
  *                     createdAt:
  *                       type: string
  *                       format: date-time
- *                       example: "2024-03-07T12:34:56.000Z"
+ *                       example: "2025-05-10T17:31:57.162Z"
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: "2025-05-10T17:31:57.162Z"
  *       400:
  *         description: Ошибка запроса (например, отсутствует userId).
  *         content:
@@ -75,6 +85,7 @@
  *                   type: string
  *                   example: "Ошибка сервера"
  */
+
 
 // -------------------- file/allFiles -----------------------
 
@@ -137,6 +148,83 @@
  *                     format: date-time
  *                     example: "2024-03-07T12:34:56.000Z"
  */
+
+// -------------------- file/filesStatus -----------------------
+
+// -------------------- file/filesStatus -----------------------
+
+/**
+ * @swagger
+ * /file/filesStatus:
+ *   get:
+ *     summary: Получить файлы по статусу с пагинацией
+ *     tags: [Files]
+ *     parameters:
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: "Статус файлов (например: active, archived)"
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: "Номер страницы"
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: "Количество файлов на странице"
+ *     responses:
+ *       200:
+ *         description: Успешный ответ, возвращает файлы с пагинацией
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 files:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 1
+ *                       name:
+ *                         type: string
+ *                         example: "File 1"
+ *                       description:
+ *                         type: string
+ *                         example: "Description of the file"
+ *                       status:
+ *                         type: string
+ *                         example: "active"
+ *                       createdAt:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2024-05-01T10:00:00Z"
+ *                 totalCount:
+ *                   type: integer
+ *                   description: "Общее количество файлов"
+ *                   example: 50
+ *                 totalPages:
+ *                   type: integer
+ *                   description: "Общее количество страниц"
+ *                   example: 5
+ *                 currentPage:
+ *                   type: integer
+ *                   description: "Текущая страница"
+ *                   example: 1
+ *       400:
+ *         description: "Ошибка: userId отсутствует или статус не передан"
+ *       500:
+ *         description: "Ошибка сервера"
+ */
+
 
 // -------------------- file/deleteFile -----------------------
 

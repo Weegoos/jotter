@@ -5,7 +5,6 @@ dotenv.config();
 
 const authMiddleware = (req, res, next) => {
     const authHeader = req.header("Authorization");
-    console.log("🔹 Заголовок Authorization:", authHeader);
 
     if (!authHeader) {
         return res.status(401).json({ message: "Нет доступа. Токен отсутствует." });
@@ -19,8 +18,7 @@ const authMiddleware = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log("✅ Расшифрованный токен:", decoded);
-        req.user = decoded; // Сохраняем данные пользователя в `req.user`
+        req.user = decoded; 
         next();
     } catch (error) {
         console.error("❌ Ошибка проверки токена:", error);

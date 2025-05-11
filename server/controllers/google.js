@@ -59,8 +59,6 @@ export default function setupGoogleAuth(app) {
               password: null,
             });
 
-            console.log("AccessToken:", accessToken);
-
             return done(null, { ...newUser, accessToken });
           }
         } catch (error) {

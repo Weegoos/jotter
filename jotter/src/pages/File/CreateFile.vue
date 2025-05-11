@@ -1,7 +1,17 @@
 <template>
   <div>
-    <q-input class="m-[16px]" v-model="fileName" type="text" placeholder="Write file name" autogrow/>
-    <BaseQEditor @saveWork="saveWork" @sendWork="sendWork" placeholder="Write description for file"/>
+    <q-input
+      class="m-[16px]"
+      v-model="fileName"
+      type="text"
+      placeholder="Write file name"
+      autogrow
+    />
+    <BaseQEditor
+      @saveWork="saveWork"
+      @sendWork="sendWork"
+      placeholder="Write description for file"
+    />
   </div>
 </template>
 
@@ -22,13 +32,13 @@ const saveWork = (data) => {
   console.log(data);
 };
 
-const fileName = ref('')
+const fileName = ref("");
 const sendWork = (data) => {
   console.log(data);
   try {
     const payload = {
       name: fileName.value,
-      description: data
+      description: data,
     };
 
     postMethod(
@@ -36,7 +46,7 @@ const sendWork = (data) => {
       "file/create",
       payload,
       $q,
-      "File created successfully",
+      "File created successfully"
     );
   } catch (error) {
     console.error(error);
