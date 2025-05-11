@@ -71,6 +71,7 @@ const $q = useQuasar();
 const maxNumberOfRequestPerPage = proxy.$maxNumberOfRequestPerPage;
 const contentForView = proxy.$contentForView;
 const webSocketURL = proxy.$webSocketURL;
+const contentForTrashedComponent = proxy.$contentForTrashedComponent;
 
 const socket = new WebSocket(webSocketURL);
 
@@ -171,14 +172,16 @@ const changeFileStatus = async (info) => {
   try {
     await putMethod(
       serverURL,
-      `file/editStatus?fileId=${info.id}&status=deleted`,
+      `file/editStatus?fileId=${info.id}&status=${contentForTrashedComponent}`,
       "",
       $q,
       "The status of file has been successfully changed",
       "Error: ",
       {}
     );
-  } catch (error) {}
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 onMounted(() => {

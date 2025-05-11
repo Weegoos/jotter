@@ -5,7 +5,6 @@
       bordered
       title="Files"
       :rows="rows"
-      @row-click="viewDetailedInformation"
       :columns="columns"
       row-key="name"
       hide-bottom
@@ -53,13 +52,38 @@
 <script setup>
 import { useQuasar } from "quasar";
 import { getMethod } from "src/composables/api-method/get";
+import { putMethod } from "src/composables/api-method/put";
 import { computed, getCurrentInstance, onMounted, ref } from "vue";
 
 // global variables
 const { proxy } = getCurrentInstance();
-const serverURL = proxy.$serverURL;
 const $q = useQuasar();
+const serverURL = proxy.$serverURL;
+const contentForTrashedComponent = proxy.$contentForTrashedComponent;
 const maxNumberOfRequestPerPage = proxy.$maxNumberOfRequestPerPage;
+const contentForView = proxy.$contentForView;
+const webSocketURL = proxy.$webSocketURL;
+
+const socket = new WebSocket(webSocketURL);
+
+socket.onopen = () => {
+  console.log("✅ WebSocket подключен");
+};
+
+socket.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  if (data.event === "change_status") {
+    getTrashedFiles(1);
+  }
+};
+
+socket.onclose = () => {
+  console.log("❌ WebSocket отключен");
+};
+
+socket.onerror = (error) => {
+  console.error("🔥 WebSocket ошибка:", error);
+};
 
 const rows = ref([]);
 const columns = computed(() => [
@@ -110,12 +134,28 @@ const getTrashedFiles = async (page) => {
   try {
     const response = await getMethod(
       serverURL,
-      `file/filesStatus?status=trashed&page=${page}&limit=${maxNumberOfRequestPerPage}`,
+      `file/filesStatus?status=${contentForTrashedComponent}&page=${page}&limit=${maxNumberOfRequestPerPage}`,
       $q,
       "Files fetched successfully"
     );
     rows.value = response.files;
     filesByStatus.value = response;
+  } catch (error) {
+    console.error("Error fetching files:", error);
+  }
+};
+
+const restoreFile = async (info) => {
+  try {
+    await putMethod(
+      serverURL,
+      `file/editStatus?fileId=${info.id}&status=${contentForView}`,
+      "",
+      $q,
+      "The status of file has been successfully changed",
+      "Error: ",
+      {}
+    );
   } catch (error) {
     console.error("Error fetching files:", error);
   }
