@@ -19,6 +19,10 @@ const routes = [
     path: "/get-file",
     component: () => import("pages/File/GetFile.vue"),
   },
+  {
+    path: "/trash",
+    component: () => import("pages/File/TrashedFile.vue"),
+  },
 
   // Always leave this as last one,
   // but you can also remove it

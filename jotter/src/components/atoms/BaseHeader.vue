@@ -184,6 +184,12 @@ const file = [
     href: "/get-file",
     icon: "mdi-file-eye",
   },
+  {
+    name: "Trash",
+    description: "View deleted files in the system",
+    href: "/trash",
+    icon: "mdi-delete-empty",
+  },
 ];
 
 const document = [
@@ -207,7 +213,7 @@ const getUserInfo = async () => {
     await apiStore.getUserInfo(serverURL, $q);
     userFullname.value = apiStore.userData.fullname;
   } catch (error) {
-    // console.error("Error fetching user info:", error);
+    console.error("Error fetching user info:", error);
   }
 };
 
