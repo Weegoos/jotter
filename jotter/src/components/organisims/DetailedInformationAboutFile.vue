@@ -18,9 +18,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref } from "vue";
 
-const confirm = ref(true)
+const isOpen = ref(false);
 </script>
 
 <style></style>

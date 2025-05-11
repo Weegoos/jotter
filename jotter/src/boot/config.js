@@ -4,8 +4,13 @@ export default ({ app }) => {
   const mobileWidth = 1050;
   const serverURL = "http://localhost:3000/";
   const clientURL = "http://localhost:9000/#/";
+  const maxNumberOfRequestPerPage = 1;
+  const contentForView = "active";
 
   app.config.globalProperties.$mobileWidth = mobileWidth;
   app.config.globalProperties.$serverURL = serverURL;
   app.config.globalProperties.$clientURL = clientURL;
+  app.config.globalProperties.$maxNumberOfRequestPerPage =
+    maxNumberOfRequestPerPage;
+  app.config.globalProperties.$contentForView = contentForView;
 };

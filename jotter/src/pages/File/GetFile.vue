@@ -27,41 +27,45 @@
         </q-td>
       </template>
       <template v-slot:body-cell-accept="props">
-              <q-td align="center">
-                <q-btn
-                  class="bg-blue-500 hover:bg-blue-600 text-white
-"
-                  icon="mdi-pencil"
-                  size="sm"
-                  @click="editFile(props.row)"
-                />
-              </q-td>
-            </template>
-            <template v-slot:body-cell-reject="props">
-              <q-td align="center">
-                <q-btn
-                  class="bg-rose-500 hover:bg-rose-600 text-white
-"
-                  icon="mdi-delete"
-                  size="sm"
-                  @click="changeFileStatus(props.row)"
-                />
-              </q-td>
-            </template>
+        <q-td align="center">
+          <q-btn
+            class="bg-blue-500 hover:bg-blue-600 text-white"
+            icon="mdi-pencil"
+            size="sm"
+            @click="editFile(props.row)"
+          />
+        </q-td>
+      </template>
+      <template v-slot:body-cell-reject="props">
+        <q-td align="center">
+          <q-btn
+            class="bg-rose-500 hover:bg-rose-600 text-white"
+            icon="mdi-delete"
+            size="sm"
+            @click="changeFileStatus(props.row)"
+          />
+        </q-td>
+      </template>
     </q-table>
-    <DetailedInformationAboutFile :informationAboutFile="Object(informationAboutFile)"/>
+    <BasePagination :variableName="Array(filesByStatus)" @pagination="pagination" />
+    <DetailedInformationAboutFile
+      :informationAboutFile="Object(informationAboutFile)"
+    />
   </div>
 </template>
 
 <script setup>
 import { useQuasar } from "quasar";
+import BasePagination from "src/components/atoms/BasePagination.vue";
 import DetailedInformationAboutFile from "src/components/organisims/DetailedInformationAboutFile.vue";
 import { getMethod } from "src/composables/api-method/get";
-import { computed, getCurrentInstance, onMounted, ref } from "vue";
+import { computed, getCurrentInstance, onMounted, ref, watch } from "vue";
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
 const $q = useQuasar();
+const maxNumberOfRequestPerPage = proxy.$maxNumberOfRequestPerPage;
+const contentForView = proxy.$contentForView;
 
 const rows = ref([]);
 const columns = computed(() => [
@@ -95,7 +99,7 @@ const columns = computed(() => [
   },
   {
     name: "accept",
-    label: 'Edit',
+    label: "Edit",
     align: "center",
     field: "id",
   },
@@ -107,28 +111,34 @@ const columns = computed(() => [
   },
 ]);
 
-const getFiles = async () => {
+const filesByStatus = ref([]);
+const getFiles = async (page) => {
   try {
     const response = await getMethod(
       serverURL,
-      "file/allFiles",
+      `file/filesStatus?status=${contentForView}&page=${page}&limit=${maxNumberOfRequestPerPage}`,
       $q,
       "Files fetched successfully"
     );
-    console.log(response);
-    rows.value = response;
+    rows.value = response.files;
+    filesByStatus.value = response;
   } catch (error) {
     console.error("Error fetching files:", error);
   }
 };
 
+const current = ref(1);
+const pagination = (page) => {
+  current.value = page;
+  getFiles(current.value);
+};
 
-const informationAboutFile = ref([])
+const informationAboutFile = ref([]);
 const viewDetailedInformation = (info, row) => {
-  informationAboutFile.value = row
+  informationAboutFile.value = row;
 };
 
 onMounted(() => {
-  getFiles();
+  getFiles(1);
 });
 </script>
