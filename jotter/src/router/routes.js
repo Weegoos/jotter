@@ -27,6 +27,10 @@ const routes = [
     path: "/create-document",
     component: () => import("pages/Document/CreateDocument.vue"),
   },
+  {
+    path: "/view-notes/:id",
+    component: () => import("pages/Document/ViewDocument.vue"),
+  },
 
   // Always leave this as last one,
   // but you can also remove it

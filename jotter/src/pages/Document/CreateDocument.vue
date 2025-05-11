@@ -15,7 +15,7 @@
       />
     </section>
     <section class="m-[24px]">
-      <q-input v-model="title" type="text" label="Title" filled autogrow/>
+      <q-input v-model="title" type="text" label="Title" filled autogrow />
     </section>
     <section class="m-[8px]">
       <BaseQEditor
@@ -44,15 +44,15 @@ const fileName = ref("");
 const fileNameOptions = ref([]);
 const type = ref("");
 const typeOptions = ref([]);
-const title = ref('')
+const title = ref("");
 
 const getList = async () => {
   try {
     await apiStore.getFileName(serverURL, $q);
     fileNameOptions.value = apiStore.fileNames;
 
-    await apiStore.getNoteTypes(serverURL, $q)
-    typeOptions.value = apiStore.noteTypes.map((type) => type.name)
+    await apiStore.getNoteTypes(serverURL, $q);
+    typeOptions.value = apiStore.noteTypes.map((type) => type.name);
   } catch (error) {
     console.error(error);
   }
@@ -71,15 +71,20 @@ const sendWork = async (data) => {
       content: data,
       fileName: fileName.value,
       title: title.value,
-      type: type.value
-    }
+      type: type.value,
+    };
 
-    await postMethod(serverURL, 'notes/create', payload, $q, 'Заметка создана!')
+    await postMethod(
+      serverURL,
+      "notes/create",
+      payload,
+      $q,
+      "Заметка создана!"
+    );
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 };
-
 </script>
 
 <style></style>

@@ -5,7 +5,7 @@
       bordered
       title="Files"
       :rows="rows"
-      @row-click="viewDetailedInformation"
+      @row-click="pushToTheFile"
       :columns="columns"
       row-key="name"
       hide-bottom
@@ -51,19 +51,16 @@
       :variableName="Object(filesByStatus)"
       @pagination="pagination"
     />
-    <DetailedInformationAboutFile
-      :informationAboutFile="Object(informationAboutFile)"
-    />
   </div>
 </template>
 
 <script setup>
 import { useQuasar } from "quasar";
 import BasePagination from "src/components/atoms/BasePagination.vue";
-import DetailedInformationAboutFile from "src/components/organisims/DetailedInformationAboutFile.vue";
 import { getMethod } from "src/composables/api-method/get";
 import { putMethod } from "src/composables/api-method/put";
 import { computed, getCurrentInstance, onMounted, ref, watch } from "vue";
+import { useRouter } from "vue-router";
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
@@ -72,8 +69,8 @@ const maxNumberOfRequestPerPage = proxy.$maxNumberOfRequestPerPage;
 const contentForView = proxy.$contentForView;
 const webSocketURL = proxy.$webSocketURL;
 const contentForTrashedComponent = proxy.$contentForTrashedComponent;
-
 const socket = new WebSocket(webSocketURL);
+const router = useRouter();
 
 socket.onopen = () => {
   console.log("✅ WebSocket подключен");
@@ -163,9 +160,8 @@ const pagination = (page) => {
   getFiles(current.value);
 };
 
-const informationAboutFile = ref([]);
-const viewDetailedInformation = (info, row) => {
-  informationAboutFile.value = row;
+const pushToTheFile = (info, row) => {
+  router.push(`/view-notes/${row.id}`);
 };
 
 const changeFileStatus = async (info) => {
