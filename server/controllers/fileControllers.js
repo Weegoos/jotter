@@ -17,15 +17,14 @@ export const createFile = async (req, res) => {
             userId,
             status: 'active'
         });
-
         wss.clients.forEach(client => {
-            if (client.readyState === 1){
+            if (client.readyState === WebSocket.OPEN){
                 client.send(JSON.stringify({
                     event: 'create_file',
                     newFile: newFile,
-                }))
+                }));
             }
-        })
+        });
 
         res.status(201).json({ message: "Файл создан!", file: newFile });
     } catch (error) {
@@ -79,6 +78,18 @@ export const getFilesByStatus = async (req, res) => {
 
         const totalPages = Math.ceil(files.count / limit);
 
+        wss.clients.forEach(client => {
+        if (client.readyState === 1 && client.userId === userId) {
+            client.send(JSON.stringify({
+            event: "get_files_by_status",
+            files: files.rows,
+            totalCount: files.count,
+            totalPages,
+            currentPage: page,
+            }));
+        }
+        });
+
         res.json({
             files: files.rows,
             totalCount: files.count,
@@ -108,6 +119,15 @@ export const editFileStatus = async (req, res) => {
 
         file.status = status;
         await file.save();
+
+                wss.clients.forEach(client => {
+            if (client.readyState === WebSocket.OPEN){
+                client.send(JSON.stringify({
+                    event: 'change_status',
+                    file: file,
+                }));
+            }
+        });
 
         res.json({ message: "Статус обновлен", file });
     } catch (error) {

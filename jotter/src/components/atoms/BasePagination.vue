@@ -21,7 +21,7 @@ const { proxy } = getCurrentInstance();
 const maxNumberOfRequestPerPage = proxy.$maxNumberOfRequestPerPage;
 
 const current = ref(1);
-const maxPage = ref('');
+const maxPage = ref("");
 
 watch(
   () => props.variableName,
@@ -32,7 +32,6 @@ watch(
       maxPage.value = 1;
     }
   }
-
 );
 
 const emit = defineEmits(["pagination"]);

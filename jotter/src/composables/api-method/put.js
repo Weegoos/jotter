@@ -13,7 +13,6 @@ export async function putMethod(
   errorMsg,
   params = {}
 ) {
-  loadingMessage("Подождите, идет обновление");
   try {
     const data = variableRef?.value ?? null;
     const response = await axios.put(`${serverURL}${url}`, variableRef.value, {
@@ -27,7 +26,7 @@ export async function putMethod(
     });
 
     console.log("Ответ сервера:", response.data);
-    // successMessage(successMsg);
+    successMessage($q, successMsg);
     // window.location.reload();
   } catch (error) {
     console.error("Ошибка при обновлении события:", error);

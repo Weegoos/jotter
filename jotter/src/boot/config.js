@@ -6,6 +6,7 @@ export default ({ app }) => {
   const clientURL = "http://localhost:9000/#/";
   const maxNumberOfRequestPerPage = 10;
   const contentForView = "active";
+  const webSocketURL = "ws://localhost:3000";
 
   app.config.globalProperties.$mobileWidth = mobileWidth;
   app.config.globalProperties.$serverURL = serverURL;
@@ -13,4 +14,5 @@ export default ({ app }) => {
   app.config.globalProperties.$maxNumberOfRequestPerPage =
     maxNumberOfRequestPerPage;
   app.config.globalProperties.$contentForView = contentForView;
+  app.config.globalProperties.$webSocketURL = webSocketURL;
 };

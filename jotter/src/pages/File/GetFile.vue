@@ -47,7 +47,10 @@
         </q-td>
       </template>
     </q-table>
-    <BasePagination :variableName="Object(filesByStatus)" @pagination="pagination" />
+    <BasePagination
+      :variableName="Object(filesByStatus)"
+      @pagination="pagination"
+    />
     <DetailedInformationAboutFile
       :informationAboutFile="Object(informationAboutFile)"
     />
@@ -67,6 +70,31 @@ const serverURL = proxy.$serverURL;
 const $q = useQuasar();
 const maxNumberOfRequestPerPage = proxy.$maxNumberOfRequestPerPage;
 const contentForView = proxy.$contentForView;
+const webSocketURL = proxy.$webSocketURL;
+
+const socket = new WebSocket(webSocketURL);
+
+socket.onopen = () => {
+  console.log("✅ WebSocket подключен");
+};
+
+socket.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  if (data.event === "create_file") {
+    getFiles(1);
+  }
+  if (data.event === "change_status") {
+    getFiles(1);
+  }
+};
+
+socket.onclose = () => {
+  console.log("❌ WebSocket отключен");
+};
+
+socket.onerror = (error) => {
+  console.error("🔥 WebSocket ошибка:", error);
+};
 
 const rows = ref([]);
 const columns = computed(() => [
@@ -139,14 +167,19 @@ const viewDetailedInformation = (info, row) => {
   informationAboutFile.value = row;
 };
 
-const changeFileStatus  = async (info) => {
+const changeFileStatus = async (info) => {
   try {
-    await putMethod(serverURL, `file/editStatus?fileId=${info.id}&status=deleted`, '', $q, 'Changed', 'Error: ', {})
-
-  } catch (error) {
-
-  }
-}
+    await putMethod(
+      serverURL,
+      `file/editStatus?fileId=${info.id}&status=deleted`,
+      "",
+      $q,
+      "The status of file has been successfully changed",
+      "Error: ",
+      {}
+    );
+  } catch (error) {}
+};
 
 onMounted(() => {
   getFiles(1);

@@ -19,13 +19,37 @@
 import { successMessage } from "src/composables/notify/successMessage";
 import BaseQEditor from "../../components/atoms/BaseQEditor.vue";
 import { useQuasar } from "quasar";
-import { getCurrentInstance, ref } from "vue";
+import { getCurrentInstance, onMounted, ref } from "vue";
 import { postMethod } from "src/composables/api-method/post";
 
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
 const $q = useQuasar();
+const webSocketURL = proxy.$webSocketURL;
+
+let ws;
+onMounted(() => {
+  ws = new WebSocket(webSocketURL);
+
+  ws.onopen = () => {
+    console.log("WebSocket подключен");
+  };
+  ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    if (data.event === "create_file") {
+      successMessage($q, "Новый файл создан и добавлен в список.");
+    }
+  };
+
+  ws.onerror = (error) => {
+    console.error("WebSocket ошибка: ", error);
+  };
+
+  ws.onclose = () => {
+    console.log("WebSocket соединение закрыто");
+  };
+});
 
 const saveWork = (data) => {
   successMessage($q, "File saved successfully");
