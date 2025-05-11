@@ -172,7 +172,7 @@ export const deleteFileById = async (req, res) => {
         await file.destroy()
 
         wss.clients.forEach(client => {
-            if (client.readyState === 1){
+            if (client.readyState === WebSocket.OPEN){
                 client.send(JSON.stringify({
                     event: "deleteFileByID",
                     file: file

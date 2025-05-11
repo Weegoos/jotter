@@ -46,15 +46,20 @@
         </q-td>
       </template>
     </q-table>
+        <BasePagination
+      :variableName="Object(filesByStatus)"
+      @pagination="pagination"
+    />
   </div>
 </template>
 
 <script setup>
 import { useQuasar } from "quasar";
+import { deleteMethod } from "src/composables/api-method/delete";
 import { getMethod } from "src/composables/api-method/get";
 import { putMethod } from "src/composables/api-method/put";
 import { computed, getCurrentInstance, onMounted, ref } from "vue";
-
+import BasePagination from "src/components/atoms/BasePagination.vue";
 // global variables
 const { proxy } = getCurrentInstance();
 const $q = useQuasar();
@@ -73,6 +78,9 @@ socket.onopen = () => {
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
   if (data.event === "change_status") {
+    getTrashedFiles(1);
+  }
+    if (data.event === "deleteFileByID") {
     getTrashedFiles(1);
   }
 };
@@ -129,6 +137,13 @@ const columns = computed(() => [
   },
 ]);
 
+const current = ref(1);
+const pagination = (page) => {
+  current.value = page;
+  getTrashedFiles(current.value);
+};
+
+
 const filesByStatus = ref([]);
 const getTrashedFiles = async (page) => {
   try {
@@ -160,6 +175,14 @@ const restoreFile = async (info) => {
     console.error("Error fetching files:", error);
   }
 };
+
+const deleteFile = async (info) => {""
+  try {
+    await deleteMethod(serverURL, 'file/deleteFile', `${info.id}`)
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 onMounted(() => {
   getTrashedFiles();
