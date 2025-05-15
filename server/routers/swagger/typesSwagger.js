@@ -51,7 +51,7 @@
  *     tags:
  *       - Types
  *     parameters:
- *       - name: fileID
+ *       - name: fileId
  *         in: path
  *         required: true
  *         description: ID файла, для которого нужно получить типы заметок.
@@ -68,7 +68,7 @@
  *                 type: string
  *                 example: "private"
  *       400:
- *         description: Ошибка в запросе (например, отсутствует fileID).
+ *         description: Ошибка в запросе (например, отсутствует fileId).
  *         content:
  *           application/json:
  *             schema:
@@ -76,7 +76,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Ошибка: fileID отсутствует."
+ *                   example: "Ошибка: fileId отсутствует."
  *       500:
  *         description: Ошибка сервера.
  *         content:
@@ -88,6 +88,7 @@
  *                   type: string
  *                   example: "Ошибка сервера"
  */
+
 
 // -------------------- types/getAllAccessLevelTypes -----------------------
 
