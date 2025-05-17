@@ -46,6 +46,25 @@ import DetailedInformationAboutNoteVue from "../../components/organisims/Detaile
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
 const $q = useQuasar();
+const webSocketURL = proxy.$webSocketURL;
+const socket = new WebSocket(webSocketURL);
+
+socket.onopen = () => {
+  console.log("✅ WebSocket подключен");
+};
+
+socket.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  if (data.event === "create_note") {
+    getNotesById();
+  }
+  if (data.event === "notes_list") {
+    getNotesById();
+  }
+  if (data.event === "delete_note") {
+    getNotesById();
+  }
+};
 
 const route = useRoute();
 const id = route.params.id;

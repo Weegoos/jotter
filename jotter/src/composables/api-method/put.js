@@ -15,7 +15,7 @@ export async function putMethod(
 ) {
   try {
     const data = variableRef?.value ?? null;
-    const response = await axios.put(`${serverURL}${url}`, variableRef.value, {
+    const response = await axios.put(`${serverURL}${url}`, variableRef, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -31,7 +31,6 @@ export async function putMethod(
   } catch (error) {
     console.error("Ошибка при обновлении события:", error);
     console.error("Детали ошибки:", error.response?.data);
-    errorMessage(errorMsg);
   } finally {
     $q.loading.hide();
   }

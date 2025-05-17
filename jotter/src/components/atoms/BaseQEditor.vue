@@ -99,20 +99,36 @@
 </template>
 <script setup>
 import { useQuasar } from "quasar";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
-const qeditor = ref("");
-
-const $q = useQuasar();
-
-defineProps({
+const props = defineProps({
   placeholder: {
     type: String,
     default: "Type something...",
   },
+  modelValue: String,
 });
 
-const emit = defineEmits(["saveWork", "sendWork"]);
+const qeditor = ref(props.modelValue || "");
+
+const $q = useQuasar();
+const emit = defineEmits(["update:modelValue", "saveWork", "sendWork"]);
+
+// Синхронизируем локальный ref с внешним v-model
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    if (newVal !== qeditor.value) {
+      qeditor.value = newVal || "";
+    }
+  }
+);
+
+// При изменении локального qeditor эмитим обновление модели вверх
+watch(qeditor, (newVal) => {
+  emit("update:modelValue", newVal);
+});
+
 const saveWork = () => {
   emit("saveWork", qeditor.value);
 };

@@ -32,7 +32,7 @@ const routes = [
     component: () => import("pages/Document/ViewDocument.vue"),
   },
   {
-    path: '/update-note/:id',
+    path: "/update-note/:id",
     component: () => import("pages/Document/UpdateDocument.vue"),
   },
 

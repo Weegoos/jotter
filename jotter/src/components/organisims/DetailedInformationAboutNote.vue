@@ -3,12 +3,23 @@
     <q-dialog v-model="isOpen" persistent style="width: 800px">
       <q-card style="width: 800px">
         <q-card-section>
-          <p class="flex text-2xl q-mb-md justify-center items-center font-bold">{{ detailedInformation.title }}</p>
-        <p v-html="detailedInformation.content"></p>
+          <p
+            class="flex text-2xl q-mb-md justify-center items-center font-bold"
+          >
+            {{ detailedInformation.title }}
+          </p>
+          <p v-html="detailedInformation.content"></p>
         </q-card-section>
         <q-card-actions align="right">
-          <BaseCloseButtonVue  @click="closeDetailedInformationSection"/>
-         <BaseUpdateButtonVue @click="updateNote(detailedInformation.id)"/>
+          <BaseUpdateButtonVue @click="updateNote(detailedInformation.id)" />
+          <BaseCloseButtonVue
+            @click="deleteNote(detailedInformation.id)"
+            label="Delete"
+          />
+          <BaseCloseButtonVue
+            @click="closeDetailedInformationSection"
+            label="Close"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -16,10 +27,11 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { getCurrentInstance, ref, watch } from "vue";
 import BaseCloseButtonVue from "../atoms/BaseCloseButton.vue";
 import BaseUpdateButtonVue from "../atoms/BaseUpdateButton.vue";
 import { useRouter } from "vue-router";
+import { deleteMethod } from "src/composables/api-method/delete";
 
 // global variables
 const props = defineProps({
@@ -29,10 +41,12 @@ const props = defineProps({
   },
   detailedInformation: {
     type: Object,
-    required: true
-  }
+    required: true,
+  },
 });
-const router = useRouter()
+const router = useRouter();
+const {proxy} = getCurrentInstance()
+const serverURL = proxy.$serverURL
 
 const isOpen = ref(props.isOpenDetailedInformation);
 
@@ -48,9 +62,17 @@ const closeDetailedInformationSection = () => {
   emit("closeDetailedInformationSection");
 };
 
-const updateNote  = (id) => {
-  router.push(`/update-note/${id}`)
-}
+const updateNote = (id) => {
+  router.push(`/update-note/${id}`);
+};
+
+const deleteNote = async (id) => {
+  try {
+    await deleteMethod(serverURL, 'notes', id)
+  } catch (error) {
+    console.error(error);
+  }
+};
 </script>
 
 <style></style>
