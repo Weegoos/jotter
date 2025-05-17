@@ -127,7 +127,6 @@ const invite = async (info) => {
 
 onMounted(async () => {
   getUsers();
-  getUserInfo()
 });
 </script>
 

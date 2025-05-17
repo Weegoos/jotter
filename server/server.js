@@ -11,9 +11,11 @@ import userRouters from './routers/userRouters.js';
 import noteRouters from './routers/noteRouters.js';
 import fileRouters from './routers/fileRouters.js';
 import typesRouters from './routers/typesRouter.js';
+import friendRouters from './routers/friendRouters.js'
+
 import initializeTypes from "./database/typesDB.js";
 import setupGoogleAuth from './controllers/google.js';
-
+import './schemas/friendSchemas.js'; 
 
 dotenv.config();
 
@@ -43,6 +45,7 @@ const PORT = process.env.PORT || 3001;
     app.use('/notes', noteRouters);
     app.use('/file', fileRouters);
     app.use('/types', typesRouters);
+    app.use('/friend', friendRouters)
 
     setupGoogleAuth(app)
     
