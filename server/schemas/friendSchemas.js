@@ -8,6 +8,7 @@ const Friend = sequelize.define('Friend', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    status: {type: DataTypes.TEXT, allowNull: false},
 }, {
     timestamps: true,
 })

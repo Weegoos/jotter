@@ -110,8 +110,6 @@ export const getNoteByID = async (req, res) => {
     }
 };
 
-
-
 export const getAllPrivateNotes = async (req, res) => {
     try {
         const {fileId} = req.params;
@@ -131,7 +129,6 @@ export const getAllPrivateNotes = async (req, res) => {
                 client.send(JSON.stringify({ event: "private_list", fileId, notes: privateNotes }));
             }
         });
-
 
         res.json(privateNotes)
     } catch (error) {
@@ -265,8 +262,6 @@ export const getAllGoalNotes = async (req, res) => {
         res.status(500).json({ message: "Ошибка сервера" });
     }
 }
-
-
 
 export const updateNote = async (req, res) => {
     try {
