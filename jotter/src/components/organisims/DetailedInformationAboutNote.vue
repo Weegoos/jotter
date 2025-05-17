@@ -8,7 +8,7 @@
         </q-card-section>
         <q-card-actions align="right">
           <BaseCloseButtonVue  @click="closeDetailedInformationSection"/>
-          <!-- <q-btn flat label="Turn on Wifi" color="primary" v-close-popup /> -->
+         <BaseUpdateButtonVue @click="updateNote(detailedInformation.id)"/>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -18,6 +18,8 @@
 <script setup>
 import { ref, watch } from "vue";
 import BaseCloseButtonVue from "../atoms/BaseCloseButton.vue";
+import BaseUpdateButtonVue from "../atoms/BaseUpdateButton.vue";
+import { useRouter } from "vue-router";
 
 // global variables
 const props = defineProps({
@@ -30,6 +32,7 @@ const props = defineProps({
     required: true
   }
 });
+const router = useRouter()
 
 const isOpen = ref(props.isOpenDetailedInformation);
 
@@ -44,6 +47,10 @@ const emit = defineEmits(["closeDetailedInformationSection"]);
 const closeDetailedInformationSection = () => {
   emit("closeDetailedInformationSection");
 };
+
+const updateNote  = (id) => {
+  router.push(`/update-note/${id}`)
+}
 </script>
 
 <style></style>

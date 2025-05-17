@@ -96,6 +96,10 @@
  *                   example: "Ошибка сервера."
  */
 
+
+
+// --------------------------- delete ---------------------
+
 /**
  * @swagger
  * /notes/{noteId}:
@@ -154,7 +158,88 @@
  *                   example: "Ошибка сервера."
  */
 
-
+// ----------------------------- getByNoteID ------------
+/**
+ * @swagger
+ * /notes/note/{noteId}:
+ *   get:
+ *     summary: Получить заметку по ID
+ *     tags: [Notes]
+ *     description: Возвращает данные одной заметки по её уникальному идентификатору.
+ *     parameters:
+ *       - in: path
+ *         name: noteId
+ *         required: true
+ *         description: Уникальный идентификатор заметки
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     responses:
+ *       200:
+ *         description: Заметка успешно найдена.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 content:
+ *                   type: string
+ *                   example: "Текст заметки"
+ *                 title:
+ *                   type: string
+ *                   example: "Идея стартапа"
+ *                 type:
+ *                   type: string
+ *                   enum: [private, public, shared]
+ *                   example: "private"
+ *                 fileId:
+ *                   type: integer
+ *                   example: 5
+ *                 fileName:
+ *                   type: string
+ *                   example: "my_notes.txt"
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2024-03-18T12:34:56.000Z"
+ *                 updatedAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2024-03-19T10:00:00.000Z"
+ *       400:
+ *         description: Неверный запрос — отсутствует параметр noteId.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка: noteId отсутствует."
+ *       404:
+ *         description: Заметка не найдена по указанному ID.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Заметка не найдена."
+ *       500:
+ *         description: Внутренняя ошибка сервера.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка сервера."
+ */
 
 // -------------------- notes/all -----------------------
 

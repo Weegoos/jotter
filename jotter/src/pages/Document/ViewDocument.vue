@@ -26,26 +26,6 @@
           ></div>
         </q-td>
       </template>
-      <template v-slot:body-cell-accept="props">
-        <q-td align="center">
-          <q-btn
-            class="bg-blue-500 hover:bg-blue-600 text-white"
-            icon="mdi-pencil"
-            size="sm"
-            @click="editNote(props.row)"
-          />
-        </q-td>
-      </template>
-      <template v-slot:body-cell-trash="props">
-        <q-td align="center">
-          <q-btn
-            class="bg-rose-500 hover:bg-rose-600 text-white"
-            icon="mdi-delete"
-            size="sm"
-            @click="changeFileStatus(props.row)"
-          />
-        </q-td>
-      </template>
     </q-table>
     <DetailedInformationAboutNoteVue
       :isOpenDetailedInformation="isOpenDetailedInformation"
@@ -109,18 +89,6 @@ const columns = computed(() => [
     field: (row) => row.updatedAt,
     sortable: true,
   },
-  {
-    name: "accept",
-    label: "Edit",
-    align: "center",
-    field: "id",
-  },
-  {
-    name: "trash",
-    label: "Move to Trash",
-    align: "center",
-    field: "id",
-  },
 ]);
 
 const getNotesById = async () => {
@@ -152,5 +120,3 @@ const closeDetailedInformationSection = () => {
   isOpenDetailedInformation.value = false;
 };
 </script>
-
-<style></style>

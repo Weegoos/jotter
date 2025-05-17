@@ -79,6 +79,37 @@ export const getAllNotesByFileID = async (req, res) => {
         res.status(500).json({ message: "Ошибка сервера" });
     }
 };
+export const getNoteByID = async (req, res) => {
+    try {
+       const noteId = Number(req.params.noteId);
+    console.log("noteId param:", noteId);
+
+        if (!noteId) {
+            return res.status(400).json({ message: "Ошибка: noteId отсутствует." });
+        }
+        const note = await Notes.findOne({
+            where: { id: Number(noteId) },
+        });
+
+
+        if (!note) {
+            return res.status(404).json({ message: "Заметка не найдена." });
+        }
+
+        // Отправка по WebSocket (если нужно)
+        wss.clients.forEach(client => {
+            if (client.readyState === 1) {
+                client.send(JSON.stringify({ event: "note_data", note }));
+            }
+        });
+
+        res.json(note);
+    } catch (error) {
+        console.error("Ошибка получения заметки:", error);
+        res.status(500).json({ message: "Ошибка сервера" });
+    }
+};
+
 
 
 export const getAllPrivateNotes = async (req, res) => {
