@@ -20,7 +20,7 @@ export async function getMethod(serverURL, url, $q, successMsg) {
     return response.data;
   } catch (error) {
     console.error("Ошибка:", error.response?.data);
-    errorMessage($q, `Ошибка: ${error}`);
+    errorMessage($q, `Ошибка: ${error.response?.data.message}`);
   } finally {
     $q.loading.hide();
   }

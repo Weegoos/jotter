@@ -169,3 +169,90 @@
  *         description: Ошибка сервера
  */
 
+// ---------------------------- getAllUsers -------------------
+
+/**
+ * @swagger
+ * /user/allUsers:
+ *   get:
+ *     summary: Получение всех пользователей
+ *     tags: 
+ *       - User
+ *     responses:
+ *       200:
+ *         description: Успешное получение списка пользователей
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   username:
+ *                     type: string
+ *                     example: johndoe
+ *                   email:
+ *                     type: string
+ *                     example: johndoe@example.com
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: 2024-08-01T12:00:00Z
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: 2024-08-05T12:00:00Z
+ *       404:
+ *         description: Пользователи не найдены
+ *       500:
+ *         description: Ошибка сервера
+ */
+
+
+// -------------- getAllUsersByInput ---------------------------
+/**
+ * @swagger
+ * /user/allUsersByInput:
+ *   get:
+ *     summary: Поиск пользователей по частичному совпадению fullname
+ *     tags:
+ *       - User
+ *     parameters:
+ *       - in: query
+ *         name: fullname
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Часть или полное имя пользователя для поиска
+ *     responses:
+ *       200:
+ *         description: Список найденных пользователей
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   fullname:
+ *                     type: string
+ *                     example: "Иван Иванов"
+ *                   email:
+ *                     type: string
+ *                     example: "ivan@example.com"
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
+ *       400:
+ *         description: Параметр fullname обязателен
+ *       404:
+ *         description: Пользователи не найдены
+ *       500:
+ *         description: Ошибка сервера
+ */
