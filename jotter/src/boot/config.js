@@ -8,6 +8,9 @@ export default ({ app }) => {
   const contentForView = "active";
   const contentForTrashedComponent = "trashed";
   const webSocketURL = "ws://localhost:3000";
+  const pending = "pending";
+  const accepted = "accepted";
+  const rejected = "rejected";
 
   app.config.globalProperties.$mobileWidth = mobileWidth;
   app.config.globalProperties.$serverURL = serverURL;
@@ -18,4 +21,7 @@ export default ({ app }) => {
   app.config.globalProperties.$webSocketURL = webSocketURL;
   app.config.globalProperties.$contentForTrashedComponent =
     contentForTrashedComponent;
+  app.config.globalProperties.$pending = pending;
+  app.config.globalProperties.$accepted = accepted;
+  app.config.globalProperties.$rejected = rejected;
 };

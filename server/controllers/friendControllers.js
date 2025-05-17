@@ -3,6 +3,7 @@ import { Op } from "sequelize";
 import Friend from "../schemas/friendSchemas.js";
 import User from "../schemas/userSchemas.js";
 import dotenv from "dotenv";
+import { wss } from "../server.js";
 const router = express.Router();
 
 
@@ -52,6 +53,16 @@ export const sendRequestToTheFriend = async (req, res) => {
       status: process.env.PENDIND_STATUS
     });
 
+     wss.clients.forEach(client => {
+            if (client.readyState === 1) {
+                // 🔥 Отправляем событие о новой заметке
+                client.send(JSON.stringify({ 
+                    event: "new_friend",
+                    newFriend: newFriend
+                }));
+            }
+        });
+
     res.status(201).json({ message: "Запрос отправлен пользователю", friend: newFriend });
   } catch (error) {
     console.error("Ошибка при добавлении в друзья:", error);
@@ -97,6 +108,12 @@ export const getUserByStatus = async (req, res) => {
         status
       },
     });
+     
+    wss.clients.forEach(client => {
+      if (client.readyState === 1) {
+        client.send(JSON.stringify({ event: "allFriendsByStatus", friends}));
+      }
+    }); 
 
      res.status(200).json({friends});
   } catch (error) {
@@ -135,6 +152,12 @@ export const changeFriendStatus = async (req, res) => {
 
     friend.status = status;
     await friend.save();
+
+    wss.clients.forEach(client => {
+      if (client.readyState === 1) {
+        client.send(JSON.stringify({ event: "changeFriendStatus", friend}));
+      }
+    }); 
 
     res.status(200).json({ message: "Статус обновлён", friend });
   } catch (error) {

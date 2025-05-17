@@ -6,7 +6,7 @@ import { errorMessage } from "../notify/errorMessage";
 
 export async function postMethod(serverURL, url, variableRef, $q, successMsg) {
   try {
-      const data = variableRef?.value ?? undefined;
+    const data = variableRef?.value ?? undefined;
     const response = await axios.post(`${serverURL}${url}`, variableRef, {
       headers: {
         "Content-Type": "application/json",
@@ -22,7 +22,7 @@ export async function postMethod(serverURL, url, variableRef, $q, successMsg) {
     } else {
       console.error("Ошибка:", error.message);
     }
-    errorMessage($q, `Ошибка: ${error.response.data.message|| error}`);
+    errorMessage($q, `Ошибка: ${error.response.data.message || error}`);
   } finally {
     $q.loading.hide();
   }

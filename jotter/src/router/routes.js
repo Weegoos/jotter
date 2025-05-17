@@ -39,6 +39,10 @@ const routes = [
     path: "/user-search",
     component: () => import("pages/Profile/UserSearch.vue"),
   },
+  {
+    path: "/personal-data",
+    component: () => import("pages/Profile/PersonalData.vue"),
+  },
   // Always leave this as last one,
   // but you can also remove it
   {

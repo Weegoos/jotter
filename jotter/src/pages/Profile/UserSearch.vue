@@ -22,7 +22,7 @@
       row-key="name"
       hide-bottom
     >
-      <template v-slot:body-cell-invite="props" >
+      <template v-slot:body-cell-invite="props">
         <q-td align="center">
           <q-btn
             class="bg-blue-500 hover:bg-blue-600 text-white"
@@ -87,7 +87,7 @@ const getUsers = async () => {
 };
 
 const fullname = ref("");
-const getAllUsersByInput = ref([])
+const getAllUsersByInput = ref([]);
 const getUsersByInput = async () => {
   try {
     const response = await getMethod(
@@ -97,19 +97,16 @@ const getUsersByInput = async () => {
       "Получили пользователя"
     );
     console.log(response);
-    getAllUsersByInput.value = response
+    getAllUsersByInput.value = response;
   } catch (error) {
     console.log(error);
   }
 };
 
-watch(
-  [getAllUsers, getAllUsersByInput],
-  ([allUsers, usersByInput]) => {
-    rows.value = (usersByInput && usersByInput.length > 0) ? usersByInput : allUsers;
-  }
-);
-
+watch([getAllUsers, getAllUsersByInput], ([allUsers, usersByInput]) => {
+  rows.value =
+    usersByInput && usersByInput.length > 0 ? usersByInput : allUsers;
+});
 
 const onEnterPress = (e) => {
   if (e.key === "Enter") {
@@ -124,11 +121,17 @@ const searchUser = () => {
 const invite = async (info) => {
   try {
     console.log(info);
-    await postMethod(serverURL, `friend/add?fullname=${info.fullname}`, undefined, $q, 'Запрос отправлен')
+    await postMethod(
+      serverURL,
+      `friend/add?fullname=${info.fullname}`,
+      undefined,
+      $q,
+      "Запрос отправлен"
+    );
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-}
+};
 
 onMounted(async () => {
   getUsers();
