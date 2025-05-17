@@ -5,7 +5,6 @@
       bordered
       title="Files"
       :rows="rows"
-      @row-click="pushToTheFile"
       :columns="columns"
       row-key="name"
       hide-bottom
@@ -26,6 +25,16 @@
           ></div>
         </q-td>
       </template>
+               <template v-slot:body-cell-push="props">
+        <q-td align="center">
+          <q-btn
+            class="bg-blue-500 hover:bg-blue-600 text-white"
+            icon="mdi-arrow-right"
+            size="sm"
+            @click="pushToTheFile(props.row)"
+          />
+        </q-td>
+      </template>
       <template v-slot:body-cell-accept="props">
         <q-td align="center">
           <q-btn
@@ -42,7 +51,7 @@
             class="bg-rose-500 hover:bg-rose-600 text-white"
             icon="mdi-delete"
             size="sm"
-            @click="changeFileStatus(props.row)"
+            @click="changeFileStatus(props.row, $event)"
           />
         </q-td>
       </template>
@@ -124,6 +133,12 @@ const columns = computed(() => [
     field: (row) => row.updatedAt,
     sortable: true,
   },
+    {
+    name: "push",
+    label: "Push",
+    align: "center",
+    field: "id",
+  },
   {
     name: "accept",
     label: "Edit",
@@ -160,21 +175,25 @@ const pagination = (page) => {
   getFiles(current.value);
 };
 
-const pushToTheFile = (info, row) => {
+const pushToTheFile = (row) => {
   router.push(`/view-notes/${row.id}`);
+  console.log(row.id);
+
 };
 
-const changeFileStatus = async (info) => {
+const changeFileStatus = async (info, event) => {
   try {
-    await putMethod(
-      serverURL,
-      `file/editStatus?fileId=${info.id}&status=${contentForTrashedComponent}`,
-      "",
-      $q,
-      "The status of file has been successfully changed",
-      "Error: ",
-      {}
-    );
+     event.stopPropagation();
+   await putMethod(
+  serverURL,
+  `file/editStatus?fileId=${info.id}&status=${contentForTrashedComponent}`,
+  undefined, // axios не будет отправлять тело вообще
+  $q,
+  "The status of file has been successfully changed",
+  "Error: ",
+  {}
+);
+
   } catch (error) {
     console.error(error);
   }

@@ -45,8 +45,8 @@ const props = defineProps({
   },
 });
 const router = useRouter();
-const {proxy} = getCurrentInstance()
-const serverURL = proxy.$serverURL
+const { proxy } = getCurrentInstance();
+const serverURL = proxy.$serverURL;
 
 const isOpen = ref(props.isOpenDetailedInformation);
 
@@ -68,7 +68,8 @@ const updateNote = (id) => {
 
 const deleteNote = async (id) => {
   try {
-    await deleteMethod(serverURL, 'notes', id)
+    await deleteMethod(serverURL, "notes", id);
+     emit("closeDetailedInformationSection");
   } catch (error) {
     console.error(error);
   }

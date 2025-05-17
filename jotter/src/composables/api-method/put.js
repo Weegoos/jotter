@@ -14,8 +14,8 @@ export async function putMethod(
   params = {}
 ) {
   try {
-    const data = variableRef?.value ?? null;
-    const response = await axios.put(`${serverURL}${url}`, variableRef, {
+    const data = variableRef?.value ?? undefined;
+    const response = await axios.put(`${serverURL}${url}`, data, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",

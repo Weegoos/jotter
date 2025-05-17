@@ -41,6 +41,7 @@ import { getMethod } from "src/composables/api-method/get";
 import { computed, getCurrentInstance, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import DetailedInformationAboutNoteVue from "../../components/organisims/DetailedInformationAboutNote.vue";
+import { useDateFormat } from "src/composables/javascript-function/formatDate";
 
 // global variables
 const { proxy } = getCurrentInstance();
@@ -48,6 +49,7 @@ const serverURL = proxy.$serverURL;
 const $q = useQuasar();
 const webSocketURL = proxy.$webSocketURL;
 const socket = new WebSocket(webSocketURL);
+const { formatDate } = useDateFormat();
 
 socket.onopen = () => {
   console.log("✅ WebSocket подключен");
@@ -98,14 +100,18 @@ const columns = computed(() => [
     name: "created_at",
     label: "Created At",
     align: "left",
-    field: (row) => row.createdAt,
+    field: (row) => formatDate(row.createdAt),
     sortable: true,
   },
   {
     name: "updated_at",
     label: "Updated At",
     align: "left",
-    field: (row) => row.updatedAt,
+    field: (row) => {
+      console.log("row.updated_at:", row.updatedAt);
+      return formatDate(row.updatedAt);
+    },
+
     sortable: true,
   },
 ]);
