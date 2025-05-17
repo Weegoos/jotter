@@ -15,12 +15,13 @@
       <q-tab-panel name="notifications">
         <NotificationsOrganisims />
       </q-tab-panel>
-      <q-tab-panel name="friends"> friend </q-tab-panel>
+      <q-tab-panel name="friends"> <FriendsPage /> </q-tab-panel>
     </q-tab-panels>
   </div>
 </template>
 
 <script setup>
+import FriendsPage from "src/components/organisims/FriendsPage.vue";
 import NotificationsOrganisims from "src/components/organisims/NotificationsOrganisims.vue";
 import { ref } from "vue";
 

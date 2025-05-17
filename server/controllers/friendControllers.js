@@ -189,6 +189,12 @@ export const deleteFriendById = async (req, res) => {
 
     await friend.destroy()
 
+    wss.clients.forEach(client => {
+      if (client.readyState === 1) {
+        client.send(JSON.stringify({ event: "deleteFromFriend", friend}));
+      }
+    }); 
+
      res.status(200).json({ message: "Друг успешно удален." });
   } catch (error) {
     console.error("Ошибка при изменении статуса друга:", error);

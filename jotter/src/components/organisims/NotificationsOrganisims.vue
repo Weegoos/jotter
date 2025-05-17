@@ -99,7 +99,7 @@ const acceptFriend = async (friend) => {
 };
 
 const rejectFriend = async (friend) => {
-    try {
+  try {
     console.log(friend);
     await putMethod(
       serverURL,
@@ -113,7 +113,7 @@ const rejectFriend = async (friend) => {
   } catch (error) {
     console.error(error);
   }
-}
+};
 
 onMounted(() => {
   getPendingFriend();
