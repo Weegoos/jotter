@@ -150,12 +150,18 @@
  * @swagger
  * /friend/changeStatus:
  *   put:
- *     summary: Изменить статус дружбы текущего пользователя
+ *     summary: Изменить статус дружбы по friendId
  *     tags:
  *       - Friends
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: query
+ *         name: friendId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Идентификатор друга
  *       - in: query
  *         name: status
  *         schema:
@@ -200,7 +206,7 @@
  *                   type: string
  *                   example: "Параметр status обязателен"
  *       401:
- *         description: Ошибка - неавторизованный пользователь
+ *         description: Ошибка - отсутствует friendId
  *         content:
  *           application/json:
  *             schema:
@@ -208,7 +214,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Неавторизованный пользователь"
+ *                   example: "Друг не найден"
  *       404:
  *         description: Запись друга не найдена
  *         content:
@@ -230,3 +236,64 @@
  *                   type: string
  *                   example: "Ошибка сервера"
  */
+
+// -------------------- deleteById -----------------------
+/**
+ * @swagger
+ * /friend/deleteById:
+ *   delete:
+ *     summary: Удалить друга по friendId
+ *     tags:
+ *       - Friends
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: friendId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Идентификатор друга для удаления
+ *     responses:
+ *       200:
+ *         description: Друг успешно удалён
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Друг успешно удален."
+ *       400:
+ *         description: Параметр friendId не указан
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Параметр friendId обязателен"
+ *       404:
+ *         description: Друг не найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Друг не найден."
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка сервера"
+ */
+

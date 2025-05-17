@@ -59,6 +59,8 @@ export const sendRequestToTheFriend = async (req, res) => {
   }
 };
 
+// export 
+
 export const getUserByStatus = async (req, res) => {
   try {
     const userId = req.user?.id;
@@ -87,18 +89,27 @@ export const getUserByStatus = async (req, res) => {
 
 export const changeFriendStatus = async (req, res) => {
   try {
-    const userId = req.user?.id;
-    const { status } = req.query;
+    const userId = req.user?.id; // текущий пользователь из авторизации
+    const { status, friendId } = req.query;
 
     if (!userId) {
-     return res.status(401).json({ message: "Неавторизованный пользователь" });
+      return res.status(401).json({ message: "Неавторизованный пользователь" });
+    }
+
+    if (!friendId) {
+      return res.status(400).json({ message: "Параметр friendId обязателен" });
     }
 
     if (!status) {
       return res.status(400).json({ message: "Параметр status обязателен" });
     }
 
-    const friend = await Friend.findByPk(userId);
+    const friend = await Friend.findOne({
+      where: {
+        userId,
+        friendId,
+      }
+    });
 
     if (!friend) {
       return res.status(404).json({ message: "Дружба не найдена" });
@@ -107,7 +118,6 @@ export const changeFriendStatus = async (req, res) => {
     friend.status = status;
     await friend.save();
 
-    // Вернуть обновлённую запись или всех друзей текущего пользователя
     res.status(200).json({ message: "Статус обновлён", friend });
   } catch (error) {
     console.error("Ошибка при изменении статуса друга:", error);
@@ -115,7 +125,36 @@ export const changeFriendStatus = async (req, res) => {
   }
 };
 
-// export const deleteFriendBy
+
+export const deleteFriendById = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    const { friendId } = req.query
+
+    if (!friendId) {
+      return res.status(400).json({ message: "Параметр friendId обязателен" });
+    }
+
+    const friend = await Friend.findOne({
+      where: {
+        userId,
+        friendId,
+      }
+    });
+
+
+    if (!friend) {
+        return res.status(404).json({ message: "Друг не найден." });
+    }
+
+    await friend.destroy()
+
+     res.status(200).json({ message: "Друг успешно удален." });
+  } catch (error) {
+    console.error("Ошибка при изменении статуса друга:", error);
+    res.status(500).json({ message: "Ошибка сервера" });
+  }
+}
 
 
 export default router;
