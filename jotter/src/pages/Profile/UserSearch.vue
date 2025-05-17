@@ -39,6 +39,7 @@
 <script setup>
 import { useQuasar } from "quasar";
 import { getMethod } from "src/composables/api-method/get";
+import { postMethod } from "src/composables/api-method/post";
 import { computed, getCurrentInstance, onMounted, ref, watch } from "vue";
 
 // global variables
@@ -121,8 +122,12 @@ const searchUser = () => {
 };
 
 const invite = async (info) => {
-  console.log(info);
-
+  try {
+    console.log(info);
+    await postMethod(serverURL, `friend/add?fullname=${info.fullname}`, undefined, $q, 'Запрос отправлен')
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 onMounted(async () => {
