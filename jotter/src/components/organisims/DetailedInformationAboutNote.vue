@@ -69,7 +69,7 @@ const updateNote = (id) => {
 const deleteNote = async (id) => {
   try {
     await deleteMethod(serverURL, "notes", id);
-     emit("closeDetailedInformationSection");
+    emit("closeDetailedInformationSection");
   } catch (error) {
     console.error(error);
   }

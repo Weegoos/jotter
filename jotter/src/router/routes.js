@@ -35,7 +35,10 @@ const routes = [
     path: "/update-note/:id",
     component: () => import("pages/Document/UpdateDocument.vue"),
   },
-
+  {
+    path: "/user-search",
+    component: () => import("pages/Profile/UserSearch.vue"),
+  },
   // Always leave this as last one,
   // but you can also remove it
   {

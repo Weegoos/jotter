@@ -69,7 +69,7 @@ export const getAllNotesByFileID = async (req, res) => {
 
         wss.clients.forEach(client => {
             if (client.readyState === 1) {
-                client.send(JSON.stringify({ event: "notes_list", fileId, notes }));
+                client.send(JSON.stringify({ event: "allNotes", fileId, notes }));
             }
         });
 
