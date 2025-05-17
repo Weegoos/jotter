@@ -65,6 +65,73 @@
  *         description: Внутренняя ошибка сервера.
  */
 
+// -------------------- /friend/getAll ----------------------------
+
+/**
+ * @swagger
+ * /friend/getAll:
+ *   get:
+ *     summary: Получить всех друзей текущего пользователя
+ *     tags:
+ *       - Friends
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Список друзей пользователя
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 friends:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 3
+ *                       userId:
+ *                         type: integer
+ *                         example: 1
+ *                       friendId:
+ *                         type: integer
+ *                         example: 2
+ *                       status:
+ *                         type: string
+ *                         example: "pending"
+ *                       createdAt:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2025-05-17T19:19:08.997Z"
+ *                       updatedAt:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2025-05-17T19:19:08.997Z"
+ *       401:
+ *         description: Неавторизованный пользователь
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Неавторизованный пользователь"
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка сервера"
+ */
+
+
 // -------------------- /friend/getByStatus -----------------------
 
 /**

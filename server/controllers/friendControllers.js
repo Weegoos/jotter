@@ -59,7 +59,25 @@ export const sendRequestToTheFriend = async (req, res) => {
   }
 };
 
-// export 
+export const getAllFriends = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Неавторизованный пользователь" });
+    }
+
+    const friends = await Friend.findAll({
+      where: { userId },
+      order: [['createdAt', 'DESC']], // например, по дате добавления — опционально
+    });
+
+    res.status(200).json({ friends });
+  } catch (error) {
+    console.error("Ошибка при получении друзей:", error);
+    res.status(500).json({ message: "Ошибка сервера" });
+  }
+};
 
 export const getUserByStatus = async (req, res) => {
   try {
@@ -125,7 +143,6 @@ export const changeFriendStatus = async (req, res) => {
   }
 };
 
-
 export const deleteFriendById = async (req, res) => {
   try {
     const userId = req.user?.id;
@@ -155,6 +172,5 @@ export const deleteFriendById = async (req, res) => {
     res.status(500).json({ message: "Ошибка сервера" });
   }
 }
-
 
 export default router;
