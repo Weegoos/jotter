@@ -52,111 +52,106 @@ export const createNote = async (req, res) => {
     }
 };
 export const getAllNotesByFileID = async (req, res) => {
-    try {
-        const { fileId } = req.params;
-        if (!fileId) {
-            return res.status(400).json({ message: "Ошибка: fileID отсутствует." });
-        }
+  try {
+    const userId = req.user.id;
+    const { fileId } = req.params;
 
-        // 📌 Получаем заметки с сортировкой (по обновлению, затем по созданию)
-        const notes = await Notes.findAll({
-            where: { fileId: fileId },
-            order: [
-                ["updatedAt", "DESC"], 
-                ["createdAt", "DESC"]  
-            ]
-        });
-
-        wss.clients.forEach(client => {
-            if (client.readyState === 1) {
-                client.send(JSON.stringify({ event: "allNotes", fileId, notes }));
-            }
-        });
-
-        res.json(notes);
-    } catch (error) {
-        console.error("Ошибка получения заметок:", error);
-        res.status(500).json({ message: "Ошибка сервера" });
+    if (!fileId) {
+      return res.status(400).json({ message: "Ошибка: fileID отсутствует." });
     }
+
+    // Проверяем, принадлежит ли файл текущему пользователю
+    const file = await Files.findOne({
+      where: { id: fileId, userId: userId }
+    });
+
+    if (!file) {
+      return res.status(403).json({ message: "Доступ запрещен или файл не найден." });
+    }
+
+    // Получаем заметки этого файла
+    const notes = await Notes.findAll({
+      where: { fileId: fileId },
+      order: [
+        ["updatedAt", "DESC"],
+        ["createdAt", "DESC"]
+      ]
+    });
+
+    wss.clients.forEach(client => {
+      if (client.readyState === 1) {
+        client.send(JSON.stringify({ event: "allNotes", fileId, notes }));
+      }
+    });
+
+    res.json(notes);
+  } catch (error) {
+    console.error("Ошибка получения заметок:", error);
+    res.status(500).json({ message: "Ошибка сервера" });
+  }
 };
+
 export const getNoteByID = async (req, res) => {
-    try {
-       const noteId = Number(req.params.noteId);
+  try {
+    const userId = req.user.id;
+    const noteId = Number(req.params.noteId);
     console.log("noteId param:", noteId);
 
-        if (!noteId) {
-            return res.status(400).json({ message: "Ошибка: noteId отсутствует." });
-        }
-        const note = await Notes.findOne({
-            where: { id: Number(noteId) },
-        });
-
-
-        if (!note) {
-            return res.status(404).json({ message: "Заметка не найдена." });
-        }
-
-        // Отправка по WebSocket (если нужно)
-        wss.clients.forEach(client => {
-            if (client.readyState === 1) {
-                client.send(JSON.stringify({ event: "note_data", note }));
-            }
-        });
-
-        res.json(note);
-    } catch (error) {
-        console.error("Ошибка получения заметки:", error);
-        res.status(500).json({ message: "Ошибка сервера" });
+    if (!noteId) {
+      return res.status(400).json({ message: "Ошибка: noteId отсутствует." });
     }
+
+    const note = await Notes.findOne({
+      where: { id: noteId },
+      include: [{
+        model: Files,
+        where: { userId: userId },
+        attributes: []
+      }]
+    });
+
+    if (!note) {
+      return res.status(404).json({ message: "Заметка не найдена." });
+    }
+
+    // Отправка по WebSocket (если нужно)
+    wss.clients.forEach(client => {
+      if (client.readyState === 1) {
+        client.send(JSON.stringify({ event: "note_data", note }));
+      }
+    });
+
+    res.json(note);
+  } catch (error) {
+    console.error("Ошибка получения заметки:", error);
+    res.status(500).json({ message: "Ошибка сервера" });
+  }
 };
-
-export const getAllPrivateNotes = async (req, res) => {
-    try {
-        const {fileId} = req.params;
-        if (!fileId) {
-            return res.status(400).json({ message: "Ошибка: fileID отсутствует." });
-        }
-        const privateNotes = await Notes.findAll({
-            where: {type: 'private', fileId: fileId},
-            order: [
-                ["updatedAt", "DESC"], 
-                ["createdAt", "DESC"]  
-            ]
-        });
-
-        wss.clients.forEach(client => {
-            if (client.readyState === 1) {
-                client.send(JSON.stringify({ event: "private_list", fileId, notes: privateNotes }));
-            }
-        });
-
-        res.json(privateNotes)
-    } catch (error) {
-        console.error("Ошибка:", error);
-        res.status(500).json({ message: "Ошибка сервера" });
-    }
-}
 
 export const getAllPublicNotes = async (req, res) => {
     try {
-        const {fileId} = req.params;
-        if (!fileId) {
-            return res.status(400).json({ message: "Ошибка: fileID отсутствует." });
-        }
-        const privateNotes = await Notes.findAll({
-            where: {type: 'public', fileId: fileId},
-            order: [
-                ["updatedAt", "DESC"], 
-                ["createdAt", "DESC"]  
-            ]
+        console.log("Получаем публичные заметки...");
+        const userId = req.user.id; 
+        const notes = await Notes.findAll({
+        where: { type: 'public' },  // публичные заметки
+        include: [{
+            model: Files,
+            where: { userId: userId }, // только файлы этого пользователя
+            attributes: []  // не нужно возвращать данные файлов, только фильтр
+        }],
+        order: [
+            ["updatedAt", "DESC"],
+            ["createdAt", "DESC"]
+        ]
         });
 
-        res.json(privateNotes)
+        res.json(notes)
     } catch (error) {
-        console.error("Ошибка:", error);
-        res.status(500).json({ message: "Ошибка сервера" });
+        console.error("Ошибка при получении публичных заметок:", error);
+        res.status(500).json({ message: "Ошибка сервера при получении заметок" });
     }
 }
+
 
 
 export const updateNote = async (req, res) => {

@@ -308,23 +308,14 @@
 
 /**
  * @swagger
- * /notes/public/{fileId}:
+ * /notes/public:
  *   get:
- *     summary: Получить все публичные заметки для определенного файла
- *     description: Возвращает список всех заметок, у которых `type` равно "public" и `fileId` соответствует переданному значению.
- *     tags:
- *       - Notes
- *     parameters:
- *       - in: path
- *         name: fileId
- *         required: true
- *         description: ID файла, к которому относятся заметки.
- *         schema:
- *           type: integer
- *           example: 123
+ *     summary: Получить все публичные заметки
+ *     description: Возвращает список всех заметок с типом "public".
+ *     tags: [Notes]
  *     responses:
  *       200:
- *         description: Успешный ответ. Возвращает массив приватных заметок, связанных с указанным `fileId`.
+ *         description: Успешный ответ. Список публичных заметок.
  *         content:
  *           application/json:
  *             schema:
@@ -337,36 +328,23 @@
  *                     example: 1
  *                   title:
  *                     type: string
- *                     example: "Моя личная заметка"
+ *                     example: "Моя публичная заметка"
  *                   content:
  *                     type: string
- *                     example: "Это приватная заметка"
+ *                     example: "Содержимое публичной заметки"
  *                   type:
  *                     type: string
  *                     example: "public"
- *                   fileId:
- *                     type: integer
- *                     example: 123
  *                   createdAt:
  *                     type: string
  *                     format: date-time
- *                     example: "2024-07-29T12:00:00.000Z"
+ *                     example: "2024-08-13T10:00:00.000Z"
  *                   updatedAt:
  *                     type: string
  *                     format: date-time
- *                     example: "2024-07-29T12:30:00.000Z"
- *       400:
- *         description: Ошибка запроса, если `fileId` отсутствует.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Ошибка: fileID отсутствует."
+ *                     example: "2024-08-14T12:30:00.000Z"
  *       500:
- *         description: Ошибка сервера.
+ *         description: Ошибка сервера при получении заметок
  *         content:
  *           application/json:
  *             schema:
@@ -374,7 +352,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Ошибка сервера"
+ *                   example: "Ошибка сервера при получении заметок"
  */
 
 
