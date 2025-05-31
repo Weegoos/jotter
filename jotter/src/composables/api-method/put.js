@@ -7,14 +7,17 @@ import { loadingMessage } from "../notify/loadingMessage";
 export async function putMethod(
   serverURL,
   url,
-  variableRef,
+  variableRefOrData,
   $q,
-  successMsg,
-  errorMsg,
+  successMsg = "Успешно обновлено",
+  errorMsg = "Ошибка: ",
   params = {}
 ) {
   try {
-    const data = variableRef?.value ?? undefined;
+    const data =
+      typeof variableRefOrData === "object" && "value" in variableRefOrData
+        ? variableRefOrData.value
+        : variableRefOrData;
     const response = await axios.put(`${serverURL}${url}`, data, {
       headers: {
         "Content-Type": "application/json",

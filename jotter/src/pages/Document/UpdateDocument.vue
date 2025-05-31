@@ -42,7 +42,7 @@ const getCurrentInformation = async () => {
     serverURL,
     `notes/note/${id}`,
     $q,
-    "The information about note"
+    "The information about note has been successfully received"
   );
   console.log(note);
   type.value = note.type;
@@ -63,11 +63,12 @@ const getList = async () => {
 
 const sendWork = async (data) => {
   try {
-    const payload = {
-      content: data,
-      title: title.value,
+    const payload = ref({
       type: type.value,
-    };
+      title: title.value,
+      content: data,
+    });
+    console.log("payload", payload);
 
     await putMethod(
       serverURL,
