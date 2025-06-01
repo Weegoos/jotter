@@ -28,16 +28,13 @@ export const createNote = async (req, res) => {
         });
 
         const uniqueTypes = types.map(t => t.type);
-        // ✅ Теперь WebSocket отправляет новую заметку
+
         wss.clients.forEach(client => {
             if (client.readyState === 1) {
-                // 🔥 Отправляем событие о новой заметке
                 client.send(JSON.stringify({ 
                     event: "create_note",
                     note: note
                 }));
-
-                // 🔥 Отправляем обновленный список типов
                 client.send(JSON.stringify({ 
                     event: "types_userUsed",
                     types: uniqueTypes 
@@ -51,6 +48,7 @@ export const createNote = async (req, res) => {
         res.status(500).json({ message: "Ошибка сервера" });
     }
 };
+
 export const getAllNotesByFileID = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -60,7 +58,6 @@ export const getAllNotesByFileID = async (req, res) => {
       return res.status(400).json({ message: "Ошибка: fileID отсутствует." });
     }
 
-    // Проверяем, принадлежит ли файл текущему пользователю
     const file = await Files.findOne({
       where: { id: fileId, userId: userId }
     });
@@ -69,7 +66,6 @@ export const getAllNotesByFileID = async (req, res) => {
       return res.status(403).json({ message: "Доступ запрещен или файл не найден." });
     }
 
-    // Получаем заметки этого файла
     const notes = await Notes.findAll({
       where: { fileId: fileId },
       order: [
@@ -114,7 +110,6 @@ export const getNoteByID = async (req, res) => {
       return res.status(404).json({ message: "Заметка не найдена." });
     }
 
-    // Отправка по WebSocket (если нужно)
     wss.clients.forEach(client => {
       if (client.readyState === 1) {
         client.send(JSON.stringify({ event: "note_data", note }));
@@ -133,11 +128,11 @@ export const getAllPublicNotes = async (req, res) => {
         console.log("Получаем публичные заметки...");
         const userId = req.user.id; 
         const notes = await Notes.findAll({
-        where: { type: 'public' },  // публичные заметки
+        where: { type: 'public' },  
         include: [{
             model: Files,
-            where: { userId: userId }, // только файлы этого пользователя
-            attributes: []  // не нужно возвращать данные файлов, только фильтр
+            where: { userId: userId }, 
+            attributes: [] 
         }],
         order: [
             ["updatedAt", "DESC"],
@@ -151,8 +146,6 @@ export const getAllPublicNotes = async (req, res) => {
         res.status(500).json({ message: "Ошибка сервера при получении заметок" });
     }
 }
-
-
 
 export const updateNote = async (req, res) => {
     try {
@@ -176,7 +169,6 @@ export const updateNote = async (req, res) => {
         // 🔥 Запрашиваем обновленный список заметок
         const notes = await Notes.findAll({ where: { fileId: note.fileId } });
 
-        // 🔥 Отправляем обновленный список ВСЕМ клиентам через WebSocket
         wss.clients.forEach(client => {
             if (client.readyState === 1) {
                 client.send(JSON.stringify({ 
@@ -193,7 +185,6 @@ export const updateNote = async (req, res) => {
         res.status(500).json({ message: "Ошибка сервера" });
     }
 };
-
 
 export const deleteNoteById = async (req, res) => {
     try {
