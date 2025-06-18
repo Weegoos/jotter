@@ -24,15 +24,17 @@
     "vue-router": "^4.0.12"
   },
   "devDependencies": {
-    "@intlify/vite-plugin-vue-i18n": "^3.3.1",
-    "@quasar/app-vite": "^1.9.0",
+    "@intlify/unplugin-vue-i18n": "^6.0.8",
+    "@quasar/app-vite": "^2.2.1",
     "autoprefixer": "^10.4.21",
+    "esbuild": "^0.19.12",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-vue": "^9.0.0",
     "postcss": "^8.5.3",
     "prettier": "^2.5.1",
     "tailwindcss": "^3.4.17",
+    "vite": "^5.2.10",
     "vite-plugin-checker": "^0.7.1"
   },
   "engines": {
