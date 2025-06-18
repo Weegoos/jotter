@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, ref, watch, defineEmits } from "vue";
+import { getCurrentInstance, ref, watch } from "vue";
 const props = defineProps({
   variableName: {
     type: Object,

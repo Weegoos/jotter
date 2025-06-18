@@ -2,10 +2,11 @@ import express from "express";
 import authMiddleware from "../middlewares/authMiddleware.js";
 import "./swagger/fileSwagger.js"; 
 import { getFilesByStatus, getFilesByUserId, getFilesName } from "../controllers/file/getFileControllers.js";
+import { createFile } from "../controllers/file/postFileController.js";
 const router = express.Router();
 
 
-// router.post('/create',authMiddleware,  createFile)
+router.post('/create',authMiddleware,  createFile)
 
 router.get('/allFiles', authMiddleware, getFilesByUserId)
 router.get('/filesName', authMiddleware, getFilesName)
