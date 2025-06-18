@@ -10,18 +10,18 @@ const Types = sequelize.define(
       primaryKey: true,
     },
     name: {
-      type: DataTypes.STRING, 
+      type: DataTypes.STRING,
       allowNull: false,
       unique: true,
     },
     description: {
-        type: DataTypes.STRING, 
-        allowNull: false
-    }
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
   {
-    timestamps: false, 
-  }
+    timestamps: false,
+  },
 );
 
 export default Types;

@@ -2,13 +2,17 @@ import { DataTypes } from "sequelize";
 import { sequelize } from "../database/db.js";
 import User from "./userSchemas.js";
 
-const Files = sequelize.define("Files", {
-    name: { type: DataTypes.STRING, allowNull: false , unique: true},
+const Files = sequelize.define(
+  "Files",
+  {
+    name: { type: DataTypes.STRING, allowNull: false, unique: true },
     description: { type: DataTypes.STRING, allowNull: false },
     status: { type: DataTypes.STRING, allowNull: false },
-}, {
-    timestamps: true
-});
+  },
+  {
+    timestamps: true,
+  },
+);
 
-Files.belongsTo(User,  {foreignKey: "userId", onDelete: "CASCADE"})
+Files.belongsTo(User, { foreignKey: "userId", onDelete: "CASCADE" });
 export default Files;

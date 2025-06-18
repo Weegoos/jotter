@@ -1,4 +1,3 @@
-
 /**
  * @swagger
  * tags:
@@ -39,7 +38,6 @@
  *                   type: string
  *                   example: "Ошибка сервера."
  */
-
 
 // -------------------- types/getUsedByUser -----------------------
 /**
@@ -88,7 +86,6 @@
  *                   type: string
  *                   example: "Ошибка сервера"
  */
-
 
 // -------------------- types/getAllAccessLevelTypes -----------------------
 
@@ -212,4 +209,3 @@
  *                   type: string
  *                   example: "Ошибка сервера"
  */
-

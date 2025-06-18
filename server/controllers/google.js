@@ -12,7 +12,8 @@ const generateSessionSecret = () => {
 };
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "fallback-id";
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || "fallback-secret";
+const GOOGLE_CLIENT_SECRET =
+  process.env.GOOGLE_CLIENT_SECRET || "fallback-secret";
 
 export default function setupGoogleAuth(app) {
   const sessionSecret = generateSessionSecret();
@@ -22,7 +23,7 @@ export default function setupGoogleAuth(app) {
       secret: sessionSecret,
       resave: false,
       saveUninitialized: true,
-    })
+    }),
   );
 
   app.use(passport.initialize());
@@ -65,13 +66,13 @@ export default function setupGoogleAuth(app) {
           console.error("Ошибка при создании пользователя: ", error);
           return done(error);
         }
-      }
-    )
+      },
+    ),
   );
 
   app.get(
     "/auth/google",
-    passport.authenticate("google", { scope: ["profile", "email"] })
+    passport.authenticate("google", { scope: ["profile", "email"] }),
   );
 
   app.get(
@@ -93,6 +94,6 @@ export default function setupGoogleAuth(app) {
         console.log("Ошибка: accessToken не найден");
         res.redirect("http://localhost:9000/#/login");
       }
-    }
+    },
   );
 }

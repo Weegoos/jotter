@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import User from "../schemas/userSchemas.js";
 import jwt from "jsonwebtoken";
 import authMiddleware from "../middlewares/authMiddleware.js";
-import dotenv from "dotenv"; 
+import dotenv from "dotenv";
 import { Op } from "sequelize";
 
 const router = express.Router();
@@ -13,107 +13,111 @@ export const createUser = async (req, res) => {
     const { fullname, email, password } = req.body;
 
     const existingUser = await User.findOne({ where: { email } });
-    const existingFullname = await User.findOne({where: {fullname}});
+    const existingFullname = await User.findOne({ where: { fullname } });
     if (existingFullname) {
-        return res.status(400).json({ message: "Этот пользователь уже зарегистрирован!" });
-    }
-    
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const cleanedEmail = email.trim();
-    if (!emailRegex.test(cleanedEmail)){
-        return res.status(400).json({ message: "Неверный формат почты" });
-    } else if (existingUser) {
-        return res.status(400).json({ message: "Этот email уже зарегистрирован!" });
+      return res
+        .status(400)
+        .json({ message: "Этот пользователь уже зарегистрирован!" });
     }
 
-    if (password.length < 6){
-        return res.status(400).json({ message: "Неверный пароль" });
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const cleanedEmail = email.trim();
+    if (!emailRegex.test(cleanedEmail)) {
+      return res.status(400).json({ message: "Неверный формат почты" });
+    } else if (existingUser) {
+      return res
+        .status(400)
+        .json({ message: "Этот email уже зарегистрирован!" });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ message: "Неверный пароль" });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await User.create({
-        fullname,
-        email,
-        password: hashedPassword
+      fullname,
+      email,
+      password: hashedPassword,
     });
 
-    res.status(201).json({ message: "Пользователь зарегистрирован!", user: newUser });
-
-} catch (error) {
+    res
+      .status(201)
+      .json({ message: "Пользователь зарегистрирован!", user: newUser });
+  } catch (error) {
     console.error("Ошибка при регистрации:", error);
     res.status(500).json({ message: "Ошибка сервера" });
-}
-}
+  }
+};
 
 export const loginUser = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const user = await User.findOne({ where: { email } });
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ where: { email } });
 
-        if (!user) {
-            return res.status(400).json({ message: "Пользователь не найден" });
-        }
-
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid) {
-            return res.status(400).json({ message: "Неверный пароль" });
-        }
-
-        const token = jwt.sign(
-            { id: user.id, email: user.email}, 
-            process.env.JWT_SECRET,
-            { expiresIn: process.env.JWT_EXPIRES_IN || "7d" } 
-        );
-
-        res.json({ message: "Успешный вход", user, token });
-    } catch (error) {
-        console.error("Ошибка при входе:", error);
-        res.status(500).json({ message: "Ошибка сервера" });
+    if (!user) {
+      return res.status(400).json({ message: "Пользователь не найден" });
     }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Неверный пароль" });
+    }
+
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN || "7d" },
+    );
+
+    res.json({ message: "Успешный вход", user, token });
+  } catch (error) {
+    console.error("Ошибка при входе:", error);
+    res.status(500).json({ message: "Ошибка сервера" });
+  }
 };
 
 export const getUserInfo = async (req, res) => {
-    try {
-        const user = await User.findByPk(req.user.id);
+  try {
+    const user = await User.findByPk(req.user.id);
 
-        if (!user) {
-            return res.status(404).json({ message: "Пользователь не найден" });
-        }
-
-        res.json(user);
-    } catch (error) {
-        console.error("Ошибка при получении данных:", error);
-        res.status(500).json({ message: "Ошибка сервера" });
+    if (!user) {
+      return res.status(404).json({ message: "Пользователь не найден" });
     }
+
+    res.json(user);
+  } catch (error) {
+    console.error("Ошибка при получении данных:", error);
+    res.status(500).json({ message: "Ошибка сервера" });
+  }
 };
 
 export const getAllUsers = async (req, res) => {
-    try {
-        const currentUserId = req.user?.id; // например, получаем id текущего пользователя из запроса
-        
-        if (!currentUserId) {
-            return res.status(401).json({ message: "Неавторизованный запрос" });
-        }
+  try {
+    const currentUserId = req.user?.id; // например, получаем id текущего пользователя из запроса
 
-        const users = await User.findAll({
-            where: {
-                id: {
-                    [Op.ne]: currentUserId  // id пользователя не равен текущему
-                }
-            }
-        });
-
-        if (!users || users.length === 0) {
-            return res.status(404).json({ message: "Пользователи не найдены" });
-        }
-
-        res.status(200).json(users);
-    } catch (error) {
-        console.error("Ошибка при получении данных:", error);
-        res.status(500).json({ message: "Ошибка сервера" });
+    if (!currentUserId) {
+      return res.status(401).json({ message: "Неавторизованный запрос" });
     }
-}
 
+    const users = await User.findAll({
+      where: {
+        id: {
+          [Op.ne]: currentUserId, // id пользователя не равен текущему
+        },
+      },
+    });
+
+    if (!users || users.length === 0) {
+      return res.status(404).json({ message: "Пользователи не найдены" });
+    }
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Ошибка при получении данных:", error);
+    res.status(500).json({ message: "Ошибка сервера" });
+  }
+};
 
 export const allUsersByInput = async (req, res) => {
   try {
@@ -130,12 +134,12 @@ export const allUsersByInput = async (req, res) => {
     const users = await User.findAll({
       where: {
         fullname: {
-          [Op.iLike]: `%${fullname}%`
+          [Op.iLike]: `%${fullname}%`,
         },
         id: {
-          [Op.ne]: currentUserId // исключаем текущего пользователя
-        }
-      }
+          [Op.ne]: currentUserId, // исключаем текущего пользователя
+        },
+      },
     });
 
     if (!users || users.length === 0) {
@@ -150,40 +154,40 @@ export const allUsersByInput = async (req, res) => {
 };
 
 export const editUserInfo = async (req, res) => {
-    try {
-        const { fullname, email, password } = req.query; // теперь данные берутся из query
-        const user = await User.findByPk(req.user.id);
-        if (!user) {
-            return res.status(404).json({ message: "Пользователь не найден" });
-        }
-
-        if (fullname) {
-            user.fullname = fullname;
-        }
-
-        if (email) {
-            const existingUser = await User.findOne({ where: { email } });
-            if (existingUser && existingUser.id !== user.id) {
-                return res.status(400).json({ message: "Этот email уже зарегистрирован!" });
-            }
-            user.email = email;
-        }
-
-        if (password) {
-            if (password.length < 6) {
-                return res.status(400).json({ message: "Пароль слишком короткий" });
-            }
-            user.password = await bcrypt.hash(password, 10);
-        }
-
-        await user.save();
-        res.json({ message: "Данные пользователя успешно обновлены", user });
-
-    } catch (error) {
-        console.error("Ошибка при редактировании данных:", error);
-        res.status(500).json({ message: "Ошибка сервера" });
+  try {
+    const { fullname, email, password } = req.query; // теперь данные берутся из query
+    const user = await User.findByPk(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "Пользователь не найден" });
     }
-};
 
+    if (fullname) {
+      user.fullname = fullname;
+    }
+
+    if (email) {
+      const existingUser = await User.findOne({ where: { email } });
+      if (existingUser && existingUser.id !== user.id) {
+        return res
+          .status(400)
+          .json({ message: "Этот email уже зарегистрирован!" });
+      }
+      user.email = email;
+    }
+
+    if (password) {
+      if (password.length < 6) {
+        return res.status(400).json({ message: "Пароль слишком короткий" });
+      }
+      user.password = await bcrypt.hash(password, 10);
+    }
+
+    await user.save();
+    res.json({ message: "Данные пользователя успешно обновлены", user });
+  } catch (error) {
+    console.error("Ошибка при редактировании данных:", error);
+    res.status(500).json({ message: "Ошибка сервера" });
+  }
+};
 
 export default router;

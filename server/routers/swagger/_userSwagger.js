@@ -9,9 +9,9 @@
 /**
  * @swagger
  * /user/register:
- *   post:   
+ *   post:
  *     summary: Регистрация нового пользователя
- *     tags: 
+ *     tags:
  *       - User
  *     requestBody:
  *       required: true
@@ -35,14 +35,13 @@
  *         description: Ошибка сервера
  */
 
-
 // user/login
 /**
  * @swagger
  * /user/login:
  *   post:
  *     summary: Вход пользователя
- *     tags: 
+ *     tags:
  *       - User
  *     requestBody:
  *       required: true
@@ -87,7 +86,6 @@
  *       500:
  *         description: Внутренняя ошибка сервера
  */
-
 
 // -------------------- user/edit -----------------------
 
@@ -147,7 +145,6 @@
  *         description: Ошибка сервера
  */
 
-
 // -------------------- user/me -----------------------
 /**
  * @swagger
@@ -176,7 +173,7 @@
  * /user/allUsers:
  *   get:
  *     summary: Получение всех пользователей
- *     tags: 
+ *     tags:
  *       - User
  *     responses:
  *       200:
@@ -210,7 +207,6 @@
  *       500:
  *         description: Ошибка сервера
  */
-
 
 // -------------- getAllUsersByInput ---------------------------
 /**
