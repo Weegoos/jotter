@@ -1,8 +1,6 @@
 import express from "express";
-import { Op } from "sequelize";
 import Friend from "../schemas/friendSchemas.js";
 import User from "../schemas/userSchemas.js";
-import dotenv from "dotenv";
 import { wss } from "../server.js";
 const router = express.Router();
 
