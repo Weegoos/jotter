@@ -1,13 +1,11 @@
 import express from "express";
 import authMiddleware from "../middlewares/authMiddleware.js";
+import "./swagger/friendSwagger.js";
 import {
-  changeFriendStatus,
-  deleteFriendById,
   getAllFriends,
   getUserByStatus,
-  sendRequestToTheFriend,
-} from "../controllers/friendControllers.js";
-import "./swagger/friendSwagger.js";
+} from "../controllers/friend/getFriendControllers.js";
+import { sendRequestToTheFriend } from "../controllers/friend/postFriendControllers.js";
 const router = express.Router();
 
 router.post("/add", authMiddleware, sendRequestToTheFriend);
@@ -15,8 +13,8 @@ router.post("/add", authMiddleware, sendRequestToTheFriend);
 router.get("/getAll", authMiddleware, getAllFriends);
 router.get("/getByStatus", authMiddleware, getUserByStatus);
 
-router.put("/changeStatus", authMiddleware, changeFriendStatus);
+// router.put("/changeStatus", authMiddleware, changeFriendStatus);
 
-router.delete("/deleteById", authMiddleware, deleteFriendById);
+// router.delete("/deleteById", authMiddleware, deleteFriendById);
 
 export default router;
