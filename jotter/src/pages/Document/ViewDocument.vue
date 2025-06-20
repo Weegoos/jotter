@@ -26,6 +26,34 @@
           ></div>
         </q-td>
       </template>
+            <template v-slot:body-cell-actions="props">
+        <q-td align="center">
+          <q-btn-dropdown @click.stop icon="mdi-vuejs" color="primary">
+            <q-list style="min-width: 100px">
+              <q-item clickable>
+                <q-item-section>
+                  <q-btn
+                    class="bg-blue-500 hover:bg-blue-600 text-white"
+                    icon="mdi-pencil"
+                    size="sm"
+                    @click="updateNote(props.row)"
+                  />
+                </q-item-section>
+              </q-item>
+              <q-item clickable v-close-popup>
+                <q-item-section>
+                  <q-btn
+                    class="bg-rose-500 hover:bg-rose-600 text-white"
+                    icon="mdi-delete"
+                    size="sm"
+                    @click="deleteNote(props.row)"
+                  />
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
+        </q-td>
+      </template>
     </q-table>
     <DetailedInformationAboutNoteVue
       :isOpenDetailedInformation="isOpenDetailedInformation"
@@ -39,9 +67,10 @@
 import { useQuasar } from "quasar";
 import { getMethod } from "src/composables/api-method/get";
 import { computed, getCurrentInstance, onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import DetailedInformationAboutNoteVue from "../../components/organisims/DetailedInformationAboutNote.vue";
 import { useDateFormat } from "src/composables/javascript-function/formatDate";
+import { deleteMethod } from "src/composables/api-method/delete";
 
 // global variables
 const { proxy } = getCurrentInstance();
@@ -49,7 +78,7 @@ const serverURL = proxy.$serverURL;
 const $q = useQuasar();
 const webSocketURL = proxy.$webSocketURL;
 const socket = new WebSocket(webSocketURL);
-const { formatDate } = useDateFormat();
+const router = useRouter()
 
 socket.onopen = () => {
   console.log("✅ WebSocket подключен");
@@ -71,15 +100,6 @@ socket.onmessage = (event) => {
 const route = useRoute();
 const id = route.params.id;
 
-const maxSize = 10;
-const heavyList = ["Label"];
-
-for (let i = 0; i < maxSize; i++) {
-  heavyList.push({
-    label: "Option " + (i + 1),
-  });
-}
-
 const rows = ref([]);
 const columns = computed(() => [
   {
@@ -100,19 +120,21 @@ const columns = computed(() => [
     name: "created_at",
     label: "Created At",
     align: "left",
-    field: (row) => formatDate(row.createdAt),
+    field: (row) => useDateFormat(row.createdAt),
     sortable: true,
   },
   {
     name: "updated_at",
     label: "Updated At",
     align: "left",
-    field: (row) => {
-      console.log("row.updated_at:", row.updatedAt);
-      return formatDate(row.updatedAt);
-    },
-
+    field: (row) => useDateFormat(row.updatedAt),
     sortable: true,
+  },
+  {
+    name: "actions",
+    label: "Actions",
+    align: "center",
+    field: "id",
   },
 ]);
 
@@ -143,5 +165,17 @@ const viewDetailedInfoAboutNote = (info, row) => {
 
 const closeDetailedInformationSection = () => {
   isOpenDetailedInformation.value = false;
+};
+
+const updateNote = (row) => {
+  router.push(`/update-note/${row.id}`);
+};
+
+const deleteNote = async (row) => {
+  try {
+    await deleteMethod(serverURL, "notes", row.id);
+  } catch (error) {
+    console.error(error);
+  }
 };
 </script>

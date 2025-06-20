@@ -62,9 +62,6 @@ const closeDetailedInformationSection = () => {
   emit("closeDetailedInformationSection");
 };
 
-const updateNote = (id) => {
-  router.push(`/update-note/${id}`);
-};
 
 const deleteNote = async (id) => {
   try {

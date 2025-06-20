@@ -67,6 +67,7 @@ import { useQuasar } from "quasar";
 import BasePagination from "src/components/atoms/BasePagination.vue";
 import { getMethod } from "src/composables/api-method/get";
 import { putMethod } from "src/composables/api-method/put";
+import { useDateFormat } from "src/composables/javascript-function/formatDate";
 import { computed, getCurrentInstance, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 // global variables
@@ -122,14 +123,14 @@ const columns = computed(() => [
     name: "created_at",
     label: "Created At",
     align: "left",
-    field: (row) => row.createdAt,
+    field: (row) => useDateFormat(row.createdAt),
     sortable: true,
   },
   {
     name: "updated_at",
     label: "Updated At",
     align: "left",
-    field: (row) => row.updatedAt,
+    field: (row) => useDateFormat(row.updatedAt),
     sortable: true,
   },
   {
