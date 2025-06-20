@@ -1,8 +1,8 @@
 import express from "express";
-import Types from "../schemas/typeSchemas.js";
-import Notes from "../schemas/notesSchemas.js";
-import { wss } from "../server.js";
-import { Sequelize, Op } from "sequelize";
+import Types from "../../schemas/typeSchemas.js";
+import Notes from "../../schemas/notesSchemas.js";
+import { wss } from "../../server.js";
+import { Sequelize } from "sequelize";
 
 const router = express.Router();
 
