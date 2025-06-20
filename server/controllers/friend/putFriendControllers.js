@@ -1,5 +1,5 @@
-import Friend from "../../schemas/friendSchemas";
-import { wss } from "../../server";
+import Friend from "../../schemas/friendSchemas.js";
+import { wss } from "../../server.js";
 
 export const changeFriendStatus = async (req, res) => {
   try {
