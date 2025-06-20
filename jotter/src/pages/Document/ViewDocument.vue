@@ -26,9 +26,9 @@
           ></div>
         </q-td>
       </template>
-            <template v-slot:body-cell-actions="props">
+      <template v-slot:body-cell-actions="props">
         <q-td align="center">
-          <q-btn-dropdown @click.stop icon="mdi-vuejs" color="primary">
+          <q-btn-dropdown @click.stop color="primary">
             <q-list style="min-width: 100px">
               <q-item clickable>
                 <q-item-section>
@@ -78,7 +78,7 @@ const serverURL = proxy.$serverURL;
 const $q = useQuasar();
 const webSocketURL = proxy.$webSocketURL;
 const socket = new WebSocket(webSocketURL);
-const router = useRouter()
+const router = useRouter();
 
 socket.onopen = () => {
   console.log("✅ WebSocket подключен");

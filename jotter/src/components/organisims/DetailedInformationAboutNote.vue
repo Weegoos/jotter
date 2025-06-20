@@ -11,11 +11,7 @@
           <p v-html="detailedInformation.content"></p>
         </q-card-section>
         <q-card-actions align="right">
-          <BaseUpdateButtonVue @click="updateNote(detailedInformation.id)" />
-          <BaseCloseButtonVue
-            @click="deleteNote(detailedInformation.id)"
-            label="Delete"
-          />
+
           <BaseCloseButtonVue
             @click="closeDetailedInformationSection"
             label="Close"
@@ -60,16 +56,6 @@ watch(
 const emit = defineEmits(["closeDetailedInformationSection"]);
 const closeDetailedInformationSection = () => {
   emit("closeDetailedInformationSection");
-};
-
-
-const deleteNote = async (id) => {
-  try {
-    await deleteMethod(serverURL, "notes", id);
-    emit("closeDetailedInformationSection");
-  } catch (error) {
-    console.error(error);
-  }
 };
 </script>
 
