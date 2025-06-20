@@ -8,9 +8,9 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 
-import { configure } from 'quasar/wrappers'
+import { configure } from "quasar/wrappers";
 import path from "path";
-import vueI18n from '@intlify/unplugin-vue-i18n/vite'
+import vueI18n from "@intlify/unplugin-vue-i18n/vite";
 
 export default configure(function (/* ctx */) {
   return {
@@ -65,22 +65,21 @@ export default configure(function (/* ctx */) {
       // extendViteConf (viteConf) {},
       // viteVuePluginOptions: {},
 
-vitePlugins: [
-  vueI18n({
-    include: path.resolve(__dirname, './src/i18n/**'),
-    // если нужны — добавь другие опции
-  }),
-  [
-    "vite-plugin-checker",
-    {
-      eslint: {
-        lintCommand: 'eslint "./**/*.{js,mjs,cjs,vue}"',
-      },
-    },
-    { server: false },
-  ],
-],
-
+      vitePlugins: [
+        vueI18n({
+          include: path.resolve(__dirname, "./src/i18n/**"),
+          // если нужны — добавь другие опции
+        }),
+        [
+          "vite-plugin-checker",
+          {
+            eslint: {
+              lintCommand: 'eslint "./**/*.{js,mjs,cjs,vue}"',
+            },
+          },
+          { server: false },
+        ],
+      ],
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer

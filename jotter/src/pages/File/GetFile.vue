@@ -8,6 +8,7 @@
       :columns="columns"
       row-key="name"
       hide-bottom
+      @row-click="pushToTheFile"
     >
       <template v-slot:body-cell-name="props">
         <q-td :props="props">
@@ -25,34 +26,32 @@
           ></div>
         </q-td>
       </template>
-      <template v-slot:body-cell-push="props">
+      <template v-slot:body-cell-actions="props">
         <q-td align="center">
-          <q-btn
-            class="bg-blue-500 hover:bg-blue-600 text-white"
-            icon="mdi-arrow-right"
-            size="sm"
-            @click="pushToTheFile(props.row)"
-          />
-        </q-td>
-      </template>
-      <template v-slot:body-cell-accept="props">
-        <q-td align="center">
-          <q-btn
-            class="bg-blue-500 hover:bg-blue-600 text-white"
-            icon="mdi-pencil"
-            size="sm"
-            @click="editFile(props.row)"
-          />
-        </q-td>
-      </template>
-      <template v-slot:body-cell-trash="props">
-        <q-td align="center">
-          <q-btn
-            class="bg-rose-500 hover:bg-rose-600 text-white"
-            icon="mdi-delete"
-            size="sm"
-            @click="changeFileStatus(props.row, $event)"
-          />
+          <q-btn-dropdown @click.stop icon="mdi-vuejs" color="primary">
+            <q-list style="min-width: 100px">
+              <q-item clickable>
+                <q-item-section>
+                  <q-btn
+                    class="bg-blue-500 hover:bg-blue-600 text-white"
+                    icon="mdi-pencil"
+                    size="sm"
+                    @click="editFile(props.row)"
+                  />
+                </q-item-section>
+              </q-item>
+              <q-item clickable v-close-popup>
+                <q-item-section>
+                  <q-btn
+                    class="bg-rose-500 hover:bg-rose-600 text-white"
+                    icon="mdi-delete"
+                    size="sm"
+                    @click="changeFileStatus(props.row, $event)"
+                  />
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
         </q-td>
       </template>
     </q-table>
@@ -134,20 +133,8 @@ const columns = computed(() => [
     sortable: true,
   },
   {
-    name: "push",
-    label: "Push",
-    align: "center",
-    field: "id",
-  },
-  {
-    name: "accept",
-    label: "Edit",
-    align: "center",
-    field: "id",
-  },
-  {
-    name: "trash",
-    label: "Move to Trash",
+    name: "actions",
+    label: "Actions",
     align: "center",
     field: "id",
   },
@@ -175,7 +162,7 @@ const pagination = (page) => {
   getFiles(current.value);
 };
 
-const pushToTheFile = (row) => {
+const pushToTheFile = (info, row) => {
   router.push(`/view-notes/${row.id}`);
   console.log(row.id);
 };
@@ -195,6 +182,10 @@ const changeFileStatus = async (info, event) => {
   } catch (error) {
     console.error(error);
   }
+};
+
+const editFile = async () => {
+  console.log(777);
 };
 
 onMounted(() => {
