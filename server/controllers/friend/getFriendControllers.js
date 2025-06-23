@@ -11,7 +11,7 @@ export const getAllFriends = async (req, res) => {
 
     const friends = await Friend.findAll({
       where: { userId },
-      order: [["createdAt", "DESC"]], 
+      order: [["createdAt", "DESC"]],
     });
 
     res.status(200).json({ friends });

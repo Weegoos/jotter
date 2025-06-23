@@ -3,7 +3,7 @@ import { wss } from "../../server.js";
 
 export const changeFriendStatus = async (req, res) => {
   try {
-    const userId = req.user?.id; 
+    const userId = req.user?.id;
     const { status, friendId } = req.query;
 
     if (!userId) {

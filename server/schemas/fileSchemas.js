@@ -8,6 +8,7 @@ const Files = sequelize.define(
     name: { type: DataTypes.STRING, allowNull: false, unique: true },
     description: { type: DataTypes.STRING, allowNull: false },
     status: { type: DataTypes.STRING, allowNull: false },
+    pinned: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
   },
   {
     timestamps: true,

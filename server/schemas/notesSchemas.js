@@ -1,4 +1,4 @@
-import { DataTypes, TEXT } from "sequelize";
+import { DataTypes } from "sequelize";
 import { sequelize } from "../database/db.js";
 import Files from "./fileSchemas.js";
 
@@ -9,6 +9,7 @@ const Notes = sequelize.define(
     content: { type: DataTypes.TEXT, allowNull: false },
     title: { type: DataTypes.TEXT, allowNull: false, unique: true },
     type: { type: DataTypes.TEXT, allowNull: false },
+    pinned: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
   },
   {
     timestamps: true,

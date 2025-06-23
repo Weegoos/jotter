@@ -2,7 +2,13 @@ import express from "express";
 import authMiddleware from "../middlewares/authMiddleware.js";
 
 import "./swagger/typesSwagger.js";
-import { getAllAccessLevelTypes, getAllContentTypes, getAllGeneralTypes, getAllTypes, getAllTypeUsedByUser } from "../controllers/types/typesGetControllers.js";
+import {
+  getAllAccessLevelTypes,
+  getAllContentTypes,
+  getAllGeneralTypes,
+  getAllTypes,
+  getAllTypeUsedByUser,
+} from "../controllers/types/typesGetControllers.js";
 const router = express.Router();
 
 router.get("", authMiddleware, getAllTypes);
