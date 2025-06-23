@@ -4,7 +4,7 @@
     bordered
     :title="props.title"
     :rows="props.notes"
-    :columns="columns"
+    :columns="props.columns"
     row-key="name"
     v-if="props.notes?.length"
   >
@@ -34,7 +34,7 @@
                   class="bg-amber-500 hover:bg-amber-600 text-white"
                   icon="mdi-pin"
                   size="sm"
-                  @click="emit('pinNote', props.row)"
+                  @click="emit('pin', props.row)"
                 />
               </q-item-section>
             </q-item>
@@ -44,7 +44,7 @@
                   class="bg-blue-500 hover:bg-blue-600 text-white"
                   icon="mdi-pencil"
                   size="sm"
-                  @click="emit('updateNote', props.row)"
+                  @click="emit('update', props.row)"
                 />
               </q-item-section>
             </q-item>
@@ -54,7 +54,7 @@
                   class="bg-rose-500 hover:bg-rose-600 text-white"
                   icon="mdi-delete"
                   size="sm"
-                  @click="emit('deleteNote', props.row)"
+                  @click="emit('delete', props.row)"
                 />
               </q-item-section>
             </q-item>
@@ -66,54 +66,17 @@
 </template>
 
 <script setup>
-import { useDateFormat } from "src/composables/javascript-function/formatDate";
-import { computed } from "vue";
-
 // global variables
 const props = defineProps({
   notes: {
     type: Object,
     required: true,
   },
+  columns: {
+    type: Object,
+  },
   title: String,
 });
 
-const emit = defineEmits(["pinNote", "updateNote", "deleteNote"]);
-
-const columns = computed(() => [
-  {
-    name: "title",
-    label: "Name",
-    align: "left",
-    field: (row) => row.title,
-    sortable: true,
-  },
-  {
-    name: "type",
-    label: "Type",
-    align: "left",
-    field: (row) => row.type,
-    sortable: true,
-  },
-  {
-    name: "created_at",
-    label: "Created At",
-    align: "left",
-    field: (row) => useDateFormat(row.createdAt),
-    sortable: true,
-  },
-  {
-    name: "updated_at",
-    label: "Updated At",
-    align: "left",
-    field: (row) => useDateFormat(row.updatedAt),
-    sortable: true,
-  },
-  {
-    name: "actions",
-    label: "Actions",
-    align: "center",
-    field: "id",
-  },
-]);
+const emit = defineEmits(["pin", "update", "delete"]);
 </script>

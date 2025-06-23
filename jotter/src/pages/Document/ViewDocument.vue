@@ -3,18 +3,20 @@
     <DocumentTable
       :notes="Object(pinnedNote)"
       :title="String('Закрепленные заметки')"
-      @deleteNote="deleteNote"
-      @pinNote="pinNote"
-      @updateNote="updateNote"
+      :columns="columns"
+      @delete="deleteNote"
+      @pin="pinNote"
+      @update="updateNote"
       @row-click="viewDetailedInfoAboutNote"
     />
 
     <DocumentTable
       :notes="Object(rows)"
       :title="String('Заметки')"
-      @deleteNote="deleteNote"
-      @pinNote="pinNote"
-      @updateNote="updateNote"
+      :columns="columns"
+      @delete="deleteNote"
+      @pin="pinNote"
+      @update="updateNote"
       @row-click="viewDetailedInfoAboutNote"
     />
 
@@ -64,6 +66,43 @@ socket.onmessage = (event) => {
 
 const route = useRoute();
 const id = route.params.id;
+
+const columns = computed(() => [
+  {
+    name: "title",
+    label: "Name",
+    align: "left",
+    field: (row) => row.title,
+    sortable: true,
+  },
+  {
+    name: "type",
+    label: "Type",
+    align: "left",
+    field: (row) => row.type,
+    sortable: true,
+  },
+  {
+    name: "created_at",
+    label: "Created At",
+    align: "left",
+    field: (row) => useDateFormat(row.createdAt),
+    sortable: true,
+  },
+  {
+    name: "updated_at",
+    label: "Updated At",
+    align: "left",
+    field: (row) => useDateFormat(row.updatedAt),
+    sortable: true,
+  },
+  {
+    name: "actions",
+    label: "Actions",
+    align: "center",
+    field: "id",
+  },
+]);
 
 const rows = ref([]);
 

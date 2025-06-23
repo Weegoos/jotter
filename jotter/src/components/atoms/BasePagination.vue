@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, ref, watch } from "vue";
+import { getCurrentInstance, ref, watch, watchEffect } from "vue";
 const props = defineProps({
   variableName: {
     type: Object,
@@ -23,16 +23,16 @@ const maxNumberOfRequestPerPage = proxy.$maxNumberOfRequestPerPage;
 const current = ref(1);
 const maxPage = ref("");
 
-watch(
-  () => props.variableName,
-  (newVal) => {
-    if (newVal && newVal.totalCount) {
-      maxPage.value = Math.ceil(newVal.totalCount / maxNumberOfRequestPerPage);
-    } else {
-      maxPage.value = 1;
-    }
+watchEffect(() => {
+  console.log("watchEffect triggered:", props.variableName);
+  if (props.variableName && props.variableName.totalCount) {
+    maxPage.value = Math.ceil(
+      props.variableName.totalCount / maxNumberOfRequestPerPage
+    );
+  } else {
+    maxPage.value = 1;
   }
-);
+});
 
 const emit = defineEmits(["pagination"]);
 watch(current, (newPage) => {

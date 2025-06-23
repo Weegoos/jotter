@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="rows?.length">
     <q-table
       class="m-[8px]"
       bordered
@@ -8,6 +8,7 @@
       :columns="columns"
       row-key="name"
       hide-bottom
+      v-if="rows?.length"
     >
       <template v-slot:body-cell-name="props">
         <q-td :props="props">
@@ -50,6 +51,9 @@
       :variableName="Object(filesByStatus)"
       @pagination="pagination"
     />
+  </div>
+  <div v-else>
+    <p class="text-center text-h6">Корзина пуста...</p>
   </div>
 </template>
 
@@ -154,6 +158,8 @@ const getTrashedFiles = async (page) => {
     );
     rows.value = response.files;
     filesByStatus.value = response;
+
+    console.log("rows:", filesByStatus.value);
   } catch (error) {
     console.error("Error fetching files:", error);
   }
@@ -164,10 +170,8 @@ const restoreFile = async (info) => {
     await putMethod(
       serverURL,
       `file/editStatus?fileId=${info.id}&status=${contentForView}`,
-      "",
+      undefined,
       $q,
-      "The status of file has been successfully changed",
-      "Error: ",
       {}
     );
   } catch (error) {

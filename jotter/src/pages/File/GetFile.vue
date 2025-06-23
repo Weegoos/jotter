@@ -1,75 +1,43 @@
 <template>
-  <div>
-    <q-table
-      class="m-[8px]"
-      bordered
-      title="Files"
-      :rows="rows"
+  <div v-if="rows?.length">
+        <DocumentTable
+      :notes="Object(rows)"
+      :title="'Закрепленные файлы'"
       :columns="columns"
-      row-key="name"
-      hide-bottom
       @row-click="pushToTheFile"
-    >
-      <template v-slot:body-cell-name="props">
-        <q-td :props="props">
-          <div
-            v-html="props.row.name"
-            class="max-w-[150px] whitespace-nowrap overflow-hidden text-ellipsis"
-          ></div>
-        </q-td>
-      </template>
-      <template v-slot:body-cell-description="props">
-        <q-td :props="props">
-          <div
-            v-html="props.row.description"
-            class="max-w-[150px] whitespace-nowrap overflow-hidden text-ellipsis"
-          ></div>
-        </q-td>
-      </template>
-      <template v-slot:body-cell-actions="props">
-        <q-td align="center">
-          <q-btn-dropdown @click.stop color="primary">
-            <q-list style="min-width: 100px">
-              <q-item clickable>
-                <q-item-section>
-                  <q-btn
-                    class="bg-blue-500 hover:bg-blue-600 text-white"
-                    icon="mdi-pencil"
-                    size="sm"
-                    @click="editFile(props.row)"
-                  />
-                </q-item-section>
-              </q-item>
-              <q-item clickable v-close-popup>
-                <q-item-section>
-                  <q-btn
-                    class="bg-rose-500 hover:bg-rose-600 text-white"
-                    icon="mdi-delete"
-                    size="sm"
-                    @click="changeFileStatus(props.row, $event)"
-                  />
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-btn-dropdown>
-        </q-td>
-      </template>
-    </q-table>
+      @delete="changeFileStatus"
+      @pin="pinFile"
+      @update="editFile"
+    />
+    <DocumentTable
+      :notes="Object(rows)"
+      :title="'Файлы'"
+      :columns="columns"
+      @row-click="pushToTheFile"
+      @delete="changeFileStatus"
+      @pin="pinFile"
+      @update="editFile"
+    />
     <BasePagination
       :variableName="Object(filesByStatus)"
       @pagination="pagination"
     />
+  </div>
+  <div v-else>
+    <p class="text-center text-h6">Файлов нету...</p>
   </div>
 </template>
 
 <script setup>
 import { useQuasar } from "quasar";
 import BasePagination from "src/components/atoms/BasePagination.vue";
+import DocumentTable from "src/components/molecules/DocumentTable.vue";
 import { getMethod } from "src/composables/api-method/get";
 import { putMethod } from "src/composables/api-method/put";
 import { useDateFormat } from "src/composables/javascript-function/formatDate";
 import { computed, getCurrentInstance, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
+
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
@@ -170,14 +138,11 @@ const pushToTheFile = (info, row) => {
 
 const changeFileStatus = async (info, event) => {
   try {
-    event.stopPropagation();
     await putMethod(
       serverURL,
       `file/editStatus?fileId=${info.id}&status=${contentForTrashedComponent}`,
       undefined,
       $q,
-      "The status of file has been successfully changed",
-      "Error: ",
       {}
     );
   } catch (error) {
@@ -188,6 +153,18 @@ const changeFileStatus = async (info, event) => {
 const editFile = async () => {
   console.log(777);
 };
+
+const pinFile = async (row) => {
+   try {
+    const payload = {
+      value: (row.pinned = !row.pinned),
+    };
+
+    await putMethod(serverURL, `file/${row.id}/pin`, payload, $q, {});
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 onMounted(() => {
   getFiles(1);

@@ -266,6 +266,7 @@
  */
 
 // /file/{fileId}/pin
+
 /**
  * @swagger
  * /file/{fileId}/pin:
