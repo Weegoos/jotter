@@ -320,7 +320,7 @@
  *         schema:
  *           type: string
  *           example: public
- *         description: Тип заметки 
+ *         description: Тип заметки
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -374,7 +374,6 @@
  *                   type: string
  *                   example: "Ошибка сервера при получении заметок"
  */
-
 
 // -------------------- notes/update -----------------------
 

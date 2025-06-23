@@ -86,10 +86,10 @@ export const getAllNotesByType = async (req, res) => {
   try {
     console.log("Получаем публичные заметки...");
     const userId = req.user.id;
-    const {type} = req.params
+    const { type } = req.params;
 
     if (!type) {
-      res.status(400).json({message: 'Укажите тип'})
+      res.status(400).json({ message: "Укажите тип" });
     }
 
     const notes = await Notes.findAll({

@@ -33,7 +33,9 @@ export const getFilesByStatus = async (req, res) => {
     }
 
     if (!status || !pinned) {
-      return res.status(400).json({ message: "Ошибка: статус и pinned обязателен." });
+      return res
+        .status(400)
+        .json({ message: "Ошибка: статус и pinned обязателен." });
     }
 
     // Найдем файлы с учетом пагинации

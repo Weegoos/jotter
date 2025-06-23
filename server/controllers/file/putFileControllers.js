@@ -73,7 +73,7 @@ export const pinFile = async (req, res) => {
         );
       }
     });
-    
+
     return res.json({ message: "Pinned обновился", file });
   } catch (error) {
     console.error("Ошибка:", error);

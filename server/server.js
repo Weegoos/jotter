@@ -14,6 +14,8 @@ import typesRouters from "./routers/typesRouter.js";
 import friendRouters from "./routers/friendRouters.js";
 
 import initializeTypes from "./database/typesDB.js";
+import initializeHashTag from "./database/hashtagDB.js";
+
 import setupGoogleAuth from "./controllers/google.js";
 import "./schemas/friendSchemas.js";
 
@@ -52,6 +54,7 @@ const PORT = process.env.PORT || 3001;
   setupGoogleAuth(app);
 
   initializeTypes();
+  initializeHashTag()
 
   app.get("/", (req, res) => {
     res.send("Сервер работает!");

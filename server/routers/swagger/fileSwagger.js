@@ -165,7 +165,7 @@
  *         schema:
  *           type: string
  *         required: true
- *         description: Статус файлов 
+ *         description: Статус файлов
  *       - in: query
  *         name: pinned
  *         schema:
@@ -253,7 +253,6 @@
  *                   type: string
  *                   example: "Ошибка сервера"
  */
-
 
 // -------------------- file/editStatus -----------------------
 
@@ -381,7 +380,6 @@
  *       500:
  *         description: Внутренняя ошибка сервера
  */
-
 
 // -------------------- file/deleteFile -----------------------
 

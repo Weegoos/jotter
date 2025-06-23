@@ -63,7 +63,24 @@ onMounted(async () => {
 });
 
 const saveWork = async (data) => {
-  console.log(data);
+ try {
+    const payload = {
+      content: data,
+      fileName: fileName.value,
+      title: title.value,
+      type: 'saved',
+    };
+
+    await postMethod(
+      serverURL,
+      "notes/create",
+      payload,
+      $q,
+      "Заметка сохранена!"
+    );
+  } catch (error) {
+    console.error(error);
+  }
 };
 const sendWork = async (data) => {
   try {
