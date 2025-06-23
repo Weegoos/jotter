@@ -6,7 +6,7 @@ import {
   getAllPublicNotes,
   getNoteByID,
 } from "../controllers/note/getNoteControllers.js";
-import { updateNote } from "../controllers/note/putNoteControllers.js";
+import { pinNote, updateNote } from "../controllers/note/putNoteControllers.js";
 import { deleteNoteById } from "../controllers/note/deleteNoteControllers.js";
 import { createNote } from "../controllers/note/postNoteControllers.js";
 const router = express.Router();
@@ -15,7 +15,8 @@ router.get("/public", authMiddleware, getAllPublicNotes);
 router.get("/:fileId", authMiddleware, getAllNotesByFileID);
 router.get("/note/:noteId", authMiddleware, getNoteByID);
 
-router.put("/update/:noteId", updateNote);
+router.put("/update/:noteId", authMiddleware, updateNote);
+router.put("/:noteId/pin", authMiddleware, pinNote);
 
 router.post("/create", authMiddleware, createNote);
 

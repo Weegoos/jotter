@@ -439,3 +439,57 @@
  *                   type: string
  *                   example: "Ошибка сервера"
  */
+
+/**
+ * @swagger
+ * /notes/{noteId}/pin:
+ *   put:
+ *     summary: Обновить статус закрепления заметки (pinned)
+ *     description: Обновляет флаг pinned у заметки, если она принадлежит пользователю
+ *     tags:
+ *       - Notes
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: noteId
+ *         in: path
+ *         required: true
+ *         description: ID заметки
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - value
+ *             properties:
+ *               value:
+ *                 type: boolean
+ *                 description: Новое значение флага pinned (true или false)
+ *                 example: true
+ *     responses:
+ *       200:
+ *         description: Статус pinned обновлён
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Статус pinned обновлён
+ *                 note:
+ *                   $ref: '#/components/schemas/Note'
+ *       400:
+ *         description: Ошибка валидации — поле value отсутствует
+ *       403:
+ *         description: Файл пользователя не найден или доступ запрещён
+ *       404:
+ *         description: Заметка не найдена или доступ запрещён
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
