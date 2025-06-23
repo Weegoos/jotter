@@ -308,14 +308,24 @@
 
 /**
  * @swagger
- * /notes/public:
+ * /notes/{type}:
  *   get:
- *     summary: Получить все публичные заметки
- *     description: Возвращает список всех заметок с типом "public".
+ *     summary: Получить заметки по типу
+ *     description: Возвращает список заметок определённого типа пользователя.
  *     tags: [Notes]
+ *     parameters:
+ *       - in: path
+ *         name: type
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: public
+ *         description: Тип заметки 
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Успешный ответ. Список публичных заметок.
+ *         description: Успешный ответ. Список заметок указанного типа.
  *         content:
  *           application/json:
  *             schema:
@@ -328,10 +338,10 @@
  *                     example: 1
  *                   title:
  *                     type: string
- *                     example: "Моя публичная заметка"
+ *                     example: "Моя заметка"
  *                   content:
  *                     type: string
- *                     example: "Содержимое публичной заметки"
+ *                     example: "Содержимое заметки"
  *                   type:
  *                     type: string
  *                     example: "public"
@@ -343,6 +353,16 @@
  *                     type: string
  *                     format: date-time
  *                     example: "2024-08-14T12:30:00.000Z"
+ *       400:
+ *         description: тип не передан
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Укажите тип"
  *       500:
  *         description: Ошибка сервера при получении заметок
  *         content:
@@ -354,6 +374,7 @@
  *                   type: string
  *                   example: "Ошибка сервера при получении заметок"
  */
+
 
 // -------------------- notes/update -----------------------
 

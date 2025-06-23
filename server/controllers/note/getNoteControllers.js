@@ -82,12 +82,18 @@ export const getNoteByID = async (req, res) => {
   }
 };
 
-export const getAllPublicNotes = async (req, res) => {
+export const getAllNotesByType = async (req, res) => {
   try {
     console.log("Получаем публичные заметки...");
     const userId = req.user.id;
+    const {type} = req.params
+
+    if (!type) {
+      res.status(400).json({message: 'Укажите тип'})
+    }
+
     const notes = await Notes.findAll({
-      where: { type: "public" },
+      where: { type: type },
       include: [
         {
           model: Files,
