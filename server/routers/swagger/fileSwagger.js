@@ -265,6 +265,90 @@
  *         description: Ошибка сервера
  */
 
+// /file/{fileId}/pin
+/**
+ * @swagger
+ * /file/{fileId}/pin:
+ *   put:
+ *     summary: Обновить статус "pinned" для файла
+ *     description: Устанавливает или снимает закрепление файла пользователя.
+ *     tags:
+ *       - Files
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: fileId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID файла, который нужно обновить
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - value
+ *             properties:
+ *               value:
+ *                 type: boolean
+ *                 example: true
+ *     responses:
+ *       200:
+ *         description: Статус pinned успешно обновлён
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Pinned обновился
+ *                 file:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     title:
+ *                       type: string
+ *                       example: Мой файл
+ *                     pinned:
+ *                       type: boolean
+ *                       example: true
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *       400:
+ *         description: Поле value отсутствует
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Все поля обязательны
+ *       404:
+ *         description: Файл не найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Файл не найден
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
 // -------------------- file/deleteFile -----------------------
 
 /**

@@ -38,3 +38,34 @@ export const editFileStatus = async (req, res) => {
     res.status(500).json({ message: "Ошибка сервера" });
   }
 };
+
+export const pinFile = async (req, res) => {
+  try {
+    const { id } = req.user;
+    const { fileId } = req.params;
+    const { value } = req.body;
+
+    if (value === undefined) {
+      return res.status(400).json({ message: "Все поля обязательны" });
+    }
+
+    const file = await Files.findOne({
+      where: {
+        id: fileId,
+        userId: id,
+      },
+    });
+
+    if (!file) {
+      return res.status(404).json({ message: "Файл не найден" });
+    }
+
+    file.pinned = value;
+    await file.save();
+
+    return res.json({ message: "Pinned обновился", file });
+  } catch (error) {
+    console.error("Ошибка:", error);
+    res.status(500).json({ message: "Ошибка сервера" });
+  }
+};

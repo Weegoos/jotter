@@ -6,8 +6,7 @@
       @deleteNote="deleteNote"
       @pinNote="pinNote"
       @updateNote="updateNote"
-      @viewDetailedInfoAboutNote="viewDetailedInfoAboutNote"
-       @row-click="viewDetailedInfoAboutNote"
+      @row-click="viewDetailedInfoAboutNote"
     />
 
     <DocumentTable

@@ -7,7 +7,10 @@ import {
   getFilesName,
 } from "../controllers/file/getFileControllers.js";
 import { createFile } from "../controllers/file/postFileController.js";
-import { editFileStatus } from "../controllers/file/putFileControllers.js";
+import {
+  editFileStatus,
+  pinFile,
+} from "../controllers/file/putFileControllers.js";
 import {
   deleteAllFiles,
   deleteFileById,
@@ -21,6 +24,7 @@ router.get("/filesName", authMiddleware, getFilesName);
 router.get("/filesStatus", authMiddleware, getFilesByStatus);
 
 router.put("/editStatus", authMiddleware, editFileStatus);
+router.put("/:fileId/pin", authMiddleware, pinFile);
 
 router.delete("/deleteFile/:fileId", authMiddleware, deleteFileById);
 router.delete("/deleteAll", authMiddleware, deleteAllFiles);

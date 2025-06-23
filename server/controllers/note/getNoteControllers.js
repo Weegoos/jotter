@@ -8,7 +8,9 @@ export const getAllNotesByFileID = async (req, res) => {
     const { fileId, pinned } = req.params;
 
     if (!fileId && !pinned) {
-      return res.status(400).json({ message: "Ошибка: fileID и pinned отсутствует." });
+      return res
+        .status(400)
+        .json({ message: "Ошибка: fileID и pinned отсутствует." });
     }
 
     const file = await Files.findOne({
