@@ -243,11 +243,13 @@
 
 /**
  * @swagger
- * /notes/{fileId}:
+ * /notes/{fileId}/{pinned}:
  *   get:
- *     summary: Получить все заметки по ID файла
+ *     summary: Получить все заметки по ID файла и статусу pinned
  *     tags: [Notes]
- *     description: Возвращает все заметки, связанные с указанным fileId.
+ *     description: Возвращает все заметки, связанные с указанным fileId, с возможной фильтрацией по pinned (true/false).
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: fileId
@@ -255,6 +257,12 @@
  *         schema:
  *           type: integer
  *         description: ID файла, для которого нужно получить заметки.
+ *       - in: path
+ *         name: pinned
+ *         required: false
+ *         schema:
+ *           type: boolean
+ *         description: Флаг фильтрации закреплённых заметок. Если не передан — возвращаются все.
  *     responses:
  *       200:
  *         description: Успешный ответ. Возвращает массив заметок.
@@ -263,23 +271,9 @@
  *             schema:
  *               type: array
  *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: integer
- *                     example: 1
- *                   fileId:
- *                     type: integer
- *                     example: 5
- *                   content:
- *                     type: string
- *                     example: "Текст заметки"
- *                   createdAt:
- *                     type: string
- *                     format: date-time
- *                     example: "2024-03-07T12:34:56.000Z"
+ *                 $ref: '#/components/schemas/Note'
  *       400:
- *         description: Ошибка в запросе (например, отсутствует fileId).
+ *         description: Ошибка в запросе (например, отсутствует fileId и pinned).
  *         content:
  *           application/json:
  *             schema:
@@ -287,9 +281,19 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Ошибка: fileID отсутствует."
+ *                   example: "Ошибка: fileID и pinned отсутствует."
+ *       403:
+ *         description: Доступ запрещён — файл не принадлежит пользователю.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Доступ запрещен или файл не найден."
  *       500:
- *         description: Ошибка сервера.
+ *         description: Внутренняя ошибка сервера.
  *         content:
  *           application/json:
  *             schema:

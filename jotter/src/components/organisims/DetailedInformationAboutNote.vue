@@ -11,7 +11,6 @@
           <p v-html="detailedInformation.content"></p>
         </q-card-section>
         <q-card-actions align="right">
-
           <BaseCloseButtonVue
             @click="closeDetailedInformationSection"
             label="Close"

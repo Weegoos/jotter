@@ -5,10 +5,10 @@ import { wss } from "../../server.js";
 export const getAllNotesByFileID = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { fileId } = req.params;
+    const { fileId, pinned } = req.params;
 
-    if (!fileId) {
-      return res.status(400).json({ message: "Ошибка: fileID отсутствует." });
+    if (!fileId && !pinned) {
+      return res.status(400).json({ message: "Ошибка: fileID и pinned отсутствует." });
     }
 
     const file = await Files.findOne({
@@ -22,7 +22,7 @@ export const getAllNotesByFileID = async (req, res) => {
     }
 
     const notes = await Notes.findAll({
-      where: { fileId: fileId },
+      where: { fileId: fileId, pinned: pinned },
       order: [
         ["updatedAt", "DESC"],
         ["createdAt", "DESC"],

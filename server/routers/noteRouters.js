@@ -12,7 +12,7 @@ import { createNote } from "../controllers/note/postNoteControllers.js";
 const router = express.Router();
 
 router.get("/public", authMiddleware, getAllPublicNotes);
-router.get("/:fileId", authMiddleware, getAllNotesByFileID);
+router.get("/:fileId/:pinned", authMiddleware, getAllNotesByFileID);
 router.get("/note/:noteId", authMiddleware, getNoteByID);
 
 router.put("/update/:noteId", authMiddleware, updateNote);

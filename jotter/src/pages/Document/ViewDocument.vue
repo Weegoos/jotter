@@ -1,9 +1,75 @@
 <template>
   <div>
+        <q-table
+      class="m-[8px]"
+      bordered
+      title="Закрепленные заметки"
+      :rows="pinnedNote"
+      @row-click="viewDetailedInfoAboutNote"
+      :columns="columns"
+      row-key="name"
+      hide-bottom
+      v-if="pinnedNote?.length"
+    >
+      <template v-slot:body-cell-name="props">
+        <q-td :props="props">
+          <div
+            v-html="props.row.name"
+            class="max-w-[150px] whitespace-nowrap overflow-hidden text-ellipsis"
+          ></div>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-description="props">
+        <q-td :props="props">
+          <div
+            v-html="props.row.description"
+            class="max-w-[150px] whitespace-nowrap overflow-hidden text-ellipsis"
+          ></div>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-actions="props">
+        <q-td align="center">
+          <q-btn-dropdown @click.stop color="primary">
+            <q-list style="min-width: 100px">
+              <q-item clickable v-close-popup>
+                <q-item-section>
+                  <q-btn
+                    class="bg-amber-500 hover:bg-amber-600 text-white"
+                    icon="mdi-pin"
+                    size="sm"
+                    @click="pinNote(props.row)"
+                  />
+                </q-item-section>
+              </q-item>
+              <q-item clickable>
+                <q-item-section>
+                  <q-btn
+                    class="bg-blue-500 hover:bg-blue-600 text-white"
+                    icon="mdi-pencil"
+                    size="sm"
+                    @click="updateNote(props.row)"
+                  />
+                </q-item-section>
+              </q-item>
+              <q-item clickable v-close-popup>
+                <q-item-section>
+                  <q-btn
+                    class="bg-rose-500 hover:bg-rose-600 text-white"
+                    icon="mdi-delete"
+                    size="sm"
+                    @click="deleteNote(props.row)"
+                  />
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
+        </q-td>
+      </template>
+    </q-table>
     <q-table
       class="m-[8px]"
       bordered
-      title="Files"
+      title="Заметка(-и)"
       :rows="rows"
       @row-click="viewDetailedInfoAboutNote"
       :columns="columns"
@@ -30,6 +96,16 @@
         <q-td align="center">
           <q-btn-dropdown @click.stop color="primary">
             <q-list style="min-width: 100px">
+              <q-item clickable v-close-popup>
+                <q-item-section>
+                  <q-btn
+                    class="bg-amber-500 hover:bg-amber-600 text-white"
+                    icon="mdi-pin"
+                    size="sm"
+                    @click="pinNote(props.row)"
+                  />
+                </q-item-section>
+              </q-item>
               <q-item clickable>
                 <q-item-section>
                   <q-btn
@@ -71,6 +147,7 @@ import { useRoute, useRouter } from "vue-router";
 import DetailedInformationAboutNoteVue from "../../components/organisims/DetailedInformationAboutNote.vue";
 import { useDateFormat } from "src/composables/javascript-function/formatDate";
 import { deleteMethod } from "src/composables/api-method/delete";
+import { putMethod } from "src/composables/api-method/put";
 
 // global variables
 const { proxy } = getCurrentInstance();
@@ -138,15 +215,24 @@ const columns = computed(() => [
   },
 ]);
 
+const pinnedNote = ref([])
 const getNotesById = async () => {
   try {
     const response = await getMethod(
       serverURL,
-      `notes/${id}`,
+      `notes/${id}/false`,
       $q,
       "Заметки получены!"
     );
     rows.value = response;
+
+    const pinned = await getMethod(
+      serverURL,
+      `notes/${id}/true`,
+      $q,
+      "Заметки получены!"
+    );
+    pinnedNote.value = pinned
   } catch (error) {
     console.error(error);
   }
@@ -174,6 +260,18 @@ const updateNote = (row) => {
 const deleteNote = async (row) => {
   try {
     await deleteMethod(serverURL, "notes", row.id);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const pinNote = async (row) => {
+  try {
+    const payload = {
+      value: (row.pinned = !row.pinned),
+    };
+
+    await putMethod(serverURL, `notes/${row.id}/pin`, payload, $q, {});
   } catch (error) {
     console.error(error);
   }

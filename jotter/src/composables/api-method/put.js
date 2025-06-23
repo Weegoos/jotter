@@ -9,8 +9,6 @@ export async function putMethod(
   url,
   variableRefOrData,
   $q,
-  successMsg = "Успешно обновлено",
-  errorMsg = "Ошибка: ",
   params = {}
 ) {
   try {
@@ -18,7 +16,7 @@ export async function putMethod(
       typeof variableRefOrData === "object" && "value" in variableRefOrData
         ? variableRefOrData.value
         : variableRefOrData;
-    const response = await axios.put(`${serverURL}${url}`, data, {
+    const response = await axios.put(`${serverURL}${url}`, variableRefOrData, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",

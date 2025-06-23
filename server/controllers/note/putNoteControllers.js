@@ -75,7 +75,21 @@ export const pinNote = async (req, res) => {
     note.pinned = value;
     await note.save();
 
+
+    wss.clients.forEach((client) => {
+      if (client.readyState === 1) {
+        client.send(
+          JSON.stringify({
+            event: "notes_list",
+            fileId: note.fileId,
+            note,
+          }),
+        );
+      }
+    });
+
     return res.json({ message: "Статус pinned обновлён", note });
+    
   } catch (error) {
     console.error("Ошибка обновления заметки:", error);
     res.status(500).json({ message: "Ошибка сервера" });
