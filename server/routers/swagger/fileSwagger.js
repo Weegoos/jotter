@@ -154,30 +154,39 @@
  * @swagger
  * /file/filesStatus:
  *   get:
- *     summary: Получить файлы по статусу с пагинацией
+ *     summary: Получить файлы по статусу и флагу pinned с пагинацией
  *     tags: [Files]
+ *     description: >
+ *       Возвращает список файлов по статусу и флагу pinned, с поддержкой пагинации.
+ *       Также рассылает WebSocket-событие "get_files_by_status" с теми же данными пользователям, чей userId совпадает.
  *     parameters:
  *       - in: query
  *         name: status
  *         schema:
  *           type: string
  *         required: true
- *         description: "Статус файлов (например: active, archived)"
+ *         description: Статус файлов 
+ *       - in: query
+ *         name: pinned
+ *         schema:
+ *           type: boolean
+ *         required: true
+ *         description: Закреплён ли файл (true/false)
  *       - in: query
  *         name: page
  *         schema:
  *           type: integer
  *           default: 1
- *         description: "Номер страницы"
+ *         description: Номер страницы
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
  *           default: 10
- *         description: "Количество файлов на странице"
+ *         description: Количество файлов на странице
  *     responses:
  *       200:
- *         description: Успешный ответ, возвращает файлы с пагинацией
+ *         description: Успешный ответ. Возвращает файлы и данные пагинации
  *         content:
  *           application/json:
  *             schema:
@@ -196,31 +205,55 @@
  *                         example: "File 1"
  *                       description:
  *                         type: string
- *                         example: "Description of the file"
+ *                         example: "Описание файла"
  *                       status:
  *                         type: string
  *                         example: "active"
+ *                       pinned:
+ *                         type: boolean
+ *                         example: true
  *                       createdAt:
  *                         type: string
  *                         format: date-time
  *                         example: "2024-05-01T10:00:00Z"
+ *                       updatedAt:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2024-06-01T10:00:00Z"
  *                 totalCount:
  *                   type: integer
- *                   description: "Общее количество файлов"
+ *                   description: Общее количество файлов
  *                   example: 50
  *                 totalPages:
  *                   type: integer
- *                   description: "Общее количество страниц"
+ *                   description: Общее количество страниц
  *                   example: 5
  *                 currentPage:
  *                   type: integer
- *                   description: "Текущая страница"
+ *                   description: Текущая страница
  *                   example: 1
  *       400:
- *         description: "Ошибка: userId отсутствует или статус не передан"
+ *         description: Ошибка в запросе (например, отсутствует статус или pinned)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка: статус и pinned обязателен."
  *       500:
- *         description: "Ошибка сервера"
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка сервера"
  */
+
 
 // -------------------- file/editStatus -----------------------
 

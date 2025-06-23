@@ -1,7 +1,7 @@
 <template>
-  <div v-if="rows?.length">
-        <DocumentTable
-      :notes="Object(rows)"
+  <div>
+    <DocumentTable
+      :notes="Object(pinnedFiles)"
       :title="'Закрепленные файлы'"
       :columns="columns"
       @row-click="pushToTheFile"
@@ -23,9 +23,9 @@
       @pagination="pagination"
     />
   </div>
-  <div v-else>
+  <!-- <div v-else>
     <p class="text-center text-h6">Файлов нету...</p>
-  </div>
+  </div> -->
 </template>
 
 <script setup>
@@ -72,54 +72,66 @@ socket.onerror = (error) => {
 };
 
 const rows = ref([]);
+const pinnedFiles = ref([]);
 const columns = computed(() => [
-  {
+ {
     name: "name",
     label: "Name",
-    align: "left",
     field: (row) => row.name,
-    sortable: true,
+    align: "left",
+    style: "width: 20%"
   },
   {
     name: "description",
     label: "Description",
-    align: "left",
     field: (row) => row.description,
-    sortable: true,
+    align: "left",
+    style: "width: 20%"
   },
   {
     name: "created_at",
     label: "Created At",
-    align: "left",
     field: (row) => useDateFormat(row.createdAt),
-    sortable: true,
+    align: "left",
+    style: "width: 20%"
   },
   {
     name: "updated_at",
     label: "Updated At",
-    align: "left",
     field: (row) => useDateFormat(row.updatedAt),
-    sortable: true,
+    align: "left",
+    style: "width: 20%"
   },
   {
     name: "actions",
     label: "Actions",
-    align: "center",
     field: "id",
-  },
+    align: "center",
+    style: "width: 20%"
+  }
 ]);
 
 const filesByStatus = ref([]);
-const getFiles = async (page) => {
+
+const getFilesByPinned = async (page, pinnedValue) => {
   try {
     const response = await getMethod(
       serverURL,
-      `file/filesStatus?status=${contentForView}&page=${page}&limit=${maxNumberOfRequestPerPage}`,
+      `file/filesStatus?status=${contentForView}&pinned=${pinnedValue}&page=${page}&limit=${maxNumberOfRequestPerPage}`,
       $q,
       "Files fetched successfully"
     );
-    rows.value = response.files;
-    filesByStatus.value = response;
+    return response.files;
+  } catch (error) {
+    console.error("Ошибка при получении заметок:", error);
+    return [];
+  }
+};
+
+const getFiles = async (page) => {
+  try {
+    rows.value = await getFilesByPinned(page, false);
+    pinnedFiles.value = await getFilesByPinned(page, true);
   } catch (error) {
     console.error("Error fetching files:", error);
   }
@@ -155,7 +167,7 @@ const editFile = async () => {
 };
 
 const pinFile = async (row) => {
-   try {
+  try {
     const payload = {
       value: (row.pinned = !row.pinned),
     };
@@ -164,7 +176,7 @@ const pinFile = async (row) => {
   } catch (error) {
     console.error(error);
   }
-}
+};
 
 onMounted(() => {
   getFiles(1);

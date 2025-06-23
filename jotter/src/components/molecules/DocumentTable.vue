@@ -5,6 +5,7 @@
     :title="props.title"
     :rows="props.notes"
     :columns="props.columns"
+     :table-style="{ tableLayout: 'fixed' }"
     row-key="name"
     v-if="props.notes?.length"
   >

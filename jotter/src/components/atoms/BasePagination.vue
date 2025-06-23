@@ -24,7 +24,6 @@ const current = ref(1);
 const maxPage = ref("");
 
 watchEffect(() => {
-  console.log("watchEffect triggered:", props.variableName);
   if (props.variableName && props.variableName.totalCount) {
     maxPage.value = Math.ceil(
       props.variableName.totalCount / maxNumberOfRequestPerPage

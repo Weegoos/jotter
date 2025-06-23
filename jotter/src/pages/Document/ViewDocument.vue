@@ -107,23 +107,25 @@ const columns = computed(() => [
 const rows = ref([]);
 
 const pinnedNote = ref([]);
-const getNotesById = async () => {
+const getNotesByPinned = async (id, pinnedValue) => {
   try {
     const response = await getMethod(
       serverURL,
-      `notes/${id}/false`,
+      `notes/${id}/${pinnedValue}`,
       $q,
       "Заметки получены!"
     );
-    rows.value = response;
+    return response;
+  } catch (error) {
+    console.error("Ошибка при получении заметок:", error);
+    return [];
+  }
+};
 
-    const pinned = await getMethod(
-      serverURL,
-      `notes/${id}/true`,
-      $q,
-      "Заметки получены!"
-    );
-    pinnedNote.value = pinned;
+const getNotesById = async () => {
+  try {
+    rows.value = await getNotesByPinned(id, false);
+    pinnedNote.value = await getNotesByPinned(id, true);
   } catch (error) {
     console.error(error);
   }
@@ -132,8 +134,6 @@ const getNotesById = async () => {
 onMounted(() => {
   getNotesById();
 });
-
-console.log(typeof pinnedNote.value);
 
 const isOpenDetailedInformation = ref(false);
 const detailedInformation = ref([]);

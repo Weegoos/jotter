@@ -63,6 +63,17 @@ export const pinFile = async (req, res) => {
     file.pinned = value;
     await file.save();
 
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(
+          JSON.stringify({
+            event: "change_status",
+            file: file,
+          }),
+        );
+      }
+    });
+    
     return res.json({ message: "Pinned обновился", file });
   } catch (error) {
     console.error("Ошибка:", error);

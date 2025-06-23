@@ -20,10 +20,11 @@ export const getFilesByUserId = async (req, res) => {
     res.status(500).json({ message: "Ошибка сервера" });
   }
 };
+
 export const getFilesByStatus = async (req, res) => {
   try {
     const userId = req.user?.id;
-    const { status } = req.query;
+    const { status, pinned } = req.query;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
 
@@ -31,15 +32,15 @@ export const getFilesByStatus = async (req, res) => {
       return res.status(400).json({ message: "Ошибка: userId отсутствует." });
     }
 
-    if (!status) {
-      return res.status(400).json({ message: "Ошибка: статус обязателен." });
+    if (!status || !pinned) {
+      return res.status(400).json({ message: "Ошибка: статус и pinned обязателен." });
     }
 
     // Найдем файлы с учетом пагинации
     const offset = (page - 1) * limit;
 
     const files = await Files.findAndCountAll({
-      where: { userId, status },
+      where: { userId, status, pinned },
       limit: limit,
       offset: offset,
     });
