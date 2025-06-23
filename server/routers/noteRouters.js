@@ -11,9 +11,9 @@ import { deleteNoteById } from "../controllers/note/deleteNoteControllers.js";
 import { createNote } from "../controllers/note/postNoteControllers.js";
 const router = express.Router();
 
-router.get("/:type", authMiddleware, getAllNotesByType);
-router.get("/:fileId/:pinned", authMiddleware, getAllNotesByFileID);
 router.get("/note/:noteId", authMiddleware, getNoteByID);
+router.get("/:fileId/:pinned", authMiddleware, getAllNotesByFileID);
+router.get("/:type", authMiddleware, getAllNotesByType);
 
 router.put("/update/:noteId", authMiddleware, updateNote);
 router.put("/:noteId/pin", authMiddleware, pinNote);

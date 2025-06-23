@@ -14,7 +14,7 @@ const initializeHashTag = async () => {
       { name: "Технологии" },
       { name: "Вдохновение" },
     ]);
-    console.log('Хэштеги загружены')
+  console.log("Хэштеги загружены");
 };
 
 export default initializeHashTag;

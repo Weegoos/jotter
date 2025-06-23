@@ -54,7 +54,7 @@ const PORT = process.env.PORT || 3001;
   setupGoogleAuth(app);
 
   initializeTypes();
-  initializeHashTag()
+  initializeHashTag();
 
   app.get("/", (req, res) => {
     res.send("Сервер работает!");

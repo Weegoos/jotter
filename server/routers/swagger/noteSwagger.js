@@ -13,13 +13,18 @@
  *   post:
  *     summary: Создать новую заметку
  *     tags: [Notes]
- *     description: Создаёт новую заметку в указанном файле.
+ *     description: Создаёт новую заметку, связанную с файлом. В случае типа "private" можно указать пароль.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - content
+ *               - fileName
+ *               - title
+ *               - type
  *             properties:
  *               content:
  *                 type: string
@@ -34,6 +39,11 @@
  *                 type: string
  *                 enum: [private, public, shared]
  *                 example: "private"
+ *               password:
+ *                 type: string
+ *                 nullable: true
+ *                 example: "secret123"
+ *                 description: Указывается только если type = private
  *     responses:
  *       201:
  *         description: Заметка успешно создана.
@@ -60,10 +70,18 @@
  *                 type:
  *                   type: string
  *                   example: "private"
+ *                 password:
+ *                   type: string
+ *                   nullable: true
+ *                   example: "secret123"
  *                 createdAt:
  *                   type: string
  *                   format: date-time
  *                   example: "2024-03-18T12:34:56.000Z"
+ *                 updatedAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2024-03-18T12:35:10.000Z"
  *       400:
  *         description: Ошибка в запросе (отсутствуют обязательные поля).
  *         content:
@@ -73,7 +91,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Контент и fileName, title, type обязательны."
+ *                   example: "Контент, fileName, title и type обязательны"
  *       404:
  *         description: Файл не найден.
  *         content:
@@ -83,7 +101,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Файл не найден."
+ *                   example: "Файл не найден"
  *       500:
  *         description: Ошибка сервера.
  *         content:
@@ -93,7 +111,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Ошибка сервера."
+ *                   example: "Ошибка сервера"
  */
 
 // --------------------------- delete ---------------------
@@ -163,18 +181,23 @@
  *   get:
  *     summary: Получить заметку по ID
  *     tags: [Notes]
- *     description: Возвращает данные одной заметки по её уникальному идентификатору.
+ *     description: Получает одну заметку по её ID. Для приватных заметок требуется пароль (query параметр `password`).
  *     parameters:
  *       - in: path
  *         name: noteId
  *         required: true
- *         description: Уникальный идентификатор заметки
  *         schema:
  *           type: integer
- *           example: 1
+ *         description: ID заметки
+ *       - in: query
+ *         name: password
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Пароль для приватной заметки
  *     responses:
  *       200:
- *         description: Заметка успешно найдена.
+ *         description: Заметка найдена
  *         content:
  *           application/json:
  *             schema:
@@ -182,61 +205,30 @@
  *               properties:
  *                 id:
  *                   type: integer
- *                   example: 1
  *                 content:
  *                   type: string
- *                   example: "Текст заметки"
  *                 title:
  *                   type: string
- *                   example: "Идея стартапа"
  *                 type:
  *                   type: string
- *                   enum: [private, public, shared]
- *                   example: "private"
  *                 fileId:
  *                   type: integer
- *                   example: 5
  *                 fileName:
  *                   type: string
- *                   example: "my_notes.txt"
  *                 createdAt:
  *                   type: string
  *                   format: date-time
- *                   example: "2024-03-18T12:34:56.000Z"
  *                 updatedAt:
  *                   type: string
  *                   format: date-time
- *                   example: "2024-03-19T10:00:00.000Z"
  *       400:
- *         description: Неверный запрос — отсутствует параметр noteId.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Ошибка: noteId отсутствует."
+ *         description: Неверный запрос (например, отсутствует noteId или пароль)
+ *       403:
+ *         description: Неверный пароль
  *       404:
- *         description: Заметка не найдена по указанному ID.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Заметка не найдена."
+ *         description: Заметка не найдена
  *       500:
- *         description: Внутренняя ошибка сервера.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Ошибка сервера."
+ *         description: Внутренняя ошибка сервера
  */
 
 // -------------------- notes/all -----------------------

@@ -10,6 +10,7 @@ const Notes = sequelize.define(
     title: { type: DataTypes.TEXT, allowNull: false, unique: true },
     type: { type: DataTypes.TEXT, allowNull: false },
     pinned: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+    password: { type: DataTypes.TEXT, allowNull: true, defaultValue: null },
   },
   {
     timestamps: true,

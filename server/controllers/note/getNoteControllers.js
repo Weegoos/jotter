@@ -1,6 +1,8 @@
 import Files from "../../schemas/fileSchemas.js";
 import Notes from "../../schemas/notesSchemas.js";
 import { wss } from "../../server.js";
+import bcrypt from "bcrypt";
+import { decrypt } from "../crypto.js";
 
 export const getAllNotesByFileID = async (req, res) => {
   try {
@@ -48,7 +50,7 @@ export const getNoteByID = async (req, res) => {
   try {
     const userId = req.user.id;
     const noteId = Number(req.params.noteId);
-    console.log("noteId param:", noteId);
+    const { password } = req.query;
 
     if (!noteId) {
       return res.status(400).json({ message: "Ошибка: noteId отсутствует." });
@@ -69,6 +71,24 @@ export const getNoteByID = async (req, res) => {
       return res.status(404).json({ message: "Заметка не найдена." });
     }
 
+    // Если приватная — проверяем пароль и расшифровываем
+    if (note.type === "private") {
+      if (!password) {
+        return res.status(400).json({ message: "Требуется пароль для доступа к приватной заметке." });
+      }
+
+      const isMatch = await bcrypt.compare(password, note.password);
+      if (!isMatch) {
+        return res.status(403).json({ message: "Неверный пароль." });
+      }
+
+      // Расшифровка данных
+      note.content = decrypt(note.content);
+      note.fileName = decrypt(note.fileName);
+      note.title = decrypt(note.title);
+    }
+
+    // WebSocket рассылка
     wss.clients.forEach((client) => {
       if (client.readyState === 1) {
         client.send(JSON.stringify({ event: "note_data", note }));
