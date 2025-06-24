@@ -1,8 +1,8 @@
 <template>
   <div>
     <DocumentTable
-      :notes="Object(pinnedNote)"
-      :title="String('Закрепленные заметки')"
+      :notes="pinnedNote.filter((note) => note.type !== 'saved')"
+      :title="'Закрепленные заметки'"
       :columns="columns"
       @delete="deleteNote"
       @pin="pinNote"
@@ -11,11 +11,20 @@
     />
 
     <DocumentTable
-      :notes="Object(rows)"
+      :notes="rows.filter((note) => note.type !== 'saved')"
       :title="String('Заметки')"
       :columns="columns"
       @delete="deleteNote"
       @pin="pinNote"
+      @update="updateNote"
+      @row-click="viewDetailedInfoAboutNote"
+    />
+
+    <DocumentTable
+      :notes="savedNote"
+      :title="'Черновики'"
+      :columns="columns"
+      @delete="deleteNote"
       @update="updateNote"
       @row-click="viewDetailedInfoAboutNote"
     />
@@ -74,6 +83,7 @@ const columns = computed(() => [
     align: "left",
     field: (row) => row.title,
     sortable: true,
+    style: "width: 20%",
   },
   {
     name: "type",
@@ -81,6 +91,7 @@ const columns = computed(() => [
     align: "left",
     field: (row) => row.type,
     sortable: true,
+    style: "width: 20%",
   },
   {
     name: "created_at",
@@ -88,6 +99,7 @@ const columns = computed(() => [
     align: "left",
     field: (row) => useDateFormat(row.createdAt),
     sortable: true,
+    style: "width: 20%",
   },
   {
     name: "updated_at",
@@ -95,18 +107,21 @@ const columns = computed(() => [
     align: "left",
     field: (row) => useDateFormat(row.updatedAt),
     sortable: true,
+    style: "width: 20%",
   },
   {
     name: "actions",
     label: "Actions",
     align: "center",
     field: "id",
+    style: "width: 20%",
   },
 ]);
 
 const rows = ref([]);
-
 const pinnedNote = ref([]);
+const savedNote = ref([]);
+
 const getNotesByPinned = async (id, pinnedValue) => {
   try {
     const response = await getMethod(
@@ -122,10 +137,26 @@ const getNotesByPinned = async (id, pinnedValue) => {
   }
 };
 
+const getSavedNotes = async (type) => {
+  try {
+    const response = await getMethod(
+      serverURL,
+      `notes/${type}`,
+      $q,
+      "Заметки получены"
+    );
+    return response;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
 const getNotesById = async () => {
   try {
     rows.value = await getNotesByPinned(id, false);
     pinnedNote.value = await getNotesByPinned(id, true);
+    savedNote.value = await getSavedNotes("saved");
   } catch (error) {
     console.error(error);
   }

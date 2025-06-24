@@ -1,5 +1,7 @@
-import enUS from "./en-US";
+import ru from "./ru-RU/index.js";
+import en from "./en-US/index.js";
 
 export default {
-  "en-US": enUS,
+  ru,
+  en,
 };

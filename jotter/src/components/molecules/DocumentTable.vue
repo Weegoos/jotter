@@ -5,7 +5,7 @@
     :title="props.title"
     :rows="props.notes"
     :columns="props.columns"
-     :table-style="{ tableLayout: 'fixed' }"
+    :table-style="{ tableLayout: 'fixed' }"
     row-key="name"
     v-if="props.notes?.length"
   >
@@ -29,7 +29,7 @@
       <q-td align="center">
         <q-btn-dropdown @click.stop color="primary">
           <q-list style="min-width: 100px">
-            <q-item clickable v-close-popup>
+            <q-item clickable v-close-popup v-if="props.row.type !== 'saved'">
               <q-item-section>
                 <q-btn
                   class="bg-amber-500 hover:bg-amber-600 text-white"

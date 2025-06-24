@@ -16,7 +16,7 @@ export async function getMethod(serverURL, url, $q, successMsg) {
     });
 
     // console.log(response.data);
-    successMessage($q, successMsg);
+    // successMessage($q, successMsg);
     return response.data;
   } catch (error) {
     console.error("Ошибка:", error.response?.data);

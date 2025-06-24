@@ -63,12 +63,12 @@ onMounted(async () => {
 });
 
 const saveWork = async (data) => {
- try {
+  try {
     const payload = {
       content: data,
       fileName: fileName.value,
       title: title.value,
-      type: 'saved',
+      type: "saved",
     };
 
     await postMethod(

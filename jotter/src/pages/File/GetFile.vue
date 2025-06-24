@@ -74,41 +74,41 @@ socket.onerror = (error) => {
 const rows = ref([]);
 const pinnedFiles = ref([]);
 const columns = computed(() => [
- {
+  {
     name: "name",
     label: "Name",
     field: (row) => row.name,
     align: "left",
-    style: "width: 20%"
+    style: "width: 20%",
   },
   {
     name: "description",
     label: "Description",
     field: (row) => row.description,
     align: "left",
-    style: "width: 20%"
+    style: "width: 20%",
   },
   {
     name: "created_at",
     label: "Created At",
     field: (row) => useDateFormat(row.createdAt),
     align: "left",
-    style: "width: 20%"
+    style: "width: 20%",
   },
   {
     name: "updated_at",
     label: "Updated At",
     field: (row) => useDateFormat(row.updatedAt),
     align: "left",
-    style: "width: 20%"
+    style: "width: 20%",
   },
   {
     name: "actions",
     label: "Actions",
     field: "id",
     align: "center",
-    style: "width: 20%"
-  }
+    style: "width: 20%",
+  },
 ]);
 
 const filesByStatus = ref([]);
