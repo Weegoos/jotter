@@ -3,6 +3,7 @@ import Notes from "../../schemas/notesSchemas.js";
 import { wss } from "../../server.js";
 import bcrypt from "bcrypt";
 import { decrypt } from "../crypto.js";
+import { Op } from "sequelize";
 
 export const getAllNotesByFileID = async (req, res) => {
   try {
@@ -71,10 +72,13 @@ export const getNoteByID = async (req, res) => {
       return res.status(404).json({ message: "Заметка не найдена." });
     }
 
-    // Если приватная — проверяем пароль и расшифровываем
     if (note.type === "private") {
       if (!password) {
-        return res.status(400).json({ message: "Требуется пароль для доступа к приватной заметке." });
+        return res
+          .status(400)
+          .json({
+            message: "Требуется пароль для доступа к приватной заметке.",
+          });
       }
 
       const isMatch = await bcrypt.compare(password, note.password);
@@ -104,7 +108,6 @@ export const getNoteByID = async (req, res) => {
 
 export const getAllNotesByType = async (req, res) => {
   try {
-    console.log("Получаем публичные заметки...");
     const userId = req.user.id;
     const { type } = req.params;
 
@@ -127,9 +130,50 @@ export const getAllNotesByType = async (req, res) => {
       ],
     });
 
-    res.json(notes);
+    res.status(200).json(notes);
   } catch (error) {
     console.error("Ошибка при получении публичных заметок:", error);
     res.status(500).json({ message: "Ошибка сервера при получении заметок" });
+  }
+};
+
+export const searchNotes = async (req, res) => {
+  try {
+    const { id } = req.user;
+
+    if (!id) {
+      return res.status(400).json({ message: "Ошибка: id отсутствует." });
+    }
+
+    const { fileId } = req.params;
+    const { search } = req.query;
+    if (!fileId) {
+      return res
+        .status(400)
+        .json({ message: "Ошибка: fileId отсутствует." });
+    }
+
+        if (!search) {
+      return res
+        .status(400)
+        .json({ message: "Ошибка: search отсутствует." });
+    }
+
+    const cleanedTitle = search.trim()
+    const notes = await Notes.findAll({
+      where: {
+        fileId: fileId,
+        [Op.or]: [
+          { title: { [Op.like]: `%${cleanedTitle}%` } },
+          { content: { [Op.like]: `%${cleanedTitle}%` } },
+        ]
+      }
+    })
+    console.log(cleanedTitle);
+    
+    return res.status(200).json({ notes });
+  } catch (error) {
+    console.error("Ошибка при получении заметок поиска:", error);
+    return res.status(500).json({ message: "Ошибка сервера при получении заметок" });
   }
 };

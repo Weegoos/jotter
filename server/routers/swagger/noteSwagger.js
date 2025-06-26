@@ -367,6 +367,66 @@
  *                   example: "Ошибка сервера при получении заметок"
  */
 
+// /notes/{fileId}/search:
+
+/**
+ * @swagger
+ * /notes/{fileId}/search:
+ *   get:
+ *     summary: Поиск заметок по заголовку или содержимому
+ *     description: Ищет заметки внутри файла по совпадению в заголовке или содержимом (регистрозависимо). 
+ *     tags:
+ *       - Notes
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: fileId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID файла, в котором производится поиск
+ *       - in: query
+ *         name: search
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Строка поиска, которая будет сравниваться с title и content
+ *     responses:
+ *       200:
+ *         description: Найденные заметки
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 notes:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Note'
+ *       400:
+ *         description: Неверный запрос (например, отсутствует fileId или параметр поиска)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *               
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Ошибка сервера при получении заметок
+ */
+
+
 // -------------------- notes/update -----------------------
 
 /**

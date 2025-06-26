@@ -3,7 +3,6 @@ const algorithm = "aes-256-cbc";
 const ENCRYPTION_SECRET = process.env.ENCRYPTION_SECRET;
 const key = crypto.createHash("sha256").update(ENCRYPTION_SECRET).digest();
 
-
 export function encrypt(text) {
   const iv = crypto.randomBytes(16);
   const cipher = crypto.createCipheriv(algorithm, key, iv);

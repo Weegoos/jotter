@@ -20,15 +20,14 @@ export const createNote = async (req, res) => {
       return res.status(404).json({ message: "Файл не найден" });
     }
 
-const noteData = {
-  content: type === "private" ? encrypt(content) : content,
-  fileName: type === "private" ? encrypt(fileName) : fileName,
-  title: type === "private" ? encrypt(title) : title,
-  fileId: file.id,
-  type,
-  ...(type === "private" && { password: await bcrypt.hash(password, 15) }),
-};
-
+    const noteData = {
+      content: type === "private" ? encrypt(content) : content,
+      fileName: type === "private" ? encrypt(fileName) : fileName,
+      title: type === "private" ? encrypt(title) : title,
+      fileId: file.id,
+      type,
+      ...(type === "private" && { password: await bcrypt.hash(password, 15) }),
+    };
 
     const note = await Notes.create(noteData);
 
