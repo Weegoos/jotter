@@ -2,7 +2,7 @@
   <q-dialog v-model="isOpen" persistent>
     <q-card>
       <q-card-section>
-        <div v-if="detailedInfo.type === privateNote">
+        <div v-if="isDecrypted === false">
           <q-input
             v-model="password"
             label="Введите пароль"
@@ -40,7 +40,7 @@
 
 <script setup>
 import { ref, watch, getCurrentInstance } from "vue";
-import { useQuasar } from "quasar";
+import { is, useQuasar } from "quasar";
 import { getMethod } from "src/composables/api-method/get";
 import BaseCloseButtonVue from "../atoms/BaseCloseButton.vue";
 
@@ -75,13 +75,6 @@ watch(
   (newVal) => {
     detailedInfo.value = { ...newVal };
 
-    // Устанавливаем isDecrypted = true только если заметка не приватная
-    if (newVal.type != "private") {
-      isDecrypted.value = true;
-    } else {
-      isDecrypted.value = false;
-    }
-
     // Если приватная — не трогаем isDecrypted, его меняет checkPassword
     password.value = "";
   },
@@ -98,13 +91,14 @@ const checkPassword = async () => {
       "Успешный пароль"
     );
 
+        isDecrypted.value = true;
     detailedInfo.value = response;
-    isDecrypted.value = true;
-    checkPrivateNote.value = true;
+    console.log(isDecrypted.value, detailedInfo.value);
 
     emit("openDecryptedNote", detailedInfo.value);
   } catch (error) {
-    $q.notify({ type: "negative", message: "Неверный пароль" });
+    console.error(error);
+
   }
 };
 </script>
