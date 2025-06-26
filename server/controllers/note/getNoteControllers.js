@@ -159,6 +159,16 @@ export const searchNotes = async (req, res) => {
         .json({ message: "Ошибка: search отсутствует." });
     }
 
+        const user = await Files.findOne({
+          where: {
+            userId: id
+          }
+        })
+
+      if (!user) {
+        return res.status(403).json({ message: "Доступ запрещен или файл не найден." });
+      }
+
     const cleanedTitle = search.trim()
     const notes = await Notes.findAll({
       where: {
@@ -166,7 +176,8 @@ export const searchNotes = async (req, res) => {
         [Op.or]: [
           { title: { [Op.like]: `%${cleanedTitle}%` } },
           { content: { [Op.like]: `%${cleanedTitle}%` } },
-        ]
+        ],
+        
       }
     })
     console.log(cleanedTitle);
