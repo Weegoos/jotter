@@ -254,6 +254,70 @@
  *                   example: "Ошибка сервера"
  */
 
+/**
+ * @swagger
+ * /file/search:
+ *   get:
+ *     summary: Поиск файлов по имени
+ *     description: Возвращает список файлов текущего пользователя, название которых содержит строку поиска.
+ *     tags:
+ *       - Files
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: проект
+ *         description: Строка для поиска в названии файла
+ *     responses:
+ *       200:
+ *         description: Список найденных файлов
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Поиск файлов по имени
+ *                 output:
+ *                   type: array
+ *       400:
+ *         description: Отсутствует id пользователя или неверный запрос
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                
+ *       404:
+ *         description: Файлы не найдены
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Файлы не найдены
+ *       500:
+ *         description: Внутренняя ошибка при поиске файла
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Ошибка при поиске файла
+ */
+
+
 // -------------------- file/editStatus -----------------------
 
 /**

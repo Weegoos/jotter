@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import Files from "../../schemas/fileSchemas.js";
 import { wss } from "../../server.js";
 
@@ -91,5 +92,37 @@ export const getFilesName = async (req, res) => {
   } catch (error) {
     console.error("Ошибка:", error);
     res.status(500).json({ message: "Ошибка сервера" });
+  }
+};
+
+export const searchFiles = async (req, res) => {
+  try {
+    const id = req.user.id;
+    const { search } = req.query;
+    if (!id) {
+      return res.status(400).json({ message: "Ошибка: id отсутствует." });
+    }
+    
+
+    const file = await Files.findAll({
+      where: {
+        userId: id,
+        name: {
+          [Op.like]: `%${search}%`,
+        }
+      }
+    })
+
+    if (!file || file.length === 0) {
+      return res.status(404).json({ message: "Файлы не найдены" });
+    }
+
+    return res.status(200).json({
+      message: "Поиск файлов по имени",
+      output: file,
+    });
+  } catch (error) {
+    console.error("Ошибка при поиске файла:", error);
+    res.status(500).json({ message: "Ошибка при поиске файла" });
   }
 };

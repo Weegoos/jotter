@@ -5,6 +5,7 @@ import {
   getFilesByStatus,
   getFilesByUserId,
   getFilesName,
+  searchFiles,
 } from "../controllers/file/getFileControllers.js";
 import { createFile } from "../controllers/file/postFileController.js";
 import {
@@ -19,6 +20,7 @@ const router = express.Router();
 
 router.post("/create", authMiddleware, createFile);
 
+router.get('/search', authMiddleware, searchFiles)
 router.get("/allFiles", authMiddleware, getFilesByUserId);
 router.get("/filesName", authMiddleware, getFilesName);
 router.get("/filesStatus", authMiddleware, getFilesByStatus);

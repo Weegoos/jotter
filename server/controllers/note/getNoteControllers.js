@@ -74,11 +74,9 @@ export const getNoteByID = async (req, res) => {
 
     if (note.type === "private") {
       if (!password) {
-        return res
-          .status(400)
-          .json({
-            message: "Требуется пароль для доступа к приватной заметке.",
-          });
+        return res.status(400).json({
+          message: "Требуется пароль для доступа к приватной заметке.",
+        });
       }
 
       const isMatch = await bcrypt.compare(password, note.password);
@@ -148,28 +146,26 @@ export const searchNotes = async (req, res) => {
     const { fileId } = req.params;
     const { search } = req.query;
     if (!fileId) {
-      return res
-        .status(400)
-        .json({ message: "Ошибка: fileId отсутствует." });
+      return res.status(400).json({ message: "Ошибка: fileId отсутствует." });
     }
 
-        if (!search) {
-      return res
-        .status(400)
-        .json({ message: "Ошибка: search отсутствует." });
+    if (!search) {
+      return res.status(400).json({ message: "Ошибка: search отсутствует." });
     }
 
-        const user = await Files.findOne({
-          where: {
-            userId: id
-          }
-        })
+    const user = await Files.findOne({
+      where: {
+        userId: id,
+      },
+    });
 
-      if (!user) {
-        return res.status(403).json({ message: "Доступ запрещен или файл не найден." });
-      }
+    if (!user) {
+      return res
+        .status(403)
+        .json({ message: "Доступ запрещен или файл не найден." });
+    }
 
-    const cleanedTitle = search.trim()
+    const cleanedTitle = search.trim();
     const notes = await Notes.findAll({
       where: {
         fileId: fileId,
@@ -177,14 +173,15 @@ export const searchNotes = async (req, res) => {
           { title: { [Op.like]: `%${cleanedTitle}%` } },
           { content: { [Op.like]: `%${cleanedTitle}%` } },
         ],
-        
-      }
-    })
+      },
+    });
     console.log(cleanedTitle);
-    
+
     return res.status(200).json({ notes });
   } catch (error) {
     console.error("Ошибка при получении заметок поиска:", error);
-    return res.status(500).json({ message: "Ошибка сервера при получении заметок" });
+    return res
+      .status(500)
+      .json({ message: "Ошибка сервера при получении заметок" });
   }
 };
