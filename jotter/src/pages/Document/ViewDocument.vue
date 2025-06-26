@@ -33,6 +33,7 @@
       :isOpenDetailedInformation="isOpenDetailedInformation"
       @closeDetailedInformationSection="closeDetailedInformationSection"
       :detailedInformation="detailedInformation"
+      @openDecryptedNote="onDecryptedNoteOpen"
     />
   </div>
 </template>
@@ -81,7 +82,7 @@ const columns = computed(() => [
     name: "title",
     label: "Name",
     align: "left",
-    field: (row) => row.title,
+    field: (row) => (row.type !== "private" ? row.title : "Введите пароль"),
     sortable: true,
     style: "width: 20%",
   },
@@ -170,7 +171,6 @@ const isOpenDetailedInformation = ref(false);
 const detailedInformation = ref([]);
 const viewDetailedInfoAboutNote = (evt, row, index) => {
   detailedInformation.value = row;
-
   isOpenDetailedInformation.value = true;
 };
 
@@ -180,6 +180,11 @@ const closeDetailedInformationSection = () => {
 
 const updateNote = (row) => {
   router.push(`/update-note/${row.id}`);
+};
+
+const onDecryptedNoteOpen = (noteData) => {
+  detailedInformation.value = noteData;
+  isOpenDetailedInformation.value = true;
 };
 
 const deleteNote = async (row) => {

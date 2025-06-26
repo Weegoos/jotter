@@ -14,8 +14,18 @@
         filled
       />
     </section>
-    <section class="m-[24px]">
+    <section
+      class="m-[24px]"
+      :class="type == privateNote ? 'grid grid-cols-2 grid-rows-1 gap-4' : ''"
+    >
       <q-input v-model="title" type="text" label="Title" filled autogrow />
+      <q-input
+        v-model="password"
+        type="password"
+        label="Password"
+        filled
+        v-if="type === privateNote"
+      />
     </section>
     <section class="m-[8px]">
       <BaseQEditor
@@ -39,12 +49,14 @@ const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
 const $q = useQuasar();
 const apiStore = useApiStore();
+const privateNote = proxy.$privateNote;
 
 const fileName = ref("");
 const fileNameOptions = ref([]);
 const type = ref("");
 const typeOptions = ref([]);
 const title = ref("");
+const password = ref("");
 
 const getList = async () => {
   try {
@@ -89,6 +101,7 @@ const sendWork = async (data) => {
       fileName: fileName.value,
       title: title.value,
       type: type.value,
+      password: password.value,
     };
 
     await postMethod(
@@ -103,5 +116,3 @@ const sendWork = async (data) => {
   }
 };
 </script>
-
-<style></style>

@@ -11,6 +11,7 @@ export default ({ app }) => {
   const pending = "pending";
   const accepted = "accepted";
   const rejected = "rejected";
+  const privateNote = "private";
 
   app.config.globalProperties.$mobileWidth = mobileWidth;
   app.config.globalProperties.$serverURL = serverURL;
@@ -24,4 +25,5 @@ export default ({ app }) => {
   app.config.globalProperties.$pending = pending;
   app.config.globalProperties.$accepted = accepted;
   app.config.globalProperties.$rejected = rejected;
+  app.config.globalProperties.$privateNote = privateNote;
 };
