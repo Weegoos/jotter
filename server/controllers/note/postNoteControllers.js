@@ -6,11 +6,11 @@ import { encrypt } from "../crypto.js";
 
 export const createNote = async (req, res) => {
   try {
-    const { content, fileName, title, type, password } = req.body;
+    const { content, fileName, title, type, password, hashtags } = req.body;
 
-    if (!content || !fileName || !title || !type) {
+    if (!content || !fileName || !title || !type || !hashtags) {
       return res.status(400).json({
-        message: "Контент, fileName, title и type обязательны",
+        message: "Контент, fileName, title, type, hashtags обязательны",
       });
     }
 
@@ -27,6 +27,7 @@ export const createNote = async (req, res) => {
       fileId: file.id,
       type,
       ...(type === "private" && { password: await bcrypt.hash(password, 15) }),
+      hashtags: hashtags
     };
 
     const note = await Notes.create(noteData);

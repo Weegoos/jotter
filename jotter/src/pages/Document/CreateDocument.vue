@@ -116,6 +116,7 @@ const sendWork = async (data) => {
       title: title.value,
       type: type.value,
       password: password.value,
+      hashtags: hashtags.value,
     };
 
     await postMethod(

@@ -25,13 +25,14 @@
  *               - fileName
  *               - title
  *               - type
+ *               - hashtags
  *             properties:
  *               content:
  *                 type: string
  *                 example: "Текст новой заметки"
  *               fileName:
  *                 type: string
- *                 example: "my_notes.txt"
+ *                 example: "Программирование"
  *               title:
  *                 type: string
  *                 example: "Идея стартапа"
@@ -44,6 +45,12 @@
  *                 nullable: true
  *                 example: "secret123"
  *                 description: Указывается только если type = private
+ *               hashtags:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["Здоровье", "Финансы"]
+ *                 description: Список хэштегов, связанных с заметкой
  *     responses:
  *       201:
  *         description: Заметка успешно создана.
@@ -63,7 +70,7 @@
  *                   example: 5
  *                 fileName:
  *                   type: string
- *                   example: "my_notes.txt"
+ *                   example: "Программирование"
  *                 title:
  *                   type: string
  *                   example: "Идея стартапа"
@@ -73,7 +80,12 @@
  *                 password:
  *                   type: string
  *                   nullable: true
- *                   example: "secret123"
+ *                   example: "$2b$10$..."
+ *                 hashtags:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   example: ["Здоровье", "Финансы"]
  *                 createdAt:
  *                   type: string
  *                   format: date-time
@@ -91,7 +103,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Контент, fileName, title и type обязательны"
+ *                   example: "Контент, fileName, title, type, hashtags обязательны"
  *       404:
  *         description: Файл не найден.
  *         content:
