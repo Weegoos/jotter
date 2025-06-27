@@ -8,6 +8,7 @@ export const useApiStore = defineStore("api", {
     userData: null,
     fileNames: [],
     noteTypes: [],
+    hashtags: [],
   }),
   actions: {
     async getUserInfo(serverURL, $q) {
@@ -43,6 +44,18 @@ export const useApiStore = defineStore("api", {
           "types",
           $q,
           "Типы заметок успешно получены"
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async getHashtags(serverURL, $q) {
+      try {
+        this.hashtags = await getMethod(
+          serverURL,
+          "hashtag/all",
+          $q,
+          "Хэштеги успешно получены"
         );
       } catch (error) {
         console.error(error);

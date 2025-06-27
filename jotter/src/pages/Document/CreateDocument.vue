@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section class="grid grid-cols-2 gap-4 m-[24px]">
+    <section class="grid grid-cols-3 gap-4 m-[24px]">
       <q-select
         v-model="fileName"
         :options="fileNameOptions"
@@ -12,6 +12,13 @@
         :options="typeOptions"
         label="Note's type"
         filled
+      />
+      <q-select
+        v-model="hashtags"
+        :options="hashtagOptions"
+        label="Hashtags"
+        filled
+        multiple
       />
     </section>
     <section
@@ -31,7 +38,7 @@
       <BaseQEditor
         @saveWork="saveWork"
         @sendWork="sendWork"
-        placeholder="Write description for file"
+        placeholder="Write something here..."
       />
     </section>
   </div>
@@ -57,6 +64,8 @@ const type = ref("");
 const typeOptions = ref([]);
 const title = ref("");
 const password = ref("");
+const hashtagOptions = ref([]);
+const hashtags = ref(null);
 
 const getList = async () => {
   try {
@@ -65,6 +74,11 @@ const getList = async () => {
 
     await apiStore.getNoteTypes(serverURL, $q);
     typeOptions.value = apiStore.noteTypes.map((type) => type.name);
+
+    await apiStore.getHashtags(serverURL, $q);
+    console.log(apiStore.hashtags.hastags);
+
+    hashtagOptions.value = apiStore.hashtags.hastags.map((hash) => hash.name);
   } catch (error) {
     console.error(error);
   }

@@ -75,7 +75,6 @@ watch(
   (newVal) => {
     detailedInfo.value = { ...newVal };
 
-
     if (newVal.type === privateNote) {
       isDecrypted.value = false;
     } else {

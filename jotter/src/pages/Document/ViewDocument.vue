@@ -174,7 +174,12 @@ const submitDocument = () => {
     getNotesById();
     return;
   }
-  getMethod(serverURL, `notes/${id}/search?search=${searchQuery}`, $q, "Заметки найдены")
+  getMethod(
+    serverURL,
+    `notes/${id}/search?search=${searchQuery}`,
+    $q,
+    "Заметки найдены"
+  )
     .then((response) => {
       const notes = response.notes;
       pinnedNote.value = notes.filter((note) => note.pinned === true);
