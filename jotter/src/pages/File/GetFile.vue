@@ -1,5 +1,11 @@
 <template>
   <div>
+    <q-form
+      @submit="searchFiles"
+      class="q-pa-sm"
+    >
+    <BaseInput v-model="search" placeholder="Поиск по файлам"/>
+    </q-form>
     <DocumentTable
       :notes="Object(pinnedFiles)"
       :title="'Закрепленные файлы'"
@@ -30,6 +36,7 @@
 
 <script setup>
 import { useQuasar } from "quasar";
+import BaseInput from "src/components/atoms/BaseInput.vue";
 import BasePagination from "src/components/atoms/BasePagination.vue";
 import DocumentTable from "src/components/molecules/DocumentTable.vue";
 import { getMethod } from "src/composables/api-method/get";
@@ -134,6 +141,32 @@ const getFiles = async (page) => {
     pinnedFiles.value = await getFilesByPinned(page, true);
   } catch (error) {
     console.error("Error fetching files:", error);
+  }
+};
+
+const search = ref('')
+const searchFiles = () => {
+  try {
+    const searchQuery = search.value.trim();
+
+    if (!searchQuery) {
+      getFiles(1); // 👈 может тут нужно обнулить pinned/regularFiles тоже?
+      return;
+    }
+
+    getMethod(serverURL, `file/search?search=${searchQuery}`, $q, "Файлы найдены")
+      .then(response => {
+        const files = response.output;
+
+        pinnedFiles.value = files.filter(file => file.pinned === true);
+        rows.value = files.filter(file => !file.pinned);
+      })
+      .catch(error => {
+        console.error("Ошибка при поиске файлов:", error);
+      });
+
+  } catch (error) {
+    console.error("Ошибка в searchFiles:", error);
   }
 };
 

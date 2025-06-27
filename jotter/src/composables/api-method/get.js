@@ -15,8 +15,6 @@ export async function getMethod(serverURL, url, $q, successMsg) {
       withCredentials: true,
     });
 
-    // console.log(response.data);
-    // successMessage($q, successMsg);
     return response.data;
   } catch (error) {
     console.error("Ошибка:", error.response?.data);
