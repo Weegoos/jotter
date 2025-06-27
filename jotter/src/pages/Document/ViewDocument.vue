@@ -1,5 +1,8 @@
 <template>
   <div>
+    <q-form @submit="submitDocument" class="q-pa-sm">
+      <BaseInput v-model="searchDocument" placeholder="Поиск по заметка..." />
+    </q-form>
     <DocumentTable
       :notes="pinnedNote.filter((note) => note.type !== 'saved')"
       :title="'Закрепленные заметки'"
@@ -48,6 +51,7 @@ import { useDateFormat } from "src/composables/javascript-function/formatDate";
 import { deleteMethod } from "src/composables/api-method/delete";
 import { putMethod } from "src/composables/api-method/put";
 import DocumentTable from "src/components/molecules/DocumentTable.vue";
+import BaseInput from "src/components/atoms/BaseInput.vue";
 
 // global variables
 const { proxy } = getCurrentInstance();
@@ -161,6 +165,24 @@ const getNotesById = async () => {
   } catch (error) {
     console.error(error);
   }
+};
+
+const searchDocument = ref("");
+const submitDocument = () => {
+  const searchQuery = searchDocument.value.trim();
+  if (!searchQuery) {
+    getNotesById();
+    return;
+  }
+  getMethod(serverURL, `notes/${id}/search?search=${searchQuery}`, $q, "Заметки найдены")
+    .then((response) => {
+      const notes = response.notes;
+      pinnedNote.value = notes.filter((note) => note.pinned === true);
+      rows.value = notes.filter((note) => !note.pinned);
+    })
+    .catch((error) => {
+      console.error("Ошибка при поиске заметок:", error);
+    });
 };
 
 onMounted(() => {

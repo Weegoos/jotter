@@ -75,7 +75,12 @@ watch(
   (newVal) => {
     detailedInfo.value = { ...newVal };
 
-    // Если приватная — не трогаем isDecrypted, его меняет checkPassword
+
+    if (newVal.type === privateNote) {
+      isDecrypted.value = false;
+    } else {
+      isDecrypted.value = true;
+    }
     password.value = "";
   },
   { immediate: true }
@@ -91,14 +96,13 @@ const checkPassword = async () => {
       "Успешный пароль"
     );
 
-        isDecrypted.value = true;
+    isDecrypted.value = true;
     detailedInfo.value = response;
     console.log(isDecrypted.value, detailedInfo.value);
 
     emit("openDecryptedNote", detailedInfo.value);
   } catch (error) {
     console.error(error);
-
   }
 };
 </script>

@@ -1,10 +1,7 @@
 <template>
   <div>
-    <q-form
-      @submit="searchFiles"
-      class="q-pa-sm"
-    >
-    <BaseInput v-model="search" placeholder="Поиск по файлам"/>
+    <q-form @submit="searchFiles" class="q-pa-sm">
+      <BaseInput v-model="search" placeholder="Поиск по файлам" />
     </q-form>
     <DocumentTable
       :notes="Object(pinnedFiles)"
@@ -144,27 +141,31 @@ const getFiles = async (page) => {
   }
 };
 
-const search = ref('')
+const search = ref("");
 const searchFiles = () => {
   try {
     const searchQuery = search.value.trim();
 
     if (!searchQuery) {
-      getFiles(1); // 👈 может тут нужно обнулить pinned/regularFiles тоже?
+      getFiles(1);
       return;
     }
 
-    getMethod(serverURL, `file/search?search=${searchQuery}`, $q, "Файлы найдены")
-      .then(response => {
+    getMethod(
+      serverURL,
+      `file/search?search=${searchQuery}`,
+      $q,
+      "Файлы найдены"
+    )
+      .then((response) => {
         const files = response.output;
 
-        pinnedFiles.value = files.filter(file => file.pinned === true);
-        rows.value = files.filter(file => !file.pinned);
+        pinnedFiles.value = files.filter((file) => file.pinned === true);
+        rows.value = files.filter((file) => !file.pinned);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Ошибка при поиске файлов:", error);
       });
-
   } catch (error) {
     console.error("Ошибка в searchFiles:", error);
   }
