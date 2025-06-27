@@ -102,16 +102,15 @@ export const searchFiles = async (req, res) => {
     if (!id) {
       return res.status(400).json({ message: "Ошибка: id отсутствует." });
     }
-    
 
     const file = await Files.findAll({
       where: {
         userId: id,
         name: {
           [Op.like]: `%${search}%`,
-        }
-      }
-    })
+        },
+      },
+    });
 
     if (!file || file.length === 0) {
       return res.status(404).json({ message: "Файлы не найдены" });

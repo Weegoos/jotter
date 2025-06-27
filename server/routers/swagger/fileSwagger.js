@@ -294,7 +294,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                
+ *
  *       404:
  *         description: Файлы не найдены
  *         content:
@@ -316,7 +316,6 @@
  *                   type: string
  *                   example: Ошибка при поиске файла
  */
-
 
 // -------------------- file/editStatus -----------------------
 

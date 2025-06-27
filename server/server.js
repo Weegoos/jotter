@@ -12,6 +12,7 @@ import noteRouters from "./routers/noteRouters.js";
 import fileRouters from "./routers/fileRouters.js";
 import typesRouters from "./routers/typesRouter.js";
 import friendRouters from "./routers/friendRouters.js";
+import hashtagsRouters from "./routers/hastagsRouters.js";
 
 import initializeTypes from "./database/typesDB.js";
 import initializeHashTag from "./database/hashtagDB.js";
@@ -50,6 +51,7 @@ const PORT = process.env.PORT || 3001;
   app.use("/file", fileRouters);
   app.use("/types", typesRouters);
   app.use("/friend", friendRouters);
+  app.use("/hashtag", hashtagsRouters);
 
   setupGoogleAuth(app);
 

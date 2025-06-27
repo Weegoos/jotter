@@ -5,6 +5,7 @@ const Hashtags = sequelize.define("Hashtag", {
   name: {
     type: DataTypes.TEXT,
     allowNull: false,
+    unique: true,
   },
 });
 
