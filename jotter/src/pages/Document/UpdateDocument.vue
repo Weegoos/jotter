@@ -62,6 +62,8 @@ const getList = async () => {
 };
 
 const sendWork = async (data) => {
+  console.log(data);
+
   try {
     const payload = ref({
       type: type.value,
@@ -73,10 +75,8 @@ const sendWork = async (data) => {
     await putMethod(
       serverURL,
       `notes/update/${id}`,
-      payload,
+      payload.value,
       $q,
-      "Заметка успешно обновлена",
-      "Error: ",
       {}
     );
   } catch (error) {
