@@ -1,6 +1,6 @@
-import {  getCurrentInstance } from "vue";
+import { getCurrentInstance } from "vue";
 
-const proxy = getCurrentInstance()
+const proxy = getCurrentInstance();
 const webSocketURL = proxy.$webSocketURL;
 const socket = new WebSocket(webSocketURL);
 

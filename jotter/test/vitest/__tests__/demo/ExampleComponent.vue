@@ -8,13 +8,13 @@
     </q-list>
 
     <p>Count: {{ todoCount }} / {{ totalCount }}</p>
-    <p>Active: {{ active ? 'yes' : 'no' }}</p>
+    <p>Active: {{ active ? "yes" : "no" }}</p>
     <p>Clicks on todos: {{ clickCount }}</p>
   </div>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref } from "vue";
 
 const props = defineProps({
   title: {

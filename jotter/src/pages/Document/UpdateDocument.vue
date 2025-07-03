@@ -72,13 +72,7 @@ const sendWork = async (data) => {
     });
     console.log("payload", payload);
 
-    await putMethod(
-      serverURL,
-      `notes/update/${id}`,
-      payload.value,
-      $q,
-      {}
-    );
+    await putMethod(serverURL, `notes/update/${id}`, payload.value, $q, {});
   } catch (error) {
     console.log(error);
   }
