@@ -206,7 +206,7 @@ import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 import { ChevronDownIcon } from "@heroicons/vue/20/solid";
 import { useApiStore } from "src/stores/api-store";
 import { useQuasar } from "quasar";
-import BaseIcon from "./BaseIcon.vue";
+import BaseIcon from "../components/atoms/BaseIcon.vue";
 // global variables
 const { proxy } = getCurrentInstance();
 const mobileWidth = proxy.$mobileWidth;

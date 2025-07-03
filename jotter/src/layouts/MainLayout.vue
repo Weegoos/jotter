@@ -14,8 +14,8 @@
 
 <script setup>
 import { computed, ref } from "vue";
-import BaseDrawer from "../components/atoms/BaseDrawer.vue";
-import BaseHeader from "../components/atoms/BaseHeader.vue";
+import BaseDrawer from "../components/molecules/MoleculeDrawer.vue";
+import BaseHeader from "../containers/HeaderContainer.vue";
 import { useRoute } from "vue-router";
 
 const drawer = ref(null);

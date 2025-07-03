@@ -63,7 +63,7 @@ import { deleteMethod } from "src/composables/api-method/delete";
 import { getMethod } from "src/composables/api-method/get";
 import { putMethod } from "src/composables/api-method/put";
 import { computed, getCurrentInstance, onMounted, ref } from "vue";
-import BasePagination from "src/components/atoms/BasePagination.vue";
+import BasePagination from "src/components/molecules/MoleculePagination.vue";
 // global variables
 const { proxy } = getCurrentInstance();
 const $q = useQuasar();

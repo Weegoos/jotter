@@ -17,7 +17,7 @@
 
 <script setup>
 import { successMessage } from "src/composables/notify/successMessage";
-import BaseQEditor from "../../components/atoms/BaseQEditor.vue";
+import BaseQEditor from "../../components/molecules/MoleculeQEditor.vue";
 import { useQuasar } from "quasar";
 import { getCurrentInstance, onMounted, ref } from "vue";
 import { postMethod } from "src/composables/api-method/post";

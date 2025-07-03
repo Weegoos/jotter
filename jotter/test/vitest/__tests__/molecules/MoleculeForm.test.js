@@ -24,7 +24,7 @@ describe("MoleculeForm", () => {
 
   beforeEach(() => {
     buttons = wrapper.findAllComponents(Button);
-  })
+  });
 
   it("renders wrapper", () => {
     expect(wrapper.exists()).toBe(true);
@@ -52,11 +52,11 @@ describe("MoleculeForm", () => {
     expect(wrapper.emitted("additionalButtonClick").length).toBe(1);
   });
 
-  it('checks custom classes', () => {
-    expect(buttons[0].classes()).toContain("w-[100%]")
-    expect(buttons[1].classes()).toContain("w-[100%]")
-    expect(buttons[2].classes()).toContain("w-[100%]")
-  })
+  it("checks custom classes", () => {
+    expect(buttons[0].classes()).toContain("w-[100%]");
+    expect(buttons[1].classes()).toContain("w-[100%]");
+    expect(buttons[2].classes()).toContain("w-[100%]");
+  });
 });
 
 describe("MoleculeForm — with custom slots", () => {
@@ -82,4 +82,3 @@ describe("MoleculeForm — with custom slots", () => {
     );
   });
 });
-
