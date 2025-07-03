@@ -10,36 +10,33 @@
           Sign in to your account
         </p>
       </div>
+
       <q-card
         class="p-[24px]"
         :class="$q.screen.width < mobileWidth ? 'w-[300px]' : 'w-[400px]'"
         bordered
-        @keypress="
-          (e) => {
-            if (e.key === 'Enter') {
-              login();
-            }
-          }
-        "
       >
         <q-card-section>
-          <p class="text-1md">Email address</p>
-          <q-input class="q-mt-sm" dense outlined v-model="email" type="text" />
-          <p class="text-1md q-mt-lg">Password</p>
-          <q-input
-            class="q-mt-sm"
-            dense
-            outlined
-            v-model="password"
-            :type="isPwd ? 'password' : 'text'"
-          >
-            <template v-slot:append>
-              <q-icon
-                :name="isPwd ? 'visibility_off' : 'visibility'"
-                class="cursor-pointer"
-                @click="isPwd = !isPwd"
-              /> </template
-          ></q-input>
+          <q-form @submit.prevent="login" class="q-gutter-md">
+            <Input placeholder="Email address" v-model="email" type="text" />
+            <Input
+              class="q-mt-sm"
+              dense
+              outlined
+              v-model="password"
+              :type="isPwd ? 'password' : 'text'"
+              placeholder="Password"
+            >
+              <template #append>
+                <q-icon
+                  :name="isPwd ? 'visibility_off' : 'visibility'"
+                  class="cursor-pointer"
+                  @click="isPwd = !isPwd"
+                />
+              </template>
+            </Input>
+            <button type="submit" style="display: none"></button>
+          </q-form>
         </q-card-section>
         <q-card-actions>
           <q-btn
@@ -73,7 +70,7 @@ import { Cookies, useQuasar } from "quasar";
 import { successMessage } from "src/composables/notify/successMessage";
 import axios from "axios";
 import { useRouter } from "vue-router";
-import { Icon } from "src/components/atoms";
+import { Icon, Input } from "src/components/atoms";
 
 // global variables
 const { proxy } = getCurrentInstance();
