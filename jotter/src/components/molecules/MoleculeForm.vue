@@ -7,16 +7,25 @@
     >
       <slot />
 
-      <div style="display: none">
-        <q-btn label="Submit" type="submit" color="primary" />
-        <q-btn
-          label="Reset"
-          type="reset"
-          color="primary"
-          flat
-          class="q-ml-sm"
-        />
-      </div>
+      <q-btn
+        class="bg-violet-700 text-white w-[100%]"
+        no-caps
+        label="Sign in"
+        @click="login"
+      />
+      <q-btn
+        class="text-black w-[100%] q-mt-sm"
+        no-caps
+        label="Don't have an account? Create here"
+        @click="$router.push('/register')"
+      />
+      <q-btn
+        icon="mdi-google"
+        no-caps
+        label="Sign up with Google Account"
+        @click="authGoogle"
+        class="q-mt-sm w-[100%]"
+      />
     </q-form>
   </section>
 </template>
