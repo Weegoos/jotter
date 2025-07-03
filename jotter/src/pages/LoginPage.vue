@@ -23,23 +23,23 @@
         "
       >
         <q-card-section>
-          <p class="text-1md">Email address</p>
-          <q-input class="q-mt-sm" dense outlined v-model="email" type="text" />
-          <p class="text-1md q-mt-lg">Password</p>
-          <q-input
+          <Input placeholder="Email address" v-model="email" type="text" />
+          <Input
             class="q-mt-sm"
             dense
             outlined
             v-model="password"
             :type="isPwd ? 'password' : 'text'"
+            placeholder="Password"
           >
-            <template v-slot:append>
+            <template #append>
               <q-icon
                 :name="isPwd ? 'visibility_off' : 'visibility'"
                 class="cursor-pointer"
                 @click="isPwd = !isPwd"
-              /> </template
-          ></q-input>
+              />
+            </template>
+          </Input>
         </q-card-section>
         <q-card-actions>
           <q-btn
@@ -73,7 +73,7 @@ import { Cookies, useQuasar } from "quasar";
 import { successMessage } from "src/composables/notify/successMessage";
 import axios from "axios";
 import { useRouter } from "vue-router";
-import { Icon } from "src/components/atoms";
+import { Icon, Input } from "src/components/atoms";
 
 // global variables
 const { proxy } = getCurrentInstance();

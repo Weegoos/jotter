@@ -1,13 +1,47 @@
+<!-- src/components/atoms/BaseInput.vue -->
 <template>
   <q-input
     :model-value="modelValue"
     @update:model-value="(val) => emit('update:modelValue', val)"
-    outlined
     :placeholder="placeholder"
-  />
+    :type="type"
+    :dense="dense"
+    :outlined="outlined"
+    :label="label"
+  >
+    <!-- проброс слотов из родителя -->
+    <template v-if="$slots.append" v-slot:append>
+      <slot name="append" />
+    </template>
+
+    <template v-if="$slots.prepend" v-slot:prepend>
+      <slot name="prepend" />
+    </template>
+
+    <template v-if="$slots.label" v-slot:label>
+      <slot name="label" />
+    </template>
+  </q-input>
 </template>
 
 <script setup>
-const { modelValue, placeholder } = defineProps(["modelValue", "placeholder"]);
+const props = defineProps({
+  modelValue: [String, Number],
+  placeholder: String,
+  type: {
+    type: String,
+    default: "text",
+  },
+  label: String,
+  dense: {
+    type: Boolean,
+    default: true,
+  },
+  outlined: {
+    type: Boolean,
+    default: true,
+  },
+});
+
 const emit = defineEmits(["update:modelValue"]);
 </script>
