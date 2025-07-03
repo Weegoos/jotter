@@ -10,36 +10,33 @@
           Sign in to your account
         </p>
       </div>
+
       <q-card
         class="p-[24px]"
         :class="$q.screen.width < mobileWidth ? 'w-[300px]' : 'w-[400px]'"
         bordered
-        @keypress="
-          (e) => {
-            if (e.key === 'Enter') {
-              login();
-            }
-          }
-        "
       >
         <q-card-section>
-          <Input placeholder="Email address" v-model="email" type="text" />
-          <Input
-            class="q-mt-sm"
-            dense
-            outlined
-            v-model="password"
-            :type="isPwd ? 'password' : 'text'"
-            placeholder="Password"
-          >
-            <template #append>
-              <q-icon
-                :name="isPwd ? 'visibility_off' : 'visibility'"
-                class="cursor-pointer"
-                @click="isPwd = !isPwd"
-              />
-            </template>
-          </Input>
+          <q-form @submit.prevent="login" class="q-gutter-md">
+            <Input placeholder="Email address" v-model="email" type="text" />
+            <Input
+              class="q-mt-sm"
+              dense
+              outlined
+              v-model="password"
+              :type="isPwd ? 'password' : 'text'"
+              placeholder="Password"
+            >
+              <template #append>
+                <q-icon
+                  :name="isPwd ? 'visibility_off' : 'visibility'"
+                  class="cursor-pointer"
+                  @click="isPwd = !isPwd"
+                />
+              </template>
+            </Input>
+            <button type="submit" style="display: none"></button>
+          </q-form>
         </q-card-section>
         <q-card-actions>
           <q-btn
