@@ -17,7 +17,7 @@
         bordered
       >
         <q-card-section>
-          <q-form @submit.prevent="login" class="q-gutter-md">
+          <Form @submit="login">
             <Input placeholder="Email address" v-model="email" type="text" />
             <Input
               class="q-mt-sm"
@@ -35,8 +35,7 @@
                 />
               </template>
             </Input>
-            <button type="submit" style="display: none"></button>
-          </q-form>
+          </Form>
         </q-card-section>
         <q-card-actions>
           <q-btn
@@ -71,6 +70,7 @@ import { successMessage } from "src/composables/notify/successMessage";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { Icon, Input } from "src/components/atoms";
+import { Form } from "src/components/molecules";
 
 // global variables
 const { proxy } = getCurrentInstance();
