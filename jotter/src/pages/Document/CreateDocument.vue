@@ -46,7 +46,7 @@
 
 <script setup>
 import { getCurrentInstance, onMounted, ref } from "vue";
-import BaseQEditor from "../../components/atoms/BaseQEditor.vue";
+import BaseQEditor from "../../components/molecules/MoleculeQEditor.vue";
 import { useQuasar } from "quasar";
 import { useApiStore } from "src/stores/api-store";
 import { postMethod } from "src/composables/api-method/post";

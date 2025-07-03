@@ -17,7 +17,7 @@
 
 <script setup>
 import { getCurrentInstance, onMounted, ref } from "vue";
-import BaseQEditor from "../../components/atoms/BaseQEditor.vue";
+import BaseQEditor from "../../components/molecules/MoleculeQEditor.vue";
 import { useRoute } from "vue-router";
 import { useQuasar } from "quasar";
 import { useApiStore } from "src/stores/api-store";

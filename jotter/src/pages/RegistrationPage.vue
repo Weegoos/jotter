@@ -2,7 +2,7 @@
   <div class="container">
     <section class="wrapper fixed-center">
       <div class="p-[16px]">
-        <BaseIcon align="center" />
+        <Icon align="center" />
         <p
           class="flex justify-center text-bold font-medium p-[16px]"
           :class="$q.screen.width < mobileWidth ? 'text-xl' : 'text-2xl'"
@@ -14,62 +14,54 @@
         class="p-[24px]"
         :class="$q.screen.width < mobileWidth ? 'w-[300px]' : 'w-[400px]'"
         bordered
-        @keypress="
-          (e) => {
-            if (e.key === 'Enter') {
-              register();
-            }
-          }
-        "
       >
         <q-card-section>
-          <p class="text-1md">Full Name</p>
-          <q-input
-            class="q-mt-sm"
-            dense
-            outlined
-            v-model="fullname"
-            type="text"
-          />
-          <p class="text-1md">Email address</p>
-          <q-input class="q-mt-sm" dense outlined v-model="email" type="text" />
-          <p class="text-1md q-mt-sm">Password</p>
-          <q-input
-            class="q-mt-sm"
-            dense
-            outlined
-            v-model="password"
-            :type="isPwd ? 'password' : 'text'"
+          <Form
+            @submit="register"
+            @mainButton="register"
+            @moveButton="router.push('/login')"
+            @additionalButtonClick="authGoogle"
+            mainButtonLabel="Create account"
+            moveButtonLabel="Do you have an account? Log in"
+            additionalButtonLabel="Create with Google Account"
+            mainButtonClass="bg-violet-700 text-white q-mt-sm w-[100%]"
+            moveButtonClass="text-black w-[100%] q-mt-sm"
+            additionalButtonClass="q-mt-sm w-[100%] text-black"
           >
-            <template v-slot:append>
-              <q-icon
-                :name="isPwd ? 'visibility_off' : 'visibility'"
-                class="cursor-pointer"
-                @click="isPwd = !isPwd"
-              /> </template
-          ></q-input>
+            <Input
+              placeholder="Full Name"
+              dense
+              outlined
+              v-model="fullname"
+              class="q-mt-sm"
+              type="text"
+            />
+            <Input
+              placeholder="Email address"
+              dense
+              outlined
+              v-model="email"
+              class="q-mt-sm"
+              type="text"
+            />
+            <Input
+              class="q-mt-sm"
+              dense
+              outlined
+              v-model="password"
+              :type="isPwd ? 'password' : 'text'"
+              placeholder="Password"
+            >
+              <template #append>
+                <q-icon
+                  :name="isPwd ? 'visibility_off' : 'visibility'"
+                  class="cursor-pointer"
+                  @click="isPwd = !isPwd"
+                />
+              </template>
+            </Input>
+          </Form>
         </q-card-section>
-        <q-card-actions>
-          <q-btn
-            class="bg-violet-700 text-white w-[99%] q-ml-sm"
-            no-caps
-            label="Create account"
-            @click="register"
-          />
-          <q-btn
-            class="text-black w-[100%] q-mt-sm"
-            no-caps
-            label="Do you have an account? Log in to your account"
-            @click="$router.push('/login')"
-          />
-          <q-btn
-            icon="mdi-google"
-            no-caps
-            label="Create with Google Account"
-            @click="authGoogle"
-            class="q-mt-sm w-[100%]"
-          />
-        </q-card-actions>
       </q-card>
     </section>
   </div>
@@ -77,11 +69,12 @@
 
 <script setup>
 import { getCurrentInstance, ref } from "vue";
-import BaseIcon from "../components/atoms/BaseIcon.vue";
-import { Cookies, useQuasar } from "quasar";
+import { useQuasar } from "quasar";
 import { successMessage } from "src/composables/notify/successMessage";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import { Icon, Input } from "src/components/atoms";
+import { Form } from "src/components/molecules";
 
 // global variables
 const { proxy } = getCurrentInstance();
