@@ -52,6 +52,7 @@ import { deleteMethod } from "src/composables/api-method/delete";
 import { putMethod } from "src/composables/api-method/put";
 import DocumentTable from "src/components/molecules/MoleculeTable.vue";
 import BaseInput from "src/components/atoms/BaseInput.vue";
+import { useWebSocket } from "src/composables/javascript-function/weboscket";
 
 // global variables
 const { proxy } = getCurrentInstance();
@@ -61,9 +62,7 @@ const webSocketURL = proxy.$webSocketURL;
 const socket = new WebSocket(webSocketURL);
 const router = useRouter();
 
-socket.onopen = () => {
-  console.log("✅ WebSocket подключен");
-};
+useWebSocket(webSocketURL)
 
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);

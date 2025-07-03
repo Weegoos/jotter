@@ -1,17 +1,15 @@
-import { getCurrentInstance } from "vue";
+export const useWebSocket = (url) => {
+  const socket = new WebSocket(url);
 
-const proxy = getCurrentInstance();
-const webSocketURL = proxy.$webSocketURL;
-const socket = new WebSocket(webSocketURL);
+  socket.onopen = () => {
+    console.log("✅ WebSocket подключен");
+  };
 
-socket.onopen = () => {
-  console.log("✅ WebSocket подключен");
-};
+  socket.onclose = () => {
+    console.log("❌ WebSocket отключен");
+  };
 
-socket.onclose = () => {
-  console.log("❌ WebSocket отключен");
-};
-
-socket.onerror = (error) => {
-  console.error("🔥 WebSocket ошибка:", error);
-};
+  socket.onerror = (error) => {
+    console.error("🔥 WebSocket ошибка:", error);
+  };
+}
