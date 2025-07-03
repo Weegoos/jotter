@@ -3,19 +3,19 @@
     <q-card>
       <q-card-section>
         <div v-if="isDecrypted === false">
-          <q-input
+          <Input
             v-model="password"
-            label="Введите пароль"
-            type="password"
             outlined
+            label="Введите пароль"
             dense
+            type="password"
           />
-          <q-btn
+
+          <Button
             v-if="detailedInfo.type === privateNote"
             color="primary"
-            no-caps
             label="Проверить пароль"
-            @click="checkPassword"
+            @emitClick="checkPassword"
           />
         </div>
 
@@ -29,9 +29,11 @@
       </q-card-section>
 
       <q-card-actions align="right">
-        <BaseCloseButtonVue
-          @click="emit('closeDetailedInformationSection')"
+        <Button
           label="Закрыть"
+          color="red-4"
+          flat
+          @click="emit('closeDetailedInformationSection')"
         />
       </q-card-actions>
     </q-card>
@@ -40,9 +42,9 @@
 
 <script setup>
 import { ref, watch, getCurrentInstance } from "vue";
-import { is, useQuasar } from "quasar";
+import { useQuasar } from "quasar";
 import { getMethod } from "src/composables/api-method/get";
-import BaseCloseButtonVue from "../atoms/BaseCloseButton.vue";
+import { Button, Input } from "../atoms";
 
 const props = defineProps({
   isOpenDetailedInformation: Boolean,

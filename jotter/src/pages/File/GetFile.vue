@@ -35,7 +35,7 @@
 import { useQuasar } from "quasar";
 import BaseInput from "src/components/atoms/BaseInput.vue";
 import BasePagination from "src/components/molecules/MoleculePagination.vue";
-import DocumentTable from "src/components/molecules/DocumentTable.vue";
+import DocumentTable from "src/components/molecules/MoleculeTable.vue";
 import { getMethod } from "src/composables/api-method/get";
 import { putMethod } from "src/composables/api-method/put";
 import { useDateFormat } from "src/composables/javascript-function/formatDate";

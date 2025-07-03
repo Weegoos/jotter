@@ -50,7 +50,7 @@ import DetailedInformationAboutNoteVue from "../../components/organisims/Detaile
 import { useDateFormat } from "src/composables/javascript-function/formatDate";
 import { deleteMethod } from "src/composables/api-method/delete";
 import { putMethod } from "src/composables/api-method/put";
-import DocumentTable from "src/components/molecules/DocumentTable.vue";
+import DocumentTable from "src/components/molecules/MoleculeTable.vue";
 import BaseInput from "src/components/atoms/BaseInput.vue";
 
 // global variables
