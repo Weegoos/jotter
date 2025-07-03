@@ -1,21 +1,19 @@
 <template>
-  <div>
-    <q-btn
-      :color="color"
-      :icon="icon"
-      :label="label"
-      no-caps
-      dense
-      @click="emit('emitClick')"
-    />
-  </div>
+  <q-btn
+    :color="color"
+    :icon="icon"
+    :label="label"
+    no-caps
+    :flat="flat"
+    @click="emit('emitClick')"
+  />
 </template>
 
 <script setup>
 defineProps({
   color: {
     type: String,
-    default: "primary",
+    default: "",
   },
   label: {
     type: [String, Number],
@@ -25,6 +23,7 @@ defineProps({
     type: String,
     required: false,
   },
+  flat: [Boolean, String],
 });
 
 const emit = defineEmits(["emitClick"]);

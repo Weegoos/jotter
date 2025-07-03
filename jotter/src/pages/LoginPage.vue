@@ -17,7 +17,15 @@
         bordered
       >
         <q-card-section>
-          <Form @submit="login">
+          <Form
+            @submit="login"
+            @mainButton="login"
+            @moveButton="router.push('/register')"
+            @additionalButtonClick="authGoogle"
+            mainButtonLabel="Sing in"
+            moveButtonLabel="Don't have an account? Create here"
+            additionalButtonLabel="Sign up with Google Account"
+          >
             <Input placeholder="Email address" v-model="email" type="text" />
             <Input
               class="q-mt-sm"
@@ -37,27 +45,6 @@
             </Input>
           </Form>
         </q-card-section>
-        <q-card-actions>
-          <q-btn
-            class="bg-violet-700 text-white w-[99%] q-ml-sm"
-            no-caps
-            label="Sign in"
-            @click="login"
-          />
-          <q-btn
-            class="text-black w-[100%] q-mt-sm"
-            no-caps
-            label="Don't have an account? Create here"
-            @click="$router.push('/register')"
-          />
-          <q-btn
-            icon="mdi-google"
-            no-caps
-            label="Sign up with Google Account"
-            @click="authGoogle"
-            class="q-mt-sm w-[100%]"
-          />
-        </q-card-actions>
       </q-card>
     </section>
   </div>
