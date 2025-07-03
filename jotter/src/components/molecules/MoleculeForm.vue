@@ -17,13 +17,12 @@
         />
         <Button
           v-if="moveButtonLabel"
-          flat="false"
           :class="moveButtonClass"
           :label="moveButtonLabel"
           @click="emit('moveButton')"
         />
         <Button
-        v-if="additionalButtonLabel"
+          v-if="additionalButtonLabel"
           icon="mdi-google"
           :label="additionalButtonLabel"
           :class="additionalButtonClass"
@@ -37,7 +36,12 @@
 <script setup>
 import { Button } from "../atoms";
 
-const emit = defineEmits(["submit", "reset", "loginButton", 'additionalButtonClick']);
+const emit = defineEmits([
+  "submit",
+  "reset",
+  "loginButton",
+  "additionalButtonClick",
+]);
 
 defineProps({
   mainButtonLabel: [String, Number],
@@ -45,15 +49,15 @@ defineProps({
   additionalButtonLabel: [String, Number],
   mainButtonClass: {
     type: String,
-    default: 'bg-violet-700 text-white w-[100%] q-mt-sm',
+    default: "bg-violet-700 text-white w-[100%] q-mt-sm",
   },
   moveButtonClass: {
     type: String,
-    default: 'text-black w-[100%] q-mt-sm',
+    default: "text-black w-[100%] q-mt-sm",
   },
   additionalButtonClass: {
     type: String,
-    default: 'text-black q-mt-sm w-[100%]',
+    default: "text-black q-mt-sm w-[100%]",
   },
 });
 </script>
