@@ -2,7 +2,7 @@
   <div class="container">
     <section class="wrapper fixed-center">
       <div class="p-[16px]">
-        <BaseIcon align="center" />
+        <Icon align="center" />
         <p
           class="flex justify-center text-bold font-medium p-[16px]"
           :class="$q.screen.width < mobileWidth ? 'text-xl' : 'text-2xl'"
@@ -69,11 +69,11 @@
 
 <script setup>
 import { getCurrentInstance, ref } from "vue";
-import BaseIcon from "../components/atoms/BaseIcon.vue";
 import { Cookies, useQuasar } from "quasar";
 import { successMessage } from "src/composables/notify/successMessage";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import { Icon } from "src/components/atoms";
 
 // global variables
 const { proxy } = getCurrentInstance();
