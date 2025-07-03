@@ -3,7 +3,7 @@ import { mount } from "@vue/test-utils";
 import { Quasar } from "quasar";
 import { Button } from "src/components/atoms";
 import MoleculeForm from "src/components/molecules/MoleculeForm.vue";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 
 installQuasarPlugin();
 
@@ -20,14 +20,17 @@ describe("MoleculeForm", () => {
     },
     emits: ["mainButton", "moveButton", "additionalButtonClick"],
   });
+  let buttons;
+
+  beforeEach(() => {
+    buttons = wrapper.findAllComponents(Button);
+  })
 
   it("renders wrapper", () => {
     expect(wrapper.exists()).toBe(true);
   });
 
   it("renders default buttons with correct labels and classes", async () => {
-    const buttons = wrapper.findAllComponents(Button);
-
     expect(buttons).toHaveLength(3);
 
     expect(buttons[0].props("label")).toBe("Sign in");
@@ -36,10 +39,6 @@ describe("MoleculeForm", () => {
   });
 
   it("emits buttons when they are clicked", async () => {
-    const buttons = wrapper.findAllComponents(Button);
-
-    expect(buttons).toHaveLength(3);
-
     await buttons[0].trigger("click");
     expect(wrapper.emitted("mainButton")).toBeTruthy();
     expect(wrapper.emitted("mainButton").length).toBe(1);
@@ -53,14 +52,25 @@ describe("MoleculeForm", () => {
     expect(wrapper.emitted("additionalButtonClick").length).toBe(1);
   });
 
-  it("renders custom slot content", () => {
-    wrapper = mount(MoleculeForm, {
-      slots: {
-        default: '<div class="custom-slot-default">Default Slot Content</div>',
-        actions: '<div class="custom-slot-actions">Actions Slot Content</div>',
-      },
-    });
+  it('checks custom classes', () => {
+    expect(buttons[0].classes()).toContain("w-[100%]")
+    expect(buttons[1].classes()).toContain("w-[100%]")
+    expect(buttons[2].classes()).toContain("w-[100%]")
+  })
+});
 
+describe("MoleculeForm — with custom slots", () => {
+  const wrapper = mount(MoleculeForm, {
+    global: {
+      plugins: [Quasar],
+    },
+    slots: {
+      default: '<div class="custom-slot-default">Default Slot Content</div>',
+      actions: '<div class="custom-slot-actions">Actions Slot Content</div>',
+    },
+  });
+
+  it("renders custom slot content", () => {
     expect(wrapper.find(".custom-slot-default").exists()).toBe(true);
     expect(wrapper.find(".custom-slot-default").text()).toBe(
       "Default Slot Content"
@@ -72,3 +82,4 @@ describe("MoleculeForm", () => {
     );
   });
 });
+
