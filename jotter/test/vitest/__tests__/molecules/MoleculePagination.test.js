@@ -12,10 +12,10 @@ describe("MoleculePagination", () => {
       plugins: [Quasar],
       config: {
         globalProperties: {
-           $maxNumberOfRequestPerPage: 10,
-                     totalCount: 30,
-        }
-      }
+          $maxNumberOfRequestPerPage: 10,
+          totalCount: 30,
+        },
+      },
     },
     props: {
       variableName: {
@@ -38,17 +38,17 @@ describe("MoleculePagination", () => {
     },
   });
   it("should render correctly", () => {
-     const pagination = wrapper.findComponent(QPagination)
-    expect(pagination.exists()).toBe(true)
+    const pagination = wrapper.findComponent(QPagination);
+    expect(pagination.exists()).toBe(true);
   });
 
-    it('emits pagination event when current page changes', async () => {
-    const pagination = wrapper.findComponent(QPagination)
-    expect(pagination.exists()).toBe(true)
+  it("emits pagination event when current page changes", async () => {
+    const pagination = wrapper.findComponent(QPagination);
+    expect(pagination.exists()).toBe(true);
 
-    await pagination.vm.$emit('update:modelValue', 2)
+    await pagination.vm.$emit("update:modelValue", 2);
 
-    expect(wrapper.emitted('pagination')).toBeTruthy()
-    expect(wrapper.emitted('pagination')[0]).toEqual([2])
-  })
+    expect(wrapper.emitted("pagination")).toBeTruthy();
+    expect(wrapper.emitted("pagination")[0]).toEqual([2]);
+  });
 });
