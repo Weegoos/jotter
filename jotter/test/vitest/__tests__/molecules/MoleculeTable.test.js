@@ -60,6 +60,14 @@ describe("MoleculeTable", () => {
     emits: ["update", "delete", "pin"],
   });
 
+  let dropdown;
+
+  beforeEach(async () => {
+    dropdown = wrapper.findComponent({ name: "QBtnDropdown" });
+    await dropdown.find("button").trigger("click");
+    await wrapper.vm.$nextTick();
+  });
+
   it("should render correctly with title", () => {
     expect(wrapper.exists()).toBe(true);
     expect(wrapper.text()).toContain("Test Table");
@@ -89,7 +97,6 @@ describe("MoleculeTable", () => {
   });
 
   it('should emit "pin" event when pin button is clicked', async () => {
-    const dropdown = wrapper.findComponent({ name: "QBtnDropdown" });
     expect(dropdown.exists()).toBe(true);
 
     await dropdown.find("button").trigger("click");
@@ -106,5 +113,44 @@ describe("MoleculeTable", () => {
 
     expect(wrapper.emitted("pin")).toBeTruthy();
     expect(wrapper.emitted("pin")[0][0].title).toBe("Привет мир");
+  });
+
+  it('should emit "update" when update button is clicked', async () => {
+    expect(dropdown.exists()).toBe(true);
+
+    await dropdown.find("button").trigger("click");
+
+    await wrapper.vm.$nextTick();
+
+    const buttons = wrapper.findAllComponents(Button);
+    expect(buttons.length).toBeGreaterThan(0);
+
+    const updateButton = buttons.find((btn) => btn.props("icon") === "mdi-pencil");
+    expect(updateButton).toBeTruthy();
+
+    await updateButton.trigger('click')
+
+    expect(wrapper.emitted('update')).toBeTruthy()
+
+    expect(wrapper.emitted('update')[0][0].title).toBe('Привет мир')
+  });
+
+    it('should emit "delete" when update button is clicked', async () => {
+    expect(dropdown.exists()).toBe(true);
+
+    await dropdown.find("button").trigger("click");
+
+    await wrapper.vm.$nextTick();
+
+    const buttons = wrapper.findAllComponents(Button);
+    expect(buttons.length).toBeGreaterThan(0);
+
+    const deleteButton = buttons.find((btn) => btn.props("icon") === "mdi-delete");
+    expect(deleteButton).toBeTruthy();
+
+    await deleteButton.trigger('click')
+
+    expect(wrapper.emitted('delete')).toBeTruthy()
+    expect(wrapper.emitted('delete')[0][0].title).toBe('Привет мир')
   });
 });
