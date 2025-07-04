@@ -27,7 +27,7 @@ export const createNote = async (req, res) => {
       fileId: file.id,
       type,
       ...(type === "private" && { password: await bcrypt.hash(password, 15) }),
-      hashtags: hashtags
+      hashtags: hashtags,
     };
 
     const note = await Notes.create(noteData);

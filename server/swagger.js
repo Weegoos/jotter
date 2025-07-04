@@ -20,6 +20,11 @@ const options = {
     },
     security: [{ bearerAuth: [] }],
   },
+      servers: [
+      {
+        url: "http://localhost:3000", // ✅ ОБЯЗАТЕЛЬНО указать базовый URL
+      },
+    ],
   apis: ["./routers/**/*.js", "./models/**/*.js", "./swagger/**/*.js"],
 };
 

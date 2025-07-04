@@ -1,0 +1,17 @@
+# frontend/Dockerfile.dev
+FROM node:20-alpine
+
+# Установка quasar-cli глобально
+RUN npm install -g @quasar/cli
+
+WORKDIR /app
+
+# Копируем package.json и устанавливаем зависимости
+COPY package*.json ./
+RUN npm install
+
+# Копируем весь исходный код
+COPY . .
+
+# Открываем Quasar Dev-сервер (в dev-режиме)
+CMD ["npm", "run", "dev"]

@@ -76,24 +76,20 @@ const PORT = process.env.PORT || 3001;
         ws.close();
         return;
       }
-
-      // Разбираем куки
       const token = cookies
         .split(";")
         .map((c) => c.trim())
         .find((c) => c.startsWith("access_token="))
         ?.split("=")[1];
 
-      if (!token) {
-        console.log("❌ Токен не найден в cookies");
+      if (!token || token.trim() === "") {
+        console.log("❌ Токен пустой или отсутствует");
         ws.close();
         return;
       }
-
-      // Верифицируем JWT
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      ws.userId = decoded.id;
 
+      ws.userId = decoded.id;
       console.log("✅ Авторизован пользователь:", ws.userId);
     } catch (error) {
       console.log("❌ Ошибка авторизации:", error.message);
