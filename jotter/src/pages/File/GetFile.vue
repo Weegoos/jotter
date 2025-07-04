@@ -1,9 +1,9 @@
 <template>
   <div>
-    <q-form @submit="searchFiles" class="q-pa-sm">
-      <BaseInput v-model="search" placeholder="Поиск по файлам" />
-    </q-form>
-    <DocumentTable
+    <Form @submit="searchFiles" class="q-pa-sm">
+      <Input v-model="search" placeholder="Поиск по файлам" />
+    </Form>
+    <Table
       :notes="Object(pinnedFiles)"
       :title="'Закрепленные файлы'"
       :columns="columns"
@@ -12,7 +12,7 @@
       @pin="pinFile"
       @update="editFile"
     />
-    <DocumentTable
+    <Table
       :notes="Object(rows)"
       :title="'Файлы'"
       :columns="columns"
@@ -33,13 +33,13 @@
 
 <script setup>
 import { useQuasar } from "quasar";
-import BaseInput from "src/components/atoms/BaseInput.vue";
+import { Input } from "src/components/atoms";
+import { Form, Table } from "src/components/molecules";
 import BasePagination from "src/components/molecules/MoleculePagination.vue";
-import DocumentTable from "src/components/molecules/MoleculeTable.vue";
 import { getMethod } from "src/composables/api-method/get";
 import { putMethod } from "src/composables/api-method/put";
 import { useDateFormat } from "src/composables/javascript-function/formatDate";
-import { computed, getCurrentInstance, onMounted, ref, watch } from "vue";
+import { computed, getCurrentInstance, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
 // global variables

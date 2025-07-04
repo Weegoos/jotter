@@ -125,17 +125,19 @@ describe("MoleculeTable", () => {
     const buttons = wrapper.findAllComponents(Button);
     expect(buttons.length).toBeGreaterThan(0);
 
-    const updateButton = buttons.find((btn) => btn.props("icon") === "mdi-pencil");
+    const updateButton = buttons.find(
+      (btn) => btn.props("icon") === "mdi-pencil"
+    );
     expect(updateButton).toBeTruthy();
 
-    await updateButton.trigger('click')
+    await updateButton.trigger("click");
 
-    expect(wrapper.emitted('update')).toBeTruthy()
+    expect(wrapper.emitted("update")).toBeTruthy();
 
-    expect(wrapper.emitted('update')[0][0].title).toBe('Привет мир')
+    expect(wrapper.emitted("update")[0][0].title).toBe("Привет мир");
   });
 
-    it('should emit "delete" when update button is clicked', async () => {
+  it('should emit "delete" when update button is clicked', async () => {
     expect(dropdown.exists()).toBe(true);
 
     await dropdown.find("button").trigger("click");
@@ -145,12 +147,14 @@ describe("MoleculeTable", () => {
     const buttons = wrapper.findAllComponents(Button);
     expect(buttons.length).toBeGreaterThan(0);
 
-    const deleteButton = buttons.find((btn) => btn.props("icon") === "mdi-delete");
+    const deleteButton = buttons.find(
+      (btn) => btn.props("icon") === "mdi-delete"
+    );
     expect(deleteButton).toBeTruthy();
 
-    await deleteButton.trigger('click')
+    await deleteButton.trigger("click");
 
-    expect(wrapper.emitted('delete')).toBeTruthy()
-    expect(wrapper.emitted('delete')[0][0].title).toBe('Привет мир')
+    expect(wrapper.emitted("delete")).toBeTruthy();
+    expect(wrapper.emitted("delete")[0][0].title).toBe("Привет мир");
   });
 });
