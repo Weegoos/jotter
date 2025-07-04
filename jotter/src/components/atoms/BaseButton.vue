@@ -17,7 +17,6 @@ defineProps({
   },
   label: {
     type: [String, Number],
-    default: "Base Button",
   },
   icon: {
     type: String,

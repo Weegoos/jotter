@@ -12,4 +12,4 @@ export const useWebSocket = (url) => {
   socket.onerror = (error) => {
     console.error("🔥 WebSocket ошибка:", error);
   };
-}
+};

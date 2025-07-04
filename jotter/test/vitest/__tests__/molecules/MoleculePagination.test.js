@@ -1,10 +1,8 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest";
 import { describe, it } from "vitest";
 
-installQuasarPlugin()
+installQuasarPlugin();
 
-describe('MoleculePagination', () => {
-  it('should render correctly', () => {
-
-  })
-})
+describe("MoleculePagination", () => {
+  it("should render correctly", () => {});
+});

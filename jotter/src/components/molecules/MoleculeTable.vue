@@ -31,7 +31,7 @@
           <q-list style="min-width: 100px">
             <q-item clickable v-close-popup v-if="props.row.type !== 'saved'">
               <q-item-section>
-                <q-btn
+                <Button
                   class="bg-amber-500 hover:bg-amber-600 text-white"
                   icon="mdi-pin"
                   size="sm"
@@ -41,7 +41,7 @@
             </q-item>
             <q-item clickable>
               <q-item-section>
-                <q-btn
+                <Button
                   class="bg-blue-500 hover:bg-blue-600 text-white"
                   icon="mdi-pencil"
                   size="sm"
@@ -51,7 +51,7 @@
             </q-item>
             <q-item clickable v-close-popup>
               <q-item-section>
-                <q-btn
+                <Button
                   class="bg-rose-500 hover:bg-rose-600 text-white"
                   icon="mdi-delete"
                   size="sm"
@@ -67,6 +67,8 @@
 </template>
 
 <script setup>
+import { Button } from "../atoms";
+
 // global variables
 const props = defineProps({
   notes: {

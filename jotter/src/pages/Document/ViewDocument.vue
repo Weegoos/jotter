@@ -1,9 +1,9 @@
 <template>
   <div>
-    <q-form @submit="submitDocument" class="q-pa-sm">
-      <BaseInput v-model="searchDocument" placeholder="Поиск по заметка..." />
-    </q-form>
-    <DocumentTable
+    <Form @submit="submitDocument" class="q-pa-sm">
+      <Input v-model="searchDocument" placeholder="Поиск по заметка..." />
+    </Form>
+    <Table
       :notes="pinnedNote.filter((note) => note.type !== 'saved')"
       :title="'Закрепленные заметки'"
       :columns="columns"
@@ -13,7 +13,7 @@
       @row-click="viewDetailedInfoAboutNote"
     />
 
-    <DocumentTable
+    <Table
       :notes="rows.filter((note) => note.type !== 'saved')"
       :title="String('Заметки')"
       :columns="columns"
@@ -23,7 +23,7 @@
       @row-click="viewDetailedInfoAboutNote"
     />
 
-    <DocumentTable
+    <Table
       :notes="savedNote"
       :title="'Черновики'"
       :columns="columns"
@@ -50,9 +50,9 @@ import DetailedInformationAboutNoteVue from "../../components/organisims/Detaile
 import { useDateFormat } from "src/composables/javascript-function/formatDate";
 import { deleteMethod } from "src/composables/api-method/delete";
 import { putMethod } from "src/composables/api-method/put";
-import DocumentTable from "src/components/molecules/MoleculeTable.vue";
-import BaseInput from "src/components/atoms/BaseInput.vue";
 import { useWebSocket } from "src/composables/javascript-function/weboscket";
+import { Form, Table } from "src/components/molecules";
+import { Input } from "src/components/atoms";
 
 // global variables
 const { proxy } = getCurrentInstance();
@@ -62,7 +62,7 @@ const webSocketURL = proxy.$webSocketURL;
 const socket = new WebSocket(webSocketURL);
 const router = useRouter();
 
-useWebSocket(webSocketURL)
+useWebSocket(webSocketURL);
 
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
