@@ -39,7 +39,7 @@ const PORT = process.env.PORT || 3001;
 app.use(
   cors({
     credentials: true,
-    origin: 'https://jotter-demo-note.netlify.app', // без слэша в конце
+    origin: 'http://localhost:9000', // без слэша в конце
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   })
 );
