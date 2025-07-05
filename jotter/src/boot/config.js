@@ -7,7 +7,8 @@ export default ({ app }) => {
   const maxNumberOfRequestPerPage = 10;
   const contentForView = "active";
   const contentForTrashedComponent = "trashed";
-  const webSocketURL = "ws://localhost:3000";
+  const webSocketURL = "wss://jotter-kmzb.onrender.com";
+
   const pending = "pending";
   const accepted = "accepted";
   const rejected = "rejected";
