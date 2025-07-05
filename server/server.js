@@ -106,9 +106,9 @@ const PORT = process.env.PORT || 3001;
     });
   });
 
-  server.listen(3000, () => {
-    console.log(`🚀 Сервер запущен на http://localhost:${PORT}`);
-  });
+server.listen(PORT, () => {
+  console.log(`🚀 Сервер запущен на ${process.env.SERVER_URL || `http://localhost:${PORT}`}`);
+});
 })();
 
 export { wss };
