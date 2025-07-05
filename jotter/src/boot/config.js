@@ -2,7 +2,7 @@
 export default ({ app }) => {
   // Объявляем глобальные переменные
   const mobileWidth = 1050;
-  const serverURL = "https://jotter-kmzb.onrender.com";
+  const serverURL = "https://jotter-kmzb.onrender.com/";
   const clientURL = "https://jotter-demo-note.netlify.app/";
   const maxNumberOfRequestPerPage = 10;
   const contentForView = "active";
