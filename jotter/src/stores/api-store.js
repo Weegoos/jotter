@@ -13,7 +13,7 @@ export const useApiStore = defineStore("api", {
   actions: {
     async getUserInfo(serverURL, $q) {
       try {
-        const response = await axios.get(`http://localhost:3000/user/me`, {
+        const response = await axios.get(`https://jotter-kmzb.onrender.com/user/me`, {
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
