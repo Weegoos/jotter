@@ -36,13 +36,13 @@ const PORT = process.env.PORT || 3001;
     process.exit(1);
   }
 
-  app.use(
-    cors({
-      credentials: true,
-      origin: 'https://jotter-demo-note.netlify.app/',
-      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    }),
-  );
+app.use(
+  cors({
+    credentials: true,
+    origin: 'https://jotter-demo-note.netlify.app', // без слэша в конце
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  })
+);
 
   app.use(express.json());
 
