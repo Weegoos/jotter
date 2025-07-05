@@ -17,7 +17,7 @@
   "author": "Batyr Ashim <batyr.ashim05@mail.ru>",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
     "chalk": "^5.4.1",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",

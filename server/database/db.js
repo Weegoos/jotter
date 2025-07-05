@@ -10,10 +10,16 @@ const sequelize = new Sequelize(
   {
     host: process.env.DB_HOST || "localhost",
     dialect: "postgres",
-    logging: false, // Отключаем SQL логи
-  },
+    logging: false, // отключаем SQL логи
+    port: 5432, // укажи явно, если не указан
+    pool: {
+      max: 10, // максимум одновременных соединений
+      min: 0,
+      acquire: 30000, // максимум времени ожидания (мс)
+      idle: 10000, // время простоя перед закрытием соединения
+    },
+  }
 );
-
 async function connectDB() {
   try {
     await sequelize.authenticate();

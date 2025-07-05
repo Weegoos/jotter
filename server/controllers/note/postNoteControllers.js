@@ -1,7 +1,7 @@
 import Files from "../../schemas/fileSchemas.js";
 import Notes from "../../schemas/notesSchemas.js";
 import { wss } from "../../server.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { encrypt } from "../crypto.js";
 
 export const createNote = async (req, res) => {

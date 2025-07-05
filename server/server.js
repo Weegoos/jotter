@@ -39,7 +39,7 @@ const PORT = process.env.PORT || 3001;
   app.use(
     cors({
       credentials: true,
-      origin: "http://localhost:9000",
+      origin: 'http://localhost:9000',
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     }),
   );
@@ -106,7 +106,7 @@ const PORT = process.env.PORT || 3001;
     });
   });
 
-  server.listen(PORT, () => {
+  server.listen(3000, () => {
     console.log(`🚀 Сервер запущен на http://localhost:${PORT}`);
   });
 })();

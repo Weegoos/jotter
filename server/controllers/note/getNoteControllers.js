@@ -1,7 +1,7 @@
 import Files from "../../schemas/fileSchemas.js";
 import Notes from "../../schemas/notesSchemas.js";
 import { wss } from "../../server.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { decrypt } from "../crypto.js";
 import { Op } from "sequelize";
 
