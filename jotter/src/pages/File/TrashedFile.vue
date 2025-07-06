@@ -152,7 +152,7 @@ const getTrashedFiles = async (page) => {
   try {
     const response = await getMethod(
       serverURL,
-      `file/filesStatus?status=${contentForTrashedComponent}&page=${page}&limit=${maxNumberOfRequestPerPage}`,
+      `file/trashedFiles?&page=${page}&limit=${maxNumberOfRequestPerPage}`,
       $q,
       "Files fetched successfully"
     );
