@@ -116,7 +116,7 @@ export const getFilesName = async (req, res) => {
     }
 
     const files = await Files.findAll({
-      where: { userId },
+      where: { userId: userId, status: 'active' },
       attributes: ['name'],
     });
 

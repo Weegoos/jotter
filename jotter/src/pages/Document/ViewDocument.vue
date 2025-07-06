@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="Object.keys(rows).length > 0 || Object.keys(pinnedNote).length > 0">
     <Form @submit="submitDocument" class="q-pa-sm">
       <Input v-model="searchDocument" placeholder="Поиск по заметка..." />
     </Form>
@@ -38,6 +38,9 @@
       :detailedInformation="detailedInformation"
       @openDecryptedNote="onDecryptedNoteOpen"
     />
+  </div>
+  <div v-else>
+    <p class="text-center text-h6">{{  }}</p>
   </div>
 </template>
 

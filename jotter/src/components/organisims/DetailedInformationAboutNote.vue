@@ -45,7 +45,9 @@ import { ref, watch, getCurrentInstance } from "vue";
 import { useQuasar } from "quasar";
 import { getMethod } from "src/composables/api-method/get";
 import { Button, Input } from "../atoms";
+import { useWebSocket } from "src/composables/javascript-function/weboscket";
 
+// global variables
 const props = defineProps({
   isOpenDetailedInformation: Boolean,
   detailedInformation: Object,
@@ -60,6 +62,34 @@ const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
 const privateNote = proxy.$privateNote;
 const $q = useQuasar();
+const webSocketURL = proxy.$webSocketURL;
+const socket = new WebSocket(webSocketURL);
+useWebSocket(webSocketURL);
+
+socket.onmessage = async (event) => {
+  const data = JSON.parse(event.data);
+  if (["create_note", "notes_list"].includes(data.event)) {
+    const id = detailedInfo.value.id;
+
+    try {
+      const response = await getMethod(
+        serverURL,
+        `notes/note/${id}`,
+        $q,
+        "Обновлено по WebSocket"
+      );
+
+      detailedInfo.value = response;
+      if (response.type !== privateNote) {
+        isDecrypted.value = true;
+      }
+
+      emit("openDecryptedNote", detailedInfo.value);
+    } catch (error) {
+      console.error("Ошибка при обновлении по WebSocket:", error);
+    }
+  }
+};
 
 const isOpen = ref(props.isOpenDetailedInformation);
 const password = ref("");

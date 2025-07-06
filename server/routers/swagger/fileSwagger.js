@@ -256,6 +256,54 @@
 
 /**
  * @swagger
+ * /file/trashedFiles:
+ *   get:
+ *     summary: Получить удалённые (trashed) файлы пользователя
+ *     tags:
+ *       - Files
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Номер страницы
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Количество элементов на странице
+ *     responses:
+ *       200:
+ *         description: Успешный ответ с удалёнными файлами
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 files:
+ *                   type: array
+ *                 totalCount:
+ *                   type: integer
+ *                   example: 42
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 5
+ *                 currentPage:
+ *                   type: integer
+ *                   example: 1
+ *       400:
+ *         description: Ошибка запроса (например, отсутствует id пользователя)
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+
+/**
+ * @swagger
  * /file/search:
  *   get:
  *     summary: Поиск файлов по имени
