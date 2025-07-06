@@ -3,13 +3,7 @@
     <q-card>
       <q-card-section>
         <div v-if="isDecrypted === false">
-          <Input
-            v-model="password"
-            outlined
-            label="Введите пароль"
-            dense
-            type="password"
-          />
+          <Input v-model="password" outlined label="Введите пароль" dense type="password" />
 
           <Button
             v-if="detailedInfo.type === privateNote"
@@ -41,11 +35,11 @@
 </template>
 
 <script setup>
-import { ref, watch, getCurrentInstance } from "vue";
-import { useQuasar } from "quasar";
-import { getMethod } from "src/composables/api-method/get";
-import { Button, Input } from "../atoms";
-import { useWebSocket } from "src/composables/javascript-function/weboscket";
+import { ref, watch, getCurrentInstance } from 'vue';
+import { useQuasar } from 'quasar';
+import { getMethod } from 'src/composables/api-method/get';
+import { Button, Input } from '../atoms';
+import { useWebSocket } from 'src/composables/javascript-function/weboscket';
 
 // global variables
 const props = defineProps({
@@ -53,10 +47,7 @@ const props = defineProps({
   detailedInformation: Object,
 });
 
-const emit = defineEmits([
-  "closeDetailedInformationSection",
-  "openDecryptedNote",
-]);
+const emit = defineEmits(['closeDetailedInformationSection', 'openDecryptedNote']);
 
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
@@ -68,31 +59,26 @@ useWebSocket(webSocketURL);
 
 socket.onmessage = async (event) => {
   const data = JSON.parse(event.data);
-  if (["create_note", "notes_list"].includes(data.event)) {
+  if (['create_note', 'notes_list'].includes(data.event)) {
     const id = detailedInfo.value.id;
 
     try {
-      const response = await getMethod(
-        serverURL,
-        `notes/note/${id}`,
-        $q,
-        "Обновлено по WebSocket"
-      );
+      const response = await getMethod(serverURL, `notes/note/${id}`, $q, 'Обновлено по WebSocket');
 
       detailedInfo.value = response;
       if (response.type !== privateNote) {
         isDecrypted.value = true;
       }
 
-      emit("openDecryptedNote", detailedInfo.value);
+      emit('openDecryptedNote', detailedInfo.value);
     } catch (error) {
-      console.error("Ошибка при обновлении по WebSocket:", error);
+      console.error('Ошибка при обновлении по WebSocket:', error);
     }
   }
 };
 
 const isOpen = ref(props.isOpenDetailedInformation);
-const password = ref("");
+const password = ref('');
 const isDecrypted = ref(false);
 const detailedInfo = ref({ ...props.detailedInformation });
 
@@ -112,7 +98,7 @@ watch(
     } else {
       isDecrypted.value = true;
     }
-    password.value = "";
+    password.value = '';
   },
   { immediate: true }
 );
@@ -124,14 +110,14 @@ const checkPassword = async () => {
       serverURL,
       `notes/note/${id}?password=${password.value}`,
       $q,
-      "Успешный пароль"
+      'Успешный пароль'
     );
 
     isDecrypted.value = true;
     detailedInfo.value = response;
     console.log(isDecrypted.value, detailedInfo.value);
 
-    emit("openDecryptedNote", detailedInfo.value);
+    emit('openDecryptedNote', detailedInfo.value);
   } catch (error) {
     console.error(error);
   }

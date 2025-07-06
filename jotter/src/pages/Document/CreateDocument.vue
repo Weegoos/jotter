@@ -1,25 +1,9 @@
 <template>
   <div>
     <section class="grid grid-cols-3 gap-4 m-[24px]">
-      <q-select
-        v-model="fileName"
-        :options="fileNameOptions"
-        label="File Name"
-        filled
-      />
-      <q-select
-        v-model="type"
-        :options="typeOptions"
-        label="Note's type"
-        filled
-      />
-      <q-select
-        v-model="hashtags"
-        :options="hashtagOptions"
-        label="Hashtags"
-        filled
-        multiple
-      />
+      <q-select v-model="fileName" :options="fileNameOptions" label="File Name" filled />
+      <q-select v-model="type" :options="typeOptions" label="Note's type" filled />
+      <q-select v-model="hashtags" :options="hashtagOptions" label="Hashtags" filled multiple />
     </section>
     <section
       class="m-[24px]"
@@ -45,11 +29,11 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, onMounted, ref } from "vue";
-import BaseQEditor from "../../components/molecules/MoleculeQEditor.vue";
-import { useQuasar } from "quasar";
-import { useApiStore } from "src/stores/api-store";
-import { postMethod } from "src/composables/api-method/post";
+import { getCurrentInstance, onMounted, ref } from 'vue';
+import BaseQEditor from '../../components/molecules/MoleculeQEditor.vue';
+import { useQuasar } from 'quasar';
+import { useApiStore } from 'src/stores/api-store';
+import { postMethod } from 'src/composables/api-method/post';
 
 // global variables
 const { proxy } = getCurrentInstance();
@@ -58,12 +42,12 @@ const $q = useQuasar();
 const apiStore = useApiStore();
 const privateNote = proxy.$privateNote;
 
-const fileName = ref("");
+const fileName = ref('');
 const fileNameOptions = ref([]);
-const type = ref("");
+const type = ref('');
 const typeOptions = ref([]);
-const title = ref("");
-const password = ref("");
+const title = ref('');
+const password = ref('');
 const hashtagOptions = ref([]);
 const hashtags = ref(null);
 
@@ -94,16 +78,10 @@ const saveWork = async (data) => {
       content: data,
       fileName: fileName.value,
       title: title.value,
-      type: "saved",
+      type: 'saved',
     };
 
-    await postMethod(
-      serverURL,
-      "notes/create",
-      payload,
-      $q,
-      "Заметка сохранена!"
-    );
+    await postMethod(serverURL, 'notes/create', payload, $q, 'Заметка сохранена!');
   } catch (error) {
     console.error(error);
   }
@@ -119,13 +97,7 @@ const sendWork = async (data) => {
       hashtags: hashtags.value,
     };
 
-    await postMethod(
-      serverURL,
-      "notes/create",
-      payload,
-      $q,
-      "Заметка создана!"
-    );
+    await postMethod(serverURL, 'notes/create', payload, $q, 'Заметка создана!');
   } catch (error) {
     console.error(error);
   }

@@ -21,11 +21,11 @@
 </template>
 
 <script setup>
-import FriendsPage from "src/components/organisims/FriendsPage.vue";
-import NotificationsOrganisims from "src/components/organisims/NotificationsOrganisims.vue";
-import { ref } from "vue";
+import FriendsPage from 'src/components/organisims/FriendsPage.vue';
+import NotificationsOrganisims from 'src/components/organisims/NotificationsOrganisims.vue';
+import { ref } from 'vue';
 
-const tab = ref("notifications");
+const tab = ref('notifications');
 </script>
 
 <style></style>

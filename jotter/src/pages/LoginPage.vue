@@ -51,13 +51,13 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, ref } from "vue";
-import { Cookies, useQuasar } from "quasar";
-import { successMessage } from "src/composables/notify/successMessage";
-import axios from "axios";
-import { useRouter } from "vue-router";
-import { Icon, Input } from "src/components/atoms";
-import { Form } from "src/components/molecules";
+import { getCurrentInstance, ref } from 'vue';
+import { Cookies, useQuasar } from 'quasar';
+import { successMessage } from 'src/composables/notify/successMessage';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+import { Icon, Input } from 'src/components/atoms';
+import { Form } from 'src/components/molecules';
 
 // global variables
 const { proxy } = getCurrentInstance();
@@ -66,8 +66,8 @@ const serverURL = proxy.$serverURL;
 const $q = useQuasar();
 const router = useRouter();
 
-const password = ref("");
-const email = ref("");
+const password = ref('');
+const email = ref('');
 const isPwd = ref(true);
 const login = async () => {
   try {
@@ -76,14 +76,14 @@ const login = async () => {
       password: password.value,
     });
     successMessage($q, `Добро пожаловать, ${response.data.user.fullname}`);
-    Cookies.set("access_token", response.data.token);
-    router.push("/");
+    Cookies.set('access_token', response.data.token);
+    router.push('/');
   } catch (error) {
     console.error(error);
   }
 };
 
 const authGoogle = () => {
-  window.location.href = "http://localhost:3000/auth/google";
+  window.location.href = 'http://localhost:3000/auth/google';
 };
 </script>

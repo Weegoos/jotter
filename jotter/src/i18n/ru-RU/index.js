@@ -1,7 +1,7 @@
 export default {
   pinnedDocument: {
-    mainText: "Закреплённый документ",
+    mainText: 'Закреплённый документ',
   },
-  failed: "Действие не выполнено",
-  success: "Успешно выполнено",
+  failed: 'Действие не выполнено',
+  success: 'Успешно выполнено',
 };

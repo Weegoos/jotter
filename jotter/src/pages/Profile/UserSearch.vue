@@ -1,13 +1,7 @@
 <template>
   <div class="q-ma-md">
     <section>
-      <q-input
-        v-model="fullname"
-        label="Search..."
-        @keypress="onEnterPress"
-        outlined
-        rounded
-      >
+      <q-input v-model="fullname" label="Search..." @keypress="onEnterPress" outlined rounded>
         <template v-slot:append>
           <q-btn flat round dense icon="mdi-magnify" @click="searchUser" />
         </template>
@@ -37,10 +31,10 @@
 </template>
 
 <script setup>
-import { useQuasar } from "quasar";
-import { getMethod } from "src/composables/api-method/get";
-import { postMethod } from "src/composables/api-method/post";
-import { computed, getCurrentInstance, onMounted, ref, watch } from "vue";
+import { useQuasar } from 'quasar';
+import { getMethod } from 'src/composables/api-method/get';
+import { postMethod } from 'src/composables/api-method/post';
+import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue';
 
 // global variables
 const { proxy } = getCurrentInstance();
@@ -50,43 +44,38 @@ const $q = useQuasar();
 const rows = ref([]);
 const columns = computed(() => [
   {
-    name: "fullname",
-    label: "Full Name",
-    align: "left",
+    name: 'fullname',
+    label: 'Full Name',
+    align: 'left',
     field: (row) => row.fullname,
     sortable: true,
   },
   {
-    name: "email",
-    label: "Email",
-    align: "left",
+    name: 'email',
+    label: 'Email',
+    align: 'left',
     field: (row) => row.email,
     sortable: true,
   },
   {
-    name: "invite",
-    label: "Invite",
-    align: "center",
-    field: "id",
+    name: 'invite',
+    label: 'Invite',
+    align: 'center',
+    field: 'id',
   },
 ]);
 
 const getAllUsers = ref([]);
 const getUsers = async () => {
   try {
-    const response = await getMethod(
-      serverURL,
-      "user/allUsers",
-      $q,
-      "Все юзеры получены"
-    );
+    const response = await getMethod(serverURL, 'user/allUsers', $q, 'Все юзеры получены');
     getAllUsers.value = response;
   } catch (error) {
     console.error(error);
   }
 };
 
-const fullname = ref("");
+const fullname = ref('');
 const getAllUsersByInput = ref([]);
 const getUsersByInput = async () => {
   try {
@@ -94,7 +83,7 @@ const getUsersByInput = async () => {
       serverURL,
       `user/allUsersByInput?fullname=${fullname.value}`,
       $q,
-      "Получили пользователя"
+      'Получили пользователя'
     );
     console.log(response);
     getAllUsersByInput.value = response;
@@ -104,12 +93,11 @@ const getUsersByInput = async () => {
 };
 
 watch([getAllUsers, getAllUsersByInput], ([allUsers, usersByInput]) => {
-  rows.value =
-    usersByInput && usersByInput.length > 0 ? usersByInput : allUsers;
+  rows.value = usersByInput && usersByInput.length > 0 ? usersByInput : allUsers;
 });
 
 const onEnterPress = (e) => {
-  if (e.key === "Enter") {
+  if (e.key === 'Enter') {
     getUsersByInput();
   }
 };
@@ -126,7 +114,7 @@ const invite = async (info) => {
       `friend/add?fullname=${info.fullname}`,
       undefined,
       $q,
-      "Запрос отправлен"
+      'Запрос отправлен'
     );
   } catch (error) {
     console.error(error);

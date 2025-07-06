@@ -40,22 +40,22 @@
     />
   </div>
   <div v-else>
-    <p class="text-center text-h6">{{  }}</p>
+    <p class="text-center text-h6">{{}}</p>
   </div>
 </template>
 
 <script setup>
-import { useQuasar } from "quasar";
-import { getMethod } from "src/composables/api-method/get";
-import { computed, getCurrentInstance, onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import DetailedInformationAboutNoteVue from "../../components/organisims/DetailedInformationAboutNote.vue";
-import { useDateFormat } from "src/composables/javascript-function/formatDate";
-import { deleteMethod } from "src/composables/api-method/delete";
-import { putMethod } from "src/composables/api-method/put";
-import { useWebSocket } from "src/composables/javascript-function/weboscket";
-import { Form, Table } from "src/components/molecules";
-import { Input } from "src/components/atoms";
+import { useQuasar } from 'quasar';
+import { getMethod } from 'src/composables/api-method/get';
+import { computed, getCurrentInstance, onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import DetailedInformationAboutNoteVue from '../../components/organisims/DetailedInformationAboutNote.vue';
+import { useDateFormat } from 'src/composables/javascript-function/formatDate';
+import { deleteMethod } from 'src/composables/api-method/delete';
+import { putMethod } from 'src/composables/api-method/put';
+import { useWebSocket } from 'src/composables/javascript-function/weboscket';
+import { Form, Table } from 'src/components/molecules';
+import { Input } from 'src/components/atoms';
 
 // global variables
 const { proxy } = getCurrentInstance();
@@ -69,13 +69,13 @@ useWebSocket(webSocketURL);
 
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
-  if (data.event === "create_note") {
+  if (data.event === 'create_note') {
     getNotesById();
   }
-  if (data.event === "notes_list") {
+  if (data.event === 'notes_list') {
     getNotesById();
   }
-  if (data.event === "delete_note") {
+  if (data.event === 'delete_note') {
     getNotesById();
   }
 };
@@ -85,43 +85,43 @@ const id = route.params.id;
 
 const columns = computed(() => [
   {
-    name: "title",
-    label: "Name",
-    align: "left",
-    field: (row) => (row.type !== "private" ? row.title : "Введите пароль"),
+    name: 'title',
+    label: 'Name',
+    align: 'left',
+    field: (row) => (row.type !== 'private' ? row.title : 'Введите пароль'),
     sortable: true,
-    style: "width: 20%",
+    style: 'width: 20%',
   },
   {
-    name: "type",
-    label: "Type",
-    align: "left",
+    name: 'type',
+    label: 'Type',
+    align: 'left',
     field: (row) => row.type,
     sortable: true,
-    style: "width: 20%",
+    style: 'width: 20%',
   },
   {
-    name: "created_at",
-    label: "Created At",
-    align: "left",
+    name: 'created_at',
+    label: 'Created At',
+    align: 'left',
     field: (row) => useDateFormat(row.createdAt),
     sortable: true,
-    style: "width: 20%",
+    style: 'width: 20%',
   },
   {
-    name: "updated_at",
-    label: "Updated At",
-    align: "left",
+    name: 'updated_at',
+    label: 'Updated At',
+    align: 'left',
     field: (row) => useDateFormat(row.updatedAt),
     sortable: true,
-    style: "width: 20%",
+    style: 'width: 20%',
   },
   {
-    name: "actions",
-    label: "Actions",
-    align: "center",
-    field: "id",
-    style: "width: 20%",
+    name: 'actions',
+    label: 'Actions',
+    align: 'center',
+    field: 'id',
+    style: 'width: 20%',
   },
 ]);
 
@@ -135,23 +135,18 @@ const getNotesByPinned = async (id, pinnedValue) => {
       serverURL,
       `notes/${id}/${pinnedValue}`,
       $q,
-      "Заметки получены!"
+      'Заметки получены!'
     );
     return response;
   } catch (error) {
-    console.error("Ошибка при получении заметок:", error);
+    console.error('Ошибка при получении заметок:', error);
     return [];
   }
 };
 
 const getSavedNotes = async (type) => {
   try {
-    const response = await getMethod(
-      serverURL,
-      `notes/${type}`,
-      $q,
-      "Заметки получены"
-    );
+    const response = await getMethod(serverURL, `notes/${type}`, $q, 'Заметки получены');
     return response;
   } catch (error) {
     console.error(error);
@@ -163,32 +158,27 @@ const getNotesById = async () => {
   try {
     rows.value = await getNotesByPinned(id, false);
     pinnedNote.value = await getNotesByPinned(id, true);
-    savedNote.value = await getSavedNotes("saved");
+    savedNote.value = await getSavedNotes('saved');
   } catch (error) {
     console.error(error);
   }
 };
 
-const searchDocument = ref("");
+const searchDocument = ref('');
 const submitDocument = () => {
   const searchQuery = searchDocument.value.trim();
   if (!searchQuery) {
     getNotesById();
     return;
   }
-  getMethod(
-    serverURL,
-    `notes/${id}/search?search=${searchQuery}`,
-    $q,
-    "Заметки найдены"
-  )
+  getMethod(serverURL, `notes/${id}/search?search=${searchQuery}`, $q, 'Заметки найдены')
     .then((response) => {
       const notes = response.notes;
       pinnedNote.value = notes.filter((note) => note.pinned === true);
       rows.value = notes.filter((note) => !note.pinned);
     })
     .catch((error) => {
-      console.error("Ошибка при поиске заметок:", error);
+      console.error('Ошибка при поиске заметок:', error);
     });
 };
 
@@ -218,7 +208,7 @@ const onDecryptedNoteOpen = (noteData) => {
 
 const deleteNote = async (row) => {
   try {
-    await deleteMethod(serverURL, "notes", row.id);
+    await deleteMethod(serverURL, 'notes', row.id);
   } catch (error) {
     console.error(error);
   }

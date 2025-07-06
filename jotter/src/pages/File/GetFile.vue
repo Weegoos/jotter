@@ -21,10 +21,7 @@
       @pin="pinFile"
       @update="editFile"
     />
-    <BasePagination
-      :variableName="Object(filesByStatus)"
-      @pagination="pagination"
-    />
+    <BasePagination :variableName="Object(filesByStatus)" @pagination="pagination" />
   </div>
   <div v-else>
     <p class="text-center text-h6">Файлов нету...</p>
@@ -32,15 +29,15 @@
 </template>
 
 <script setup>
-import { useQuasar } from "quasar";
-import { Input } from "src/components/atoms";
-import { Form, Table } from "src/components/molecules";
-import BasePagination from "src/components/molecules/MoleculePagination.vue";
-import { getMethod } from "src/composables/api-method/get";
-import { putMethod } from "src/composables/api-method/put";
-import { useDateFormat } from "src/composables/javascript-function/formatDate";
-import { computed, getCurrentInstance, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
+import { useQuasar } from 'quasar';
+import { Input } from 'src/components/atoms';
+import { Form, Table } from 'src/components/molecules';
+import BasePagination from 'src/components/molecules/MoleculePagination.vue';
+import { getMethod } from 'src/composables/api-method/get';
+import { putMethod } from 'src/composables/api-method/put';
+import { useDateFormat } from 'src/composables/javascript-function/formatDate';
+import { computed, getCurrentInstance, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 // global variables
 const { proxy } = getCurrentInstance();
@@ -54,64 +51,64 @@ const socket = new WebSocket(webSocketURL);
 const router = useRouter();
 
 socket.onopen = () => {
-  console.log("✅ WebSocket подключен");
+  console.log('✅ WebSocket подключен');
 };
 
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
-  if (data.event === "create_file") {
+  if (data.event === 'create_file') {
     getFiles(1);
   }
-  if (data.event === "change_status") {
+  if (data.event === 'change_status') {
     getFiles(1);
   }
 };
 
 socket.onclose = () => {
-  console.log("❌ WebSocket отключен");
+  console.log('❌ WebSocket отключен');
 };
 
 socket.onerror = (error) => {
-  console.error("🔥 WebSocket ошибка:", error);
+  console.error('🔥 WebSocket ошибка:', error);
 };
 
 const rows = ref([]);
 const pinnedFiles = ref([]);
 const columns = computed(() => [
   {
-    name: "name",
-    label: "Name",
+    name: 'name',
+    label: 'Name',
     field: (row) => row.name,
-    align: "left",
-    style: "width: 20%",
+    align: 'left',
+    style: 'width: 20%',
   },
   {
-    name: "description",
-    label: "Description",
+    name: 'description',
+    label: 'Description',
     field: (row) => row.description,
-    align: "left",
-    style: "width: 20%",
+    align: 'left',
+    style: 'width: 20%',
   },
   {
-    name: "created_at",
-    label: "Created At",
+    name: 'created_at',
+    label: 'Created At',
     field: (row) => useDateFormat(row.createdAt),
-    align: "left",
-    style: "width: 20%",
+    align: 'left',
+    style: 'width: 20%',
   },
   {
-    name: "updated_at",
-    label: "Updated At",
+    name: 'updated_at',
+    label: 'Updated At',
     field: (row) => useDateFormat(row.updatedAt),
-    align: "left",
-    style: "width: 20%",
+    align: 'left',
+    style: 'width: 20%',
   },
   {
-    name: "actions",
-    label: "Actions",
-    field: "id",
-    align: "center",
-    style: "width: 20%",
+    name: 'actions',
+    label: 'Actions',
+    field: 'id',
+    align: 'center',
+    style: 'width: 20%',
   },
 ]);
 
@@ -123,11 +120,11 @@ const getFilesByPinned = async (page, pinnedValue) => {
       serverURL,
       `file/filesStatus?status=${contentForView}&pinned=${pinnedValue}&page=${page}&limit=${maxNumberOfRequestPerPage}`,
       $q,
-      "Files fetched successfully"
+      'Files fetched successfully'
     );
     return response.files;
   } catch (error) {
-    console.error("Ошибка при получении заметок:", error);
+    console.error('Ошибка при получении заметок:', error);
     return [];
   }
 };
@@ -137,11 +134,11 @@ const getFiles = async (page) => {
     rows.value = await getFilesByPinned(page, false);
     pinnedFiles.value = await getFilesByPinned(page, true);
   } catch (error) {
-    console.error("Error fetching files:", error);
+    console.error('Error fetching files:', error);
   }
 };
 
-const search = ref("");
+const search = ref('');
 const searchFiles = () => {
   try {
     const searchQuery = search.value.trim();
@@ -151,12 +148,7 @@ const searchFiles = () => {
       return;
     }
 
-    getMethod(
-      serverURL,
-      `file/search?search=${searchQuery}`,
-      $q,
-      "Файлы найдены"
-    )
+    getMethod(serverURL, `file/search?search=${searchQuery}`, $q, 'Файлы найдены')
       .then((response) => {
         const files = response.output;
 
@@ -164,10 +156,10 @@ const searchFiles = () => {
         rows.value = files.filter((file) => !file.pinned);
       })
       .catch((error) => {
-        console.error("Ошибка при поиске файлов:", error);
+        console.error('Ошибка при поиске файлов:', error);
       });
   } catch (error) {
-    console.error("Ошибка в searchFiles:", error);
+    console.error('Ошибка в searchFiles:', error);
   }
 };
 

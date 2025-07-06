@@ -1,57 +1,57 @@
 const routes = [
   {
-    path: "/",
-    component: () => import("pages/IndexPage.vue"),
+    path: '/',
+    component: () => import('pages/IndexPage.vue'),
   },
   {
-    path: "/login",
-    component: () => import("pages/LoginPage.vue"),
+    path: '/login',
+    component: () => import('pages/LoginPage.vue'),
   },
   {
-    path: "/register",
-    component: () => import("pages/RegistrationPage.vue"),
+    path: '/register',
+    component: () => import('pages/RegistrationPage.vue'),
   },
   {
-    path: "/create-file",
-    component: () => import("pages/File/CreateFile.vue"),
+    path: '/create-file',
+    component: () => import('pages/File/CreateFile.vue'),
   },
   {
-    path: "/get-file",
-    component: () => import("pages/File/GetFile.vue"),
+    path: '/get-file',
+    component: () => import('pages/File/GetFile.vue'),
   },
   {
-    path: "/trash",
-    component: () => import("pages/File/TrashedFile.vue"),
+    path: '/trash',
+    component: () => import('pages/File/TrashedFile.vue'),
   },
   {
-    path: "/create-document",
-    component: () => import("pages/Document/CreateDocument.vue"),
+    path: '/create-document',
+    component: () => import('pages/Document/CreateDocument.vue'),
   },
   {
-    path: "/view-notes/:id",
-    component: () => import("pages/Document/ViewDocument.vue"),
+    path: '/view-notes/:id',
+    component: () => import('pages/Document/ViewDocument.vue'),
   },
   {
-    path: "/update-note/:id",
-    component: () => import("pages/Document/UpdateDocument.vue"),
+    path: '/update-note/:id',
+    component: () => import('pages/Document/UpdateDocument.vue'),
   },
   {
-    path: "/user-search",
-    component: () => import("pages/Profile/UserSearch.vue"),
+    path: '/user-search',
+    component: () => import('pages/Profile/UserSearch.vue'),
   },
   {
-    path: "/personal-data",
-    component: () => import("pages/Profile/PersonalData.vue"),
+    path: '/personal-data',
+    component: () => import('pages/Profile/PersonalData.vue'),
   },
   {
-    path: "/publications",
-    component: () => import("pages/Profile/PublicationsPage.vue"),
+    path: '/publications',
+    component: () => import('pages/Profile/PublicationsPage.vue'),
   },
   // Always leave this as last one,
   // but you can also remove it
   {
-    path: "/:catchAll(.*)*",
-    component: () => import("pages/ErrorNotFound.vue"),
+    path: '/:catchAll(.*)*',
+    component: () => import('pages/ErrorNotFound.vue'),
   },
 ];
 

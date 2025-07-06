@@ -47,10 +47,7 @@
         </q-td>
       </template>
     </q-table>
-    <BasePagination
-      :variableName="Object(filesByStatus)"
-      @pagination="pagination"
-    />
+    <BasePagination :variableName="Object(filesByStatus)" @pagination="pagination" />
   </div>
   <div v-else>
     <p class="text-center text-h6">Корзина пуста...</p>
@@ -58,12 +55,12 @@
 </template>
 
 <script setup>
-import { useQuasar } from "quasar";
-import { deleteMethod } from "src/composables/api-method/delete";
-import { getMethod } from "src/composables/api-method/get";
-import { putMethod } from "src/composables/api-method/put";
-import { computed, getCurrentInstance, onMounted, ref } from "vue";
-import BasePagination from "src/components/molecules/MoleculePagination.vue";
+import { useQuasar } from 'quasar';
+import { deleteMethod } from 'src/composables/api-method/delete';
+import { getMethod } from 'src/composables/api-method/get';
+import { putMethod } from 'src/composables/api-method/put';
+import { computed, getCurrentInstance, onMounted, ref } from 'vue';
+import BasePagination from 'src/components/molecules/MoleculePagination.vue';
 // global variables
 const { proxy } = getCurrentInstance();
 const $q = useQuasar();
@@ -76,68 +73,68 @@ const webSocketURL = proxy.$webSocketURL;
 const socket = new WebSocket(webSocketURL);
 
 socket.onopen = () => {
-  console.log("✅ WebSocket подключен");
+  console.log('✅ WebSocket подключен');
 };
 
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
-  if (data.event === "change_status") {
+  if (data.event === 'change_status') {
     getTrashedFiles(1);
   }
-  if (data.event === "deleteFileByID") {
+  if (data.event === 'deleteFileByID') {
     getTrashedFiles(1);
   }
 };
 
 socket.onclose = () => {
-  console.log("❌ WebSocket отключен");
+  console.log('❌ WebSocket отключен');
 };
 
 socket.onerror = (error) => {
-  console.error("🔥 WebSocket ошибка:", error);
+  console.error('🔥 WebSocket ошибка:', error);
 };
 
 const rows = ref([]);
 const columns = computed(() => [
   {
-    name: "name",
-    label: "Name",
-    align: "left",
+    name: 'name',
+    label: 'Name',
+    align: 'left',
     field: (row) => row.name,
     sortable: true,
   },
   {
-    name: "description",
-    label: "Description",
-    align: "left",
+    name: 'description',
+    label: 'Description',
+    align: 'left',
     field: (row) => row.description,
     sortable: true,
   },
   {
-    name: "created_at",
-    label: "Created At",
-    align: "left",
+    name: 'created_at',
+    label: 'Created At',
+    align: 'left',
     field: (row) => row.createdAt,
     sortable: true,
   },
   {
-    name: "updated_at",
-    label: "Updated At",
-    align: "left",
+    name: 'updated_at',
+    label: 'Updated At',
+    align: 'left',
     field: (row) => row.updatedAt,
     sortable: true,
   },
   {
-    name: "restore",
-    label: "Restore",
-    align: "center",
-    field: "id",
+    name: 'restore',
+    label: 'Restore',
+    align: 'center',
+    field: 'id',
   },
   {
-    name: "delete",
-    label: "Delete from Trash",
-    align: "center",
-    field: "id",
+    name: 'delete',
+    label: 'Delete from Trash',
+    align: 'center',
+    field: 'id',
   },
 ]);
 
@@ -154,14 +151,14 @@ const getTrashedFiles = async (page) => {
       serverURL,
       `file/trashedFiles?&page=${page}&limit=${maxNumberOfRequestPerPage}`,
       $q,
-      "Files fetched successfully"
+      'Files fetched successfully'
     );
     rows.value = response.files;
     filesByStatus.value = response;
 
-    console.log("rows:", filesByStatus.value);
+    console.log('rows:', filesByStatus.value);
   } catch (error) {
-    console.error("Error fetching files:", error);
+    console.error('Error fetching files:', error);
   }
 };
 
@@ -175,14 +172,14 @@ const restoreFile = async (info) => {
       {}
     );
   } catch (error) {
-    console.error("Error fetching files:", error);
+    console.error('Error fetching files:', error);
   }
 };
 
 const deleteFile = async (info) => {
-  "";
+  '';
   try {
-    await deleteMethod(serverURL, "file/deleteFile", `${info.id}`);
+    await deleteMethod(serverURL, 'file/deleteFile', `${info.id}`);
   } catch (error) {
     console.error(error);
   }

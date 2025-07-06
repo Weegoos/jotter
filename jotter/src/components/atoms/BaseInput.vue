@@ -30,7 +30,7 @@ const props = defineProps({
   placeholder: String,
   type: {
     type: String,
-    default: "text",
+    default: 'text',
   },
   label: String,
   dense: {
@@ -43,5 +43,5 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(['update:modelValue']);
 </script>

@@ -50,15 +50,7 @@
             fixedLabel: true,
             fixedIcon: true,
             list: 'no-icons',
-            options: [
-              'size-1',
-              'size-2',
-              'size-3',
-              'size-4',
-              'size-5',
-              'size-6',
-              'size-7',
-            ],
+            options: ['size-1', 'size-2', 'size-3', 'size-4', 'size-5', 'size-6', 'size-7'],
           },
           {
             label: $q.lang.editor.defaultFont,
@@ -98,41 +90,41 @@
   </div>
 </template>
 <script setup>
-import { useQuasar } from "quasar";
-import { ref, watch } from "vue";
+import { useQuasar } from 'quasar';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
   placeholder: {
     type: String,
-    default: "Type something...",
+    default: 'Type something...',
   },
   modelValue: String,
 });
 
-const qeditor = ref(props.modelValue || "");
+const qeditor = ref(props.modelValue || '');
 
 const $q = useQuasar();
-const emit = defineEmits(["update:modelValue", "saveWork", "sendWork"]);
+const emit = defineEmits(['update:modelValue', 'saveWork', 'sendWork']);
 
 // Синхронизируем локальный ref с внешним v-model
 watch(
   () => props.modelValue,
   (newVal) => {
     if (newVal !== qeditor.value) {
-      qeditor.value = newVal || "";
+      qeditor.value = newVal || '';
     }
   }
 );
 
 // При изменении локального qeditor эмитим обновление модели вверх
 watch(qeditor, (newVal) => {
-  emit("update:modelValue", newVal);
+  emit('update:modelValue', newVal);
 });
 
 const saveWork = () => {
-  emit("saveWork", qeditor.value);
+  emit('saveWork', qeditor.value);
 };
 const sendWork = () => {
-  emit("sendWork", qeditor.value);
+  emit('sendWork', qeditor.value);
 };
 </script>

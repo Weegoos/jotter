@@ -13,7 +13,7 @@
 defineProps({
   color: {
     type: String,
-    default: "",
+    default: '',
   },
   label: {
     type: [String, Number],
@@ -25,5 +25,5 @@ defineProps({
   flat: [Boolean, String],
 });
 
-const emit = defineEmits(["emitClick"]);
+const emit = defineEmits(['emitClick']);
 </script>

@@ -24,10 +24,10 @@
 </template>
 
 <script setup>
-import { useQuasar } from "quasar";
-import { deleteMethod } from "src/composables/api-method/delete";
-import { getMethod } from "src/composables/api-method/get";
-import { computed, getCurrentInstance, onMounted, ref } from "vue";
+import { useQuasar } from 'quasar';
+import { deleteMethod } from 'src/composables/api-method/delete';
+import { getMethod } from 'src/composables/api-method/get';
+import { computed, getCurrentInstance, onMounted, ref } from 'vue';
 
 // global variables
 const { proxy } = getCurrentInstance();
@@ -38,41 +38,41 @@ const socket = new WebSocket(webSocketURL);
 const $q = useQuasar();
 
 socket.onopen = () => {
-  console.log("✅ WebSocket подключен");
+  console.log('✅ WebSocket подключен');
 };
 
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
-  if (data.event === "new_friend") {
+  if (data.event === 'new_friend') {
     getFriends();
   }
-  if (data.event === "deleteFromFriend") {
+  if (data.event === 'deleteFromFriend') {
     getFriends();
   }
 };
 
 socket.onclose = () => {
-  console.log("❌ WebSocket отключен");
+  console.log('❌ WebSocket отключен');
 };
 
 socket.onerror = (error) => {
-  console.error("🔥 WebSocket ошибка:", error);
+  console.error('🔥 WebSocket ошибка:', error);
 };
 
 const rows = ref([]);
 const columns = computed(() => [
   {
-    name: "fullname",
-    label: "Full Name",
-    align: "left",
+    name: 'fullname',
+    label: 'Full Name',
+    align: 'left',
     field: (row) => row.fullname,
     sortable: true,
   },
   {
-    name: "delete",
-    label: "Delete",
-    align: "center",
-    field: "id",
+    name: 'delete',
+    label: 'Delete',
+    align: 'center',
+    field: 'id',
   },
 ]);
 
@@ -83,7 +83,7 @@ const getFriends = async () => {
       serverURL,
       `friend/getByStatus?status=${accepted}`,
       $q,
-      "Друзья получены"
+      'Друзья получены'
     );
     console.log(response.friends);
     rows.value = response.friends;
@@ -99,11 +99,7 @@ onMounted(() => {
 const deleteFromFriends = async (info) => {
   console.log(info);
   try {
-    await deleteMethod(
-      serverURL,
-      `friend`,
-      `deleteById?friendId=${info.friendId}`
-    );
+    await deleteMethod(serverURL, `friend`, `deleteById?friendId=${info.friendId}`);
   } catch (error) {
     console.error(error);
   }

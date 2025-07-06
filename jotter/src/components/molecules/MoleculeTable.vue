@@ -67,7 +67,7 @@
 </template>
 
 <script setup>
-import { Button } from "../atoms";
+import { Button } from '../atoms';
 
 // global variables
 const props = defineProps({
@@ -81,5 +81,5 @@ const props = defineProps({
   title: String,
 });
 
-const emit = defineEmits(["pin", "update", "delete"]);
+const emit = defineEmits(['pin', 'update', 'delete']);
 </script>

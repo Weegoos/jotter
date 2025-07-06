@@ -68,13 +68,13 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, ref } from "vue";
-import { useQuasar } from "quasar";
-import { successMessage } from "src/composables/notify/successMessage";
-import axios from "axios";
-import { useRouter } from "vue-router";
-import { Icon, Input } from "src/components/atoms";
-import { Form } from "src/components/molecules";
+import { getCurrentInstance, ref } from 'vue';
+import { useQuasar } from 'quasar';
+import { successMessage } from 'src/composables/notify/successMessage';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+import { Icon, Input } from 'src/components/atoms';
+import { Form } from 'src/components/molecules';
 
 // global variables
 const { proxy } = getCurrentInstance();
@@ -83,9 +83,9 @@ const serverURL = proxy.$serverURL;
 const $q = useQuasar();
 const router = useRouter();
 
-const fullname = ref("");
-const password = ref("");
-const email = ref("");
+const fullname = ref('');
+const password = ref('');
+const email = ref('');
 const isPwd = ref(true);
 
 const register = async () => {
@@ -96,7 +96,7 @@ const register = async () => {
       password: password.value,
     });
     successMessage($q, `${response.data.user.fullname} добро пожаловать`);
-    router.push("/login");
+    router.push('/login');
   } catch (error) {
     console.error(error);
   }

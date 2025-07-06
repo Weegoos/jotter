@@ -13,10 +13,10 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
-import BaseDrawer from "../components/molecules/MoleculeDrawer.vue";
-import BaseHeader from "../containers/HeaderContainer.vue";
-import { useRoute } from "vue-router";
+import { computed, ref } from 'vue';
+import BaseDrawer from '../components/molecules/MoleculeDrawer.vue';
+import BaseHeader from '../containers/HeaderContainer.vue';
+import { useRoute } from 'vue-router';
 
 const drawer = ref(null);
 const toggleDrawer = (newDrawerState) => {
@@ -26,7 +26,7 @@ const toggleDrawer = (newDrawerState) => {
 
 const route = useRoute();
 const authPage = computed(() => {
-  return route.path === "/login" || route.path === "/register";
+  return route.path === '/login' || route.path === '/register';
 });
 </script>
 
