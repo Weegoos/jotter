@@ -1,7 +1,7 @@
-import { DataTypes } from "sequelize";
-import { sequelize } from "../database/db.js";
+import { DataTypes } from 'sequelize';
+import { sequelize } from '../database/db.js';
 
-const Hashtags = sequelize.define("Hashtag", {
+const Hashtags = sequelize.define('Hashtag', {
   name: {
     type: DataTypes.TEXT,
     allowNull: false,

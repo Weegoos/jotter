@@ -1,9 +1,9 @@
-import { DataTypes } from "sequelize";
-import { sequelize } from "../database/db.js";
-import Files from "./fileSchemas.js";
+import { DataTypes } from 'sequelize';
+import { sequelize } from '../database/db.js';
+import Files from './fileSchemas.js';
 
 const Notes = sequelize.define(
-  "Notes",
+  'Notes',
   {
     fileName: { type: DataTypes.TEXT, allowNull: false },
     content: { type: DataTypes.TEXT, allowNull: false },
@@ -19,9 +19,9 @@ const Notes = sequelize.define(
   },
   {
     timestamps: true,
-  },
+  }
 );
-Notes.belongsTo(Files, { foreignKey: "fileId", onDelete: "CASCADE" });
-Files.hasMany(Notes, { foreignKey: "fileId" });
+Notes.belongsTo(Files, { foreignKey: 'fileId', onDelete: 'CASCADE' });
+Files.hasMany(Notes, { foreignKey: 'fileId' });
 
 export default Notes;

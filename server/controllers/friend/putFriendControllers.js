@@ -1,5 +1,5 @@
-import Friend from "../../schemas/friendSchemas.js";
-import { wss } from "../../server.js";
+import Friend from '../../schemas/friendSchemas.js';
+import { wss } from '../../server.js';
 
 export const changeFriendStatus = async (req, res) => {
   try {
@@ -7,15 +7,15 @@ export const changeFriendStatus = async (req, res) => {
     const { status, friendId } = req.query;
 
     if (!userId) {
-      return res.status(401).json({ message: "Неавторизованный пользователь" });
+      return res.status(401).json({ message: 'Неавторизованный пользователь' });
     }
 
     if (!friendId) {
-      return res.status(400).json({ message: "Параметр friendId обязателен" });
+      return res.status(400).json({ message: 'Параметр friendId обязателен' });
     }
 
     if (!status) {
-      return res.status(400).json({ message: "Параметр status обязателен" });
+      return res.status(400).json({ message: 'Параметр status обязателен' });
     }
 
     const friend = await Friend.findOne({
@@ -26,7 +26,7 @@ export const changeFriendStatus = async (req, res) => {
     });
 
     if (!friend) {
-      return res.status(404).json({ message: "Дружба не найдена" });
+      return res.status(404).json({ message: 'Дружба не найдена' });
     }
 
     friend.status = status;
@@ -34,13 +34,13 @@ export const changeFriendStatus = async (req, res) => {
 
     wss.clients.forEach((client) => {
       if (client.readyState === 1) {
-        client.send(JSON.stringify({ event: "changeFriendStatus", friend }));
+        client.send(JSON.stringify({ event: 'changeFriendStatus', friend }));
       }
     });
 
-    res.status(200).json({ message: "Статус обновлён", friend });
+    res.status(200).json({ message: 'Статус обновлён', friend });
   } catch (error) {
-    console.error("Ошибка при изменении статуса друга:", error);
-    res.status(500).json({ message: "Ошибка сервера" });
+    console.error('Ошибка при изменении статуса друга:', error);
+    res.status(500).json({ message: 'Ошибка сервера' });
   }
 };

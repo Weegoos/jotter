@@ -1,5 +1,5 @@
-import Friend from "../../schemas/friendSchemas";
-import { wss } from "../../server";
+import Friend from '../../schemas/friendSchemas';
+import { wss } from '../../server';
 
 export const deleteFriendById = async (req, res) => {
   try {
@@ -7,7 +7,7 @@ export const deleteFriendById = async (req, res) => {
     const { friendId } = req.query;
 
     if (!friendId) {
-      return res.status(400).json({ message: "Параметр friendId обязателен" });
+      return res.status(400).json({ message: 'Параметр friendId обязателен' });
     }
 
     const friend = await Friend.findOne({
@@ -18,20 +18,20 @@ export const deleteFriendById = async (req, res) => {
     });
 
     if (!friend) {
-      return res.status(404).json({ message: "Друг не найден." });
+      return res.status(404).json({ message: 'Друг не найден.' });
     }
 
     await friend.destroy();
 
     wss.clients.forEach((client) => {
       if (client.readyState === 1) {
-        client.send(JSON.stringify({ event: "deleteFromFriend", friend }));
+        client.send(JSON.stringify({ event: 'deleteFromFriend', friend }));
       }
     });
 
-    res.status(200).json({ message: "Друг успешно удален." });
+    res.status(200).json({ message: 'Друг успешно удален.' });
   } catch (error) {
-    console.error("Ошибка при изменении статуса друга:", error);
-    res.status(500).json({ message: "Ошибка сервера" });
+    console.error('Ошибка при изменении статуса друга:', error);
+    res.status(500).json({ message: 'Ошибка сервера' });
   }
 };

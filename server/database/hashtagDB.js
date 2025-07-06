@@ -1,23 +1,23 @@
-import Hashtags from "../schemas/hashtagSchemas.js";
+import Hashtags from '../schemas/hashtagSchemas.js';
 
 const initializeHashTag = async () => {
   await Hashtags.sync({ alter: true }),
     await Hashtags.bulkCreate(
       [
-        { name: "Здоровье" },
-        { name: "Образование" },
-        { name: "Работа" },
-        { name: "Цели" },
-        { name: "Идеи" },
-        { name: "Саморазвитие" },
-        { name: "Финансы" },
-        { name: "Путешествия" },
-        { name: "Технологии" },
-        { name: "Вдохновение" },
+        { name: 'Здоровье' },
+        { name: 'Образование' },
+        { name: 'Работа' },
+        { name: 'Цели' },
+        { name: 'Идеи' },
+        { name: 'Саморазвитие' },
+        { name: 'Финансы' },
+        { name: 'Путешествия' },
+        { name: 'Технологии' },
+        { name: 'Вдохновение' },
       ],
-      { ignoreDuplicates: true },
+      { ignoreDuplicates: true }
     );
-  console.log("Хэштеги загружены");
+  console.log('Хэштеги загружены');
 };
 
 export default initializeHashTag;

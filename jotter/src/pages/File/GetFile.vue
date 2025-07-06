@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="Object.keys(rows).length > 0 || Object.keys(pinnedFiles).length > 0">
     <Form @submit="searchFiles" class="q-pa-sm">
       <Input v-model="search" placeholder="Поиск по файлам" />
     </Form>
@@ -26,9 +26,9 @@
       @pagination="pagination"
     />
   </div>
-  <!-- <div v-else>
+  <div v-else>
     <p class="text-center text-h6">Файлов нету...</p>
-  </div> -->
+  </div>
 </template>
 
 <script setup>

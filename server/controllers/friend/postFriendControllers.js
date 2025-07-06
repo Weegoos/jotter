@@ -1,6 +1,6 @@
-import Friend from "../../schemas/friendSchemas.js";
-import User from "../../schemas/userSchemas.js";
-import { wss } from "../../server.js";
+import Friend from '../../schemas/friendSchemas.js';
+import User from '../../schemas/userSchemas.js';
+import { wss } from '../../server.js';
 
 export const sendRequestToTheFriend = async (req, res) => {
   try {
@@ -8,11 +8,11 @@ export const sendRequestToTheFriend = async (req, res) => {
     const { fullname } = req.query;
 
     if (!userId) {
-      return res.status(401).json({ message: "Неавторизованный пользователь" });
+      return res.status(401).json({ message: 'Неавторизованный пользователь' });
     }
 
     if (!fullname) {
-      return res.status(400).json({ message: "Параметр fullname обязателен" });
+      return res.status(400).json({ message: 'Параметр fullname обязателен' });
     }
 
     const friendUser = await User.findOne({
@@ -20,15 +20,13 @@ export const sendRequestToTheFriend = async (req, res) => {
     });
 
     if (!friendUser) {
-      return res
-        .status(404)
-        .json({ message: "Пользователь с таким именем не найден" });
+      return res.status(404).json({ message: 'Пользователь с таким именем не найден' });
     }
 
     const friendId = friendUser.id;
 
     if (parseInt(userId) === parseInt(friendId)) {
-      return res.status(400).json({ message: "Нельзя добавить себя в друзья" });
+      return res.status(400).json({ message: 'Нельзя добавить себя в друзья' });
     }
 
     const existingFriend = await Friend.findOne({
@@ -40,7 +38,7 @@ export const sendRequestToTheFriend = async (req, res) => {
     });
 
     if (existingFriend) {
-      return res.status(409).json({ message: "Пользователь уже в друзьях" });
+      return res.status(409).json({ message: 'Пользователь уже в друзьях' });
     }
 
     const newFriend = await Friend.create({
@@ -54,18 +52,16 @@ export const sendRequestToTheFriend = async (req, res) => {
       if (client.readyState === 1) {
         client.send(
           JSON.stringify({
-            event: "new_friend",
+            event: 'new_friend',
             newFriend: newFriend,
-          }),
+          })
         );
       }
     });
 
-    res
-      .status(201)
-      .json({ message: "Запрос отправлен пользователю", friend: newFriend });
+    res.status(201).json({ message: 'Запрос отправлен пользователю', friend: newFriend });
   } catch (error) {
-    console.error("Ошибка при добавлении в друзья:", error);
-    res.status(500).json({ message: "Ошибка сервера" });
+    console.error('Ошибка при добавлении в друзья:', error);
+    res.status(500).json({ message: 'Ошибка сервера' });
   }
 };

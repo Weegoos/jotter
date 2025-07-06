@@ -1,9 +1,9 @@
-import Files from "../../schemas/fileSchemas.js";
-import Notes from "../../schemas/notesSchemas.js";
-import { wss } from "../../server.js";
-import bcrypt from "bcryptjs";
-import { decrypt } from "../crypto.js";
-import { Op } from "sequelize";
+import Files from '../../schemas/fileSchemas.js';
+import Notes from '../../schemas/notesSchemas.js';
+import { wss } from '../../server.js';
+import bcrypt from 'bcryptjs';
+import { decrypt } from '../crypto.js';
+import { Op } from 'sequelize';
 
 export const getAllNotesByFileID = async (req, res) => {
   try {
@@ -11,9 +11,7 @@ export const getAllNotesByFileID = async (req, res) => {
     const { fileId, pinned } = req.params;
 
     if (!fileId && !pinned) {
-      return res
-        .status(400)
-        .json({ message: "Ошибка: fileID и pinned отсутствует." });
+      return res.status(400).json({ message: 'Ошибка: fileID и pinned отсутствует.' });
     }
 
     const file = await Files.findOne({
@@ -21,29 +19,27 @@ export const getAllNotesByFileID = async (req, res) => {
     });
 
     if (!file) {
-      return res
-        .status(403)
-        .json({ message: "Доступ запрещен или файл не найден." });
+      return res.status(403).json({ message: 'Доступ запрещен или файл не найден.' });
     }
 
     const notes = await Notes.findAll({
       where: { fileId: fileId, pinned: pinned },
       order: [
-        ["updatedAt", "DESC"],
-        ["createdAt", "DESC"],
+        ['updatedAt', 'DESC'],
+        ['createdAt', 'DESC'],
       ],
     });
 
     wss.clients.forEach((client) => {
       if (client.readyState === 1) {
-        client.send(JSON.stringify({ event: "allNotes", fileId, notes }));
+        client.send(JSON.stringify({ event: 'allNotes', fileId, notes }));
       }
     });
 
     res.json(notes);
   } catch (error) {
-    console.error("Ошибка получения заметок:", error);
-    res.status(500).json({ message: "Ошибка сервера" });
+    console.error('Ошибка получения заметок:', error);
+    res.status(500).json({ message: 'Ошибка сервера' });
   }
 };
 
@@ -54,7 +50,7 @@ export const getNoteByID = async (req, res) => {
     const { password } = req.query;
 
     if (!noteId) {
-      return res.status(400).json({ message: "Ошибка: noteId отсутствует." });
+      return res.status(400).json({ message: 'Ошибка: noteId отсутствует.' });
     }
 
     const note = await Notes.findOne({
@@ -69,19 +65,19 @@ export const getNoteByID = async (req, res) => {
     });
 
     if (!note) {
-      return res.status(404).json({ message: "Заметка не найдена." });
+      return res.status(404).json({ message: 'Заметка не найдена.' });
     }
 
-    if (note.type === "private") {
+    if (note.type === 'private') {
       if (!password) {
         return res.status(400).json({
-          message: "Требуется пароль для доступа к приватной заметке.",
+          message: 'Требуется пароль для доступа к приватной заметке.',
         });
       }
 
       const isMatch = await bcrypt.compare(password, note.password);
       if (!isMatch) {
-        return res.status(403).json({ message: "Неверный пароль." });
+        return res.status(403).json({ message: 'Неверный пароль.' });
       }
 
       // Расшифровка данных
@@ -93,14 +89,14 @@ export const getNoteByID = async (req, res) => {
     // WebSocket рассылка
     wss.clients.forEach((client) => {
       if (client.readyState === 1) {
-        client.send(JSON.stringify({ event: "note_data", note }));
+        client.send(JSON.stringify({ event: 'note_data', note }));
       }
     });
 
     res.json(note);
   } catch (error) {
-    console.error("Ошибка получения заметки:", error);
-    res.status(500).json({ message: "Ошибка сервера" });
+    console.error('Ошибка получения заметки:', error);
+    res.status(500).json({ message: 'Ошибка сервера' });
   }
 };
 
@@ -110,7 +106,7 @@ export const getAllNotesByType = async (req, res) => {
     const { type } = req.params;
 
     if (!type) {
-      res.status(400).json({ message: "Укажите тип" });
+      res.status(400).json({ message: 'Укажите тип' });
     }
 
     const notes = await Notes.findAll({
@@ -123,15 +119,15 @@ export const getAllNotesByType = async (req, res) => {
         },
       ],
       order: [
-        ["updatedAt", "DESC"],
-        ["createdAt", "DESC"],
+        ['updatedAt', 'DESC'],
+        ['createdAt', 'DESC'],
       ],
     });
 
     res.status(200).json(notes);
   } catch (error) {
-    console.error("Ошибка при получении публичных заметок:", error);
-    res.status(500).json({ message: "Ошибка сервера при получении заметок" });
+    console.error('Ошибка при получении публичных заметок:', error);
+    res.status(500).json({ message: 'Ошибка сервера при получении заметок' });
   }
 };
 
@@ -140,17 +136,17 @@ export const searchNotes = async (req, res) => {
     const { id } = req.user;
 
     if (!id) {
-      return res.status(400).json({ message: "Ошибка: id отсутствует." });
+      return res.status(400).json({ message: 'Ошибка: id отсутствует.' });
     }
 
     const { fileId } = req.params;
     const { search } = req.query;
     if (!fileId) {
-      return res.status(400).json({ message: "Ошибка: fileId отсутствует." });
+      return res.status(400).json({ message: 'Ошибка: fileId отсутствует.' });
     }
 
     if (!search) {
-      return res.status(400).json({ message: "Ошибка: search отсутствует." });
+      return res.status(400).json({ message: 'Ошибка: search отсутствует.' });
     }
 
     const user = await Files.findOne({
@@ -160,9 +156,7 @@ export const searchNotes = async (req, res) => {
     });
 
     if (!user) {
-      return res
-        .status(403)
-        .json({ message: "Доступ запрещен или файл не найден." });
+      return res.status(403).json({ message: 'Доступ запрещен или файл не найден.' });
     }
 
     const cleanedTitle = search.trim();
@@ -179,9 +173,7 @@ export const searchNotes = async (req, res) => {
 
     return res.status(200).json({ notes });
   } catch (error) {
-    console.error("Ошибка при получении заметок поиска:", error);
-    return res
-      .status(500)
-      .json({ message: "Ошибка сервера при получении заметок" });
+    console.error('Ошибка при получении заметок поиска:', error);
+    return res.status(500).json({ message: 'Ошибка сервера при получении заметок' });
   }
 };

@@ -1,19 +1,19 @@
-import express from "express";
-import authMiddleware from "../middlewares/authMiddleware.js";
+import express from 'express';
+import authMiddleware from '../middlewares/authMiddleware.js';
 
-import "./swagger/typesSwagger.js";
+import './swagger/typesSwagger.js';
 import {
   getAllAccessLevelTypes,
   getAllContentTypes,
   getAllGeneralTypes,
   getAllTypes,
   getAllTypeUsedByUser,
-} from "../controllers/types/typesGetControllers.js";
+} from '../controllers/types/typesGetControllers.js';
 const router = express.Router();
 
-router.get("", authMiddleware, getAllTypes);
-router.get("/usedByUser/:fileId", getAllTypeUsedByUser);
-router.get("/general", authMiddleware, getAllGeneralTypes);
-router.get("/content", authMiddleware, getAllContentTypes);
-router.get("/accessLevel", authMiddleware, getAllAccessLevelTypes);
+router.get('', authMiddleware, getAllTypes);
+router.get('/usedByUser/:fileId', getAllTypeUsedByUser);
+router.get('/general', authMiddleware, getAllGeneralTypes);
+router.get('/content', authMiddleware, getAllContentTypes);
+router.get('/accessLevel', authMiddleware, getAllAccessLevelTypes);
 export default router;

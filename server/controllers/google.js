@@ -1,19 +1,18 @@
-import dotenv from "dotenv";
-import User from "../schemas/userSchemas.js";
-import crypto from "crypto";
-import session from "express-session";
-import passport from "passport";
-import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import dotenv from 'dotenv';
+import User from '../schemas/userSchemas.js';
+import crypto from 'crypto';
+import session from 'express-session';
+import passport from 'passport';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 
 dotenv.config();
 
 const generateSessionSecret = () => {
-  return crypto.randomBytes(32).toString("hex");
+  return crypto.randomBytes(32).toString('hex');
 };
 
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "fallback-id";
-const GOOGLE_CLIENT_SECRET =
-  process.env.GOOGLE_CLIENT_SECRET || "fallback-secret";
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || 'fallback-id';
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || 'fallback-secret';
 
 export default function setupGoogleAuth(app) {
   const sessionSecret = generateSessionSecret();
@@ -23,7 +22,7 @@ export default function setupGoogleAuth(app) {
       secret: sessionSecret,
       resave: false,
       saveUninitialized: true,
-    }),
+    })
   );
 
   app.use(passport.initialize());
@@ -42,7 +41,7 @@ export default function setupGoogleAuth(app) {
       {
         clientID: GOOGLE_CLIENT_ID,
         clientSecret: GOOGLE_CLIENT_SECRET,
-        callbackURL: "/auth/google/callback",
+        callbackURL: '/auth/google/callback',
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
@@ -63,37 +62,34 @@ export default function setupGoogleAuth(app) {
             return done(null, { ...newUser, accessToken });
           }
         } catch (error) {
-          console.error("Ошибка при создании пользователя: ", error);
+          console.error('Ошибка при создании пользователя: ', error);
           return done(error);
         }
-      },
-    ),
+      }
+    )
   );
 
-  app.get(
-    "/auth/google",
-    passport.authenticate("google", { scope: ["profile", "email"] }),
-  );
+  app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
   app.get(
-    "/auth/google/callback",
-    passport.authenticate("google", { failureRedirect: "/login" }),
+    '/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/login' }),
     (req, res) => {
       if (req.user && req.user.accessToken) {
         const accessToken = req.user.accessToken;
 
-        res.cookie("access_token", accessToken, {
+        res.cookie('access_token', accessToken, {
           httpOnly: true,
           secure: false,
-          sameSite: "lax",
+          sameSite: 'lax',
           maxAge: 3600 * 1000,
         });
 
         res.redirect(`${process.env.CLIENT_URL}#/`);
       } else {
-        console.log("Ошибка: accessToken не найден");
-        res.redirect("http://localhost:9000/#/login");
+        console.log('Ошибка: accessToken не найден');
+        res.redirect('http://localhost:9000/#/login');
       }
-    },
+    }
   );
 }

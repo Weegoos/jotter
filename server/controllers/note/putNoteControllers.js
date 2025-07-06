@@ -1,6 +1,6 @@
-import Files from "../../schemas/fileSchemas.js";
-import Notes from "../../schemas/notesSchemas.js";
-import { wss } from "../../server.js";
+import Files from '../../schemas/fileSchemas.js';
+import Notes from '../../schemas/notesSchemas.js';
+import { wss } from '../../server.js';
 
 export const updateNote = async (req, res) => {
   try {
@@ -8,12 +8,12 @@ export const updateNote = async (req, res) => {
     const { content, title, type } = req.body;
 
     if (!content || !title || !type) {
-      return res.status(400).json({ message: "Все поля обязательны" });
+      return res.status(400).json({ message: 'Все поля обязательны' });
     }
 
     const note = await Notes.findByPk(noteId);
     if (!note) {
-      return res.status(404).json({ message: "Заметка не найдена" });
+      return res.status(404).json({ message: 'Заметка не найдена' });
     }
 
     note.content = content;
@@ -28,18 +28,18 @@ export const updateNote = async (req, res) => {
       if (client.readyState === 1) {
         client.send(
           JSON.stringify({
-            event: "notes_list",
+            event: 'notes_list',
             fileId: note.fileId,
             notes,
-          }),
+          })
         );
       }
     });
 
     res.json(note);
   } catch (error) {
-    console.error("Ошибка обновления заметки:", error);
-    res.status(500).json({ message: "Ошибка сервера" });
+    console.error('Ошибка обновления заметки:', error);
+    res.status(500).json({ message: 'Ошибка сервера' });
   }
 };
 
@@ -50,13 +50,13 @@ export const pinNote = async (req, res) => {
     const { value } = req.body;
 
     if (value === undefined) {
-      return res.status(400).json({ message: "Все поля обязательный" });
+      return res.status(400).json({ message: 'Все поля обязательный' });
     }
 
     const userFile = await Files.findByPk(userId);
 
     if (!userFile) {
-      return res.status(403).json({ message: "Файл пользователя не найден" });
+      return res.status(403).json({ message: 'Файл пользователя не найден' });
     }
 
     const note = await Notes.findOne({
@@ -67,9 +67,7 @@ export const pinNote = async (req, res) => {
     });
 
     if (!note) {
-      return res
-        .status(404)
-        .json({ message: "Заметка не найдена или доступ запрещен" });
+      return res.status(404).json({ message: 'Заметка не найдена или доступ запрещен' });
     }
 
     note.pinned = value;
@@ -79,17 +77,17 @@ export const pinNote = async (req, res) => {
       if (client.readyState === 1) {
         client.send(
           JSON.stringify({
-            event: "notes_list",
+            event: 'notes_list',
             fileId: note.fileId,
             note,
-          }),
+          })
         );
       }
     });
 
-    return res.json({ message: "Статус pinned обновлён", note });
+    return res.json({ message: 'Статус pinned обновлён', note });
   } catch (error) {
-    console.error("Ошибка обновления заметки:", error);
-    res.status(500).json({ message: "Ошибка сервера" });
+    console.error('Ошибка обновления заметки:', error);
+    res.status(500).json({ message: 'Ошибка сервера' });
   }
 };

@@ -1,9 +1,9 @@
-import { DataTypes } from "sequelize";
-import { sequelize } from "../database/db.js";
-import User from "./userSchemas.js";
+import { DataTypes } from 'sequelize';
+import { sequelize } from '../database/db.js';
+import User from './userSchemas.js';
 
 const Files = sequelize.define(
-  "Files",
+  'Files',
   {
     name: { type: DataTypes.STRING, allowNull: false, unique: true },
     description: { type: DataTypes.STRING, allowNull: false },
@@ -12,8 +12,8 @@ const Files = sequelize.define(
   },
   {
     timestamps: true,
-  },
+  }
 );
 
-Files.belongsTo(User, { foreignKey: "userId", onDelete: "CASCADE" });
+Files.belongsTo(User, { foreignKey: 'userId', onDelete: 'CASCADE' });
 export default Files;

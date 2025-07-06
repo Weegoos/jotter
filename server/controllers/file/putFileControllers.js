@@ -1,5 +1,6 @@
-import Files from "../../schemas/fileSchemas.js";
-import { wss } from "../../server.js";
+import Files from '../../schemas/fileSchemas.js';
+import { wss } from '../../server.js';
+import { WebSocket } from 'ws';
 
 export const editFileStatus = async (req, res) => {
   try {
@@ -7,15 +8,13 @@ export const editFileStatus = async (req, res) => {
     const { fileId, status } = req.query;
 
     if (!userId || !fileId || !status) {
-      return res
-        .status(400)
-        .json({ message: "Необходимы userId, fileId и status" });
+      return res.status(400).json({ message: 'Необходимы userId, fileId и status' });
     }
 
     const file = await Files.findOne({ where: { id: fileId, userId } });
 
     if (!file) {
-      return res.status(404).json({ message: "Файл не найден" });
+      return res.status(404).json({ message: 'Файл не найден' });
     }
 
     file.status = status;
@@ -25,17 +24,17 @@ export const editFileStatus = async (req, res) => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(
           JSON.stringify({
-            event: "change_status",
+            event: 'change_status',
             file: file,
-          }),
+          })
         );
       }
     });
 
-    res.json({ message: "Статус обновлен", file });
+    res.json({ message: 'Статус обновлен', file });
   } catch (error) {
-    console.error("Ошибка:", error);
-    res.status(500).json({ message: "Ошибка сервера" });
+    console.error('Ошибка:', error);
+    res.status(500).json({ message: 'Ошибка сервера' });
   }
 };
 
@@ -46,7 +45,7 @@ export const pinFile = async (req, res) => {
     const { value } = req.body;
 
     if (value === undefined) {
-      return res.status(400).json({ message: "Все поля обязательны" });
+      return res.status(400).json({ message: 'Все поля обязательны' });
     }
 
     const file = await Files.findOne({
@@ -57,7 +56,7 @@ export const pinFile = async (req, res) => {
     });
 
     if (!file) {
-      return res.status(404).json({ message: "Файл не найден" });
+      return res.status(404).json({ message: 'Файл не найден' });
     }
 
     file.pinned = value;
@@ -67,16 +66,16 @@ export const pinFile = async (req, res) => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(
           JSON.stringify({
-            event: "change_status",
+            event: 'change_status',
             file: file,
-          }),
+          })
         );
       }
     });
 
-    return res.json({ message: "Pinned обновился", file });
+    return res.json({ message: 'Pinned обновился', file });
   } catch (error) {
-    console.error("Ошибка:", error);
-    res.status(500).json({ message: "Ошибка сервера" });
+    console.error('Ошибка:', error);
+    res.status(500).json({ message: 'Ошибка сервера' });
   }
 };
