@@ -1,5 +1,7 @@
 <template>
+  <q-layout view="hHr LpR lFf" container>
     <q-header
+      data-testid="main-header"
       :model-value="headerValue"
       @update:model-value="updateHeader"
       reveal
@@ -11,12 +13,13 @@
         :class="props.userFullname ? 'grid-cols-3' : 'grid-cols-2'"
       >
         <section>
-          <Icon @click="emit('toggleDrawer')" />
+          <Icon data-testid="toggle-icon" @click="emit('toggleDrawer')" />
         </section>
         <nav
           v-if="props.userFullname"
           align="left"
           :class="$q.screen.width < mobileWidth ? 'hidden' : 'row'"
+          data-testid="header-nav"
         >
           <PopoverItem :item="file" :title="'File'" />
           <PopoverItem :item="document" :title="'Document'" />
@@ -24,6 +27,7 @@
         </nav>
         <div
           align="right"
+          data-testid="header-buttons"
           v-if="!props.userFullname"
           :class="$q.screen.width < mobileWidth ? 'hidden' : ''"
         >
@@ -46,6 +50,7 @@
         </div>
       </div>
     </q-header>
+  </q-layout>
 </template>
 
 <script setup>
