@@ -301,7 +301,6 @@
  *         description: Внутренняя ошибка сервера
  */
 
-
 /**
  * @swagger
  * /file/search:
