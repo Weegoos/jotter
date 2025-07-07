@@ -32,7 +32,7 @@
       @row-click="viewDetailedInfoAboutNote"
     />
 
-    <DetailedInformationAboutNoteVue
+    <NoteInformation
       :isOpenDetailedInformation="isOpenDetailedInformation"
       @closeDetailedInformationSection="closeDetailedInformationSection"
       :detailedInformation="detailedInformation"
@@ -40,7 +40,7 @@
     />
   </div>
   <div v-else>
-    <p class="text-center text-h6">{{}}</p>
+    <p class="text-center text-h6">Файл пуст</p>
   </div>
 </template>
 
@@ -49,13 +49,13 @@ import { useQuasar } from 'quasar';
 import { getMethod } from 'src/composables/api-method/get';
 import { computed, getCurrentInstance, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import DetailedInformationAboutNoteVue from '../../components/organisims/DetailedInformationAboutNote.vue';
 import { useDateFormat } from 'src/composables/javascript-function/formatDate';
 import { deleteMethod } from 'src/composables/api-method/delete';
 import { putMethod } from 'src/composables/api-method/put';
 import { useWebSocket } from 'src/composables/javascript-function/weboscket';
 import { Form, Table } from 'src/components/molecules';
 import { Input } from 'src/components/atoms';
+import { NoteInformation } from 'src/components/organism ';
 
 // global variables
 const { proxy } = getCurrentInstance();

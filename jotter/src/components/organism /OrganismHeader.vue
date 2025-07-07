@@ -84,5 +84,3 @@ function updateHeader(val) {
 const { proxy } = getCurrentInstance();
 const mobileWidth = proxy.$mobileWidth;
 </script>
-
-<style></style>

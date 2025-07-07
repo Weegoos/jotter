@@ -21,8 +21,8 @@
 </template>
 
 <script setup>
-import FriendsPage from 'src/components/organisims/FriendsPage.vue';
-import NotificationsOrganisims from 'src/components/organisims/NotificationsOrganisims.vue';
+import FriendsPage from 'src/components/organism /FriendsPage.vue';
+import NotificationsOrganisims from 'src/components/organism /NotificationsOrganisims.vue';
 import { ref } from 'vue';
 
 const tab = ref('notifications');

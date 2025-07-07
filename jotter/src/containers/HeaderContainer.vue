@@ -14,7 +14,7 @@ import { getCurrentInstance, onMounted, ref } from 'vue';
 import { useApiStore } from 'src/stores/api-store';
 import { useQuasar } from 'quasar';
 import { Button, Icon, PopoverItem } from 'src/components/atoms';
-import { Header } from 'src/components/organisims';
+import { Header } from 'src/components/organism ';
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;

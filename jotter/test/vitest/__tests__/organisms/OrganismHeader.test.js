@@ -3,7 +3,7 @@ installQuasarPlugin();
 import { mount } from '@vue/test-utils';
 import { QHeader, Quasar } from 'quasar';
 import { Button, Icon, PopoverItem } from 'src/components/atoms';
-import OrganismHeader from 'src/components/organisims/OrganismHeader.vue';
+import OrganismHeader from 'src/components/organism /OrganismHeader.vue';
 import { describe, expect, it, vi } from 'vitest';
 
 describe('OrganismHeader.vue', () => {
@@ -54,7 +54,7 @@ describe('OrganismHeader.vue', () => {
     expect(wrapper.emitted('toggleDrawer').length).toBe(1);
   });
 
-    it('should render userFullname', async () => {
+  it('should render userFullname', async () => {
     expect(wrapper.props('userFullname')).toBe('Batyr Ashim');
 
     await wrapper.setProps({ userFullname: 'John Doe' });
@@ -64,7 +64,7 @@ describe('OrganismHeader.vue', () => {
   it('should render header nav', () => {
     const headerNav = wrapper.find('[data-testid="header-nav"]');
     expect(headerNav.exists()).toBe(true);
-  })
+  });
 
   it('should render PopoverItem components', () => {
     const popoverItems = wrapper.findAllComponents(PopoverItem);
@@ -73,7 +73,7 @@ describe('OrganismHeader.vue', () => {
     expect(popoverItems[0].props('item')).toEqual(wrapper.props('file'));
     expect(popoverItems[1].props('item')).toEqual(wrapper.props('document'));
     expect(popoverItems[2].props('item')).toEqual(wrapper.props('profile'));
-  })
+  });
 
   it('should render header buttons', async () => {
     await wrapper.setProps({ userFullname: '' });
