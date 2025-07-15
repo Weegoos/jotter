@@ -1,55 +1,52 @@
 <template>
   <!-- <q-layout view="hHr LpR lFf" style="min-height: 100%"> -->
-    <q-header
-      data-testid="main-header"
-      :model-value="headerValue"
-      @update:model-value="updateHeader"
-      reveal
-      elevated
-      class="bg-white p-4 text-black"
-    >
-      <div
-        class="grid grid-rows-1 gap-4"
-        :class="props.userFullname ? 'grid-cols-3' : 'grid-cols-2'"
+  <q-header
+    data-testid="main-header"
+    :model-value="headerValue"
+    @update:model-value="updateHeader"
+    reveal
+    elevated
+    class="bg-white p-4 text-black"
+  >
+    <div class="grid grid-rows-1 gap-4" :class="props.userFullname ? 'grid-cols-3' : 'grid-cols-2'">
+      <section>
+        <Icon data-testid="toggle-icon" @click="emit('toggleDrawer')" />
+      </section>
+      <nav
+        v-if="props.userFullname"
+        align="left"
+        :class="$q.screen.width < mobileWidth ? 'hidden' : 'row'"
+        data-testid="header-nav"
       >
-        <section>
-          <Icon data-testid="toggle-icon" @click="emit('toggleDrawer')" />
-        </section>
-        <nav
-          v-if="props.userFullname"
-          align="left"
-          :class="$q.screen.width < mobileWidth ? 'hidden' : 'row'"
-          data-testid="header-nav"
-        >
-          <PopoverItem :item="file" :title="'File'" />
-          <PopoverItem :item="document" :title="'Document'" />
-          <PopoverItem :item="profile" :title="'Profile'" />
-        </nav>
-        <div
-          align="right"
-          data-testid="header-buttons"
-          v-if="!props.userFullname"
-          :class="$q.screen.width < mobileWidth ? 'hidden' : ''"
-        >
-          <Button
-            class="rounded-full q-mr-sm"
-            color="black"
-            no-caps
-            label="Register"
-            icon-right="mdi-arrow-right"
-            @emitClick="$router.push('/register')"
-          />
-          <Button
-            class="rounded-full"
-            color="black"
-            no-caps
-            label="Log in"
-            icon-right="mdi-login"
-            @emitClick="$router.push('/login')"
-          />
-        </div>
+        <PopoverItem :item="file" :title="'File'" />
+        <PopoverItem :item="document" :title="'Document'" />
+        <PopoverItem :item="profile" :title="'Profile'" />
+      </nav>
+      <div
+        align="right"
+        data-testid="header-buttons"
+        v-if="!props.userFullname"
+        :class="$q.screen.width < mobileWidth ? 'hidden' : ''"
+      >
+        <Button
+          class="rounded-full q-mr-sm"
+          color="black"
+          no-caps
+          label="Register"
+          icon-right="mdi-arrow-right"
+          @emitClick="$router.push('/register')"
+        />
+        <Button
+          class="rounded-full"
+          color="black"
+          no-caps
+          label="Log in"
+          icon-right="mdi-login"
+          @emitClick="$router.push('/login')"
+        />
       </div>
-    </q-header>
+    </div>
+  </q-header>
   <!-- </q-layout> -->
 </template>
 

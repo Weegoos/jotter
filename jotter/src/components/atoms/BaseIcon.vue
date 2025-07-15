@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="row">
     <img
       v-bind="$attrs"
       @click="toggleDrawer"
@@ -7,11 +7,14 @@
       src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
       alt="icon"
     />
+    <BadgeVersion />
   </div>
 </template>
 
-<script>
-export default {};
+<script setup>
+import { BadgeVersion } from ".";
+
+BadgeVersion
 </script>
 
 <style></style>
