@@ -1,4 +1,4 @@
-import Hashtags from '../src/infrastructure/database/models/hashtagSchemas.js';
+import Hashtags from '../database/models/hashtagSchemas.js'
 
 const initializeHashTag = async () => {
   await Hashtags.sync({ alter: true }),

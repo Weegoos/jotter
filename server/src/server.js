@@ -7,17 +7,17 @@ import { connectDB } from './infrastructure/database/db.js';
 import setupSwagger from './swagger.js';
 import jwt from 'jsonwebtoken';
 
-import userRouters from './routers/userRouters.js';
-import noteRouters from './routers/noteRouters.js';
-import fileRouters from './routers/fileRouters.js';
-import typesRouters from './routers/typesRouter.js';
-import friendRouters from './routers/friendRouters.js';
-import hashtagsRouters from './routers/hastagsRouters.js';
+import userRouters from './presentation/routers/userRouters.js';
+import noteRouters from './presentation/routers/noteRouters.js';
+import fileRouters from './presentation/routers/fileRouters.js';
+import typesRouters from './presentation/routers/typesRouter.js';
+import friendRouters from './presentation/routers/friendRouters.js';
+import hashtagsRouters from './presentation/routers/hastagsRouters.js';
 
-import initializeTypes from './database/typesDB.js';
-import initializeHashTag from './database/hashtagDB.js';
+import initializeTypes from './infrastructure/database/typesDB.js';
+import initializeHashTag from './infrastructure/database/hashtagDB.js';
 
-import setupGoogleAuth from './controllers/google.js';
+import setupGoogleAuth from './presentation/controllers/google.js';
 import './infrastructure/database/models/friendSchemas.js';
 
 dotenv.config();

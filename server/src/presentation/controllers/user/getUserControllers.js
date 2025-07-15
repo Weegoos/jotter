@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import User from '../../schemas/userSchemas.js';
+import User from '../../../infrastructure/database/models/userSchemas.js';
 
 export const getUserInfo = async (req, res) => {
   try {

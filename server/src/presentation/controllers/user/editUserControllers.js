@@ -1,5 +1,6 @@
-import User from '../../schemas/userSchemas.js';
+
 import bcrypt from 'bcryptjs';
+import User from '../../../infrastructure/database/models/userSchemas.js';
 
 export const editUserInfo = async (req, res) => {
   try {

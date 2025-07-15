@@ -1,9 +1,10 @@
-import Files from '../../schemas/fileSchemas.js';
-import Notes from '../../schemas/notesSchemas.js';
-import { wss } from '../../server.js';
+
+import { wss } from '../../../server.js';
 import bcrypt from 'bcryptjs';
 import { decrypt } from '../crypto.js';
 import { Op } from 'sequelize';
+import Files from '../../../infrastructure/database/models/fileSchemas.js';
+import Notes from '../../../infrastructure/database/models/notesSchemas.js';
 
 export const getAllNotesByFileID = async (req, res) => {
   try {

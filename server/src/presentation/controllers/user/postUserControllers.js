@@ -1,7 +1,8 @@
-import User from '../../schemas/userSchemas.js';
+
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { UniqueConstraintError, ValidationError } from 'sequelize';
+import User from '../../../infrastructure/database/models/userSchemas.js';
 
 export const createUser = async (req, res) => {
   try {

@@ -1,6 +1,6 @@
-import Files from '../../schemas/fileSchemas.js';
-import Notes from '../../schemas/notesSchemas.js';
-import { wss } from '../../server.js';
+import Files from '../../../infrastructure/database/models/fileSchemas.js';
+import Notes from '../../../infrastructure/database/models/notesSchemas.js';
+import { wss } from '../../../server.js';
 
 export const updateNote = async (req, res) => {
   try {

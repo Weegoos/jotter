@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import User from '../schemas/userSchemas.js';
+import User from '../../infrastructure/database/models/userSchemas.js';
 import crypto from 'crypto';
 import session from 'express-session';
 import passport from 'passport';
