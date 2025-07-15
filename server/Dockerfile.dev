@@ -17,4 +17,4 @@ RUN npm install
 COPY . .
 
 # Запускаем в режиме разработки
-CMD ["npm", "run", "dev"]
+CMD ["nodemon", "src/server.js"]

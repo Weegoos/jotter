@@ -1,6 +1,7 @@
 <template>
-  <div class="row">
-    <img
+  <div class="row items-center justify-center gap-2">
+
+     <img
       v-bind="$attrs"
       @click="toggleDrawer"
       class="h-8 w-auto"

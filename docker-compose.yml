@@ -17,7 +17,7 @@ services:
 
   backend:
     build:
-      context: ./server
+      context: ./server/
       dockerfile: Dockerfile.dev      # Dockerfile для Node.js + Express
     ports:
       - "3000:3000"                   # порт backend API

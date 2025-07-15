@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-
+import path from 'path';
 dotenv.config();
 const options = {
   definition: {
@@ -27,7 +27,9 @@ const options = {
       url: process.env.SERVER_URL, // ✅ ОБЯЗАТЕЛЬНО указать базовый URL
     },
   ],
-  apis: ['./routers/**/*.js', './models/**/*.js', './swagger/**/*.js'],
+   apis: [
+    path.resolve('./src/presentation/routers/swagger/**/*.js'), // 👈 вот нужный путь
+  ],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
