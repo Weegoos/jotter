@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import { sequelize } from '../database/db.js';
+import { sequelize } from '../db.js';
 import Files from './fileSchemas.js';
 
 const Notes = sequelize.define(

@@ -1,6 +1,10 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import crypto from 'crypto';
 const algorithm = 'aes-256-cbc';
 const ENCRYPTION_SECRET = process.env.ENCRYPTION_SECRET;
+console.log(process.env.DB_USER);
+
 const key = crypto.createHash('sha256').update(ENCRYPTION_SECRET).digest();
 
 export function encrypt(text) {

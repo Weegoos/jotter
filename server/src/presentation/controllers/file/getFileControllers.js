@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 import Files from '../../../infrastructure/database/models/fileSchemas.js';
-import { wss } from '../../../../server.js';
+import { wss } from '../../../server.js';
 
 export const getFilesByUserId = async (req, res) => {
   try {

@@ -1,7 +1,7 @@
 import express from 'express';
 import Types from '../../../infrastructure/database/models/typeSchemas.js';
 import Notes from '../../../infrastructure/database/models/notesSchemas.js';
-import { wss } from '../../server.js';
+import { wss } from '../../../server.js';
 import { Sequelize } from 'sequelize';
 
 const router = express.Router();

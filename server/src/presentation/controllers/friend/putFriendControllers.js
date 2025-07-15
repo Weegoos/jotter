@@ -1,5 +1,6 @@
-import Friend from '../../schemas/friendSchemas.js';
-import { wss } from '../../server.js';
+
+import Friend from '../../../infrastructure/database/models/friendSchemas.js';
+import { wss } from '../../../server.js';
 
 export const changeFriendStatus = async (req, res) => {
   try {

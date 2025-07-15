@@ -1,6 +1,7 @@
-import Friend from '../../schemas/friendSchemas.js';
-import User from '../../schemas/userSchemas.js';
-import { wss } from '../../server.js';
+
+import { wss } from '../../../server.js';
+import User from '../../../infrastructure/database/models/userSchemas.js';
+import Friend from '../../../infrastructure/database/models/friendSchemas.js';
 
 export const sendRequestToTheFriend = async (req, res) => {
   try {

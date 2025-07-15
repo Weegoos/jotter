@@ -1,5 +1,6 @@
-import Files from '../../schemas/fileSchemas.js';
-import { wss } from '../../server.js';
+
+import Files from '../../../infrastructure/database/models/fileSchemas.js';
+import { wss } from '../../../server.js';
 import { WebSocket } from 'ws';
 
 export const editFileStatus = async (req, res) => {
