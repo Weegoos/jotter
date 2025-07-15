@@ -52,7 +52,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useDateFormat } from 'src/composables/javascript-function/formatDate';
 import { deleteMethod } from 'src/composables/api-method/delete';
 import { putMethod } from 'src/composables/api-method/put';
-import { useWebSocket } from 'src/composables/javascript-function/weboscket';
+import { useWebSocket } from 'src/composables/javascript-function/websocket';
 import { Form, Table } from 'src/components/molecules';
 import { Input } from 'src/components/atoms';
 import { NoteInformation } from 'src/components/organism ';

@@ -1,8 +1,8 @@
 <template>
-  <q-dialog v-model="isOpen" persistent>
+  <q-dialog v-model="isOpen" persistent data-testid="detailed-information-dialog">
     <q-card>
       <q-card-section>
-        <div v-if="isDecrypted === false">
+        <div v-if="isDecrypted === false" data-testid="detailed-information-section">
           <Input v-model="password" outlined label="Введите пароль" dense type="password" />
 
           <Button
@@ -39,7 +39,7 @@ import { ref, watch, getCurrentInstance } from 'vue';
 import { useQuasar } from 'quasar';
 import { getMethod } from 'src/composables/api-method/get';
 import { Button, Input } from '../atoms';
-import { useWebSocket } from 'src/composables/javascript-function/weboscket';
+import { useWebSocket } from 'src/composables/javascript-function/websocket';
 
 // global variables
 const props = defineProps({
