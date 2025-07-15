@@ -12,9 +12,9 @@
 </template>
 
 <script setup>
-import { BadgeVersion } from ".";
+import { BadgeVersion } from '.';
 
-BadgeVersion
+BadgeVersion;
 </script>
 
 <style></style>
