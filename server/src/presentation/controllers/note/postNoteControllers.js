@@ -5,52 +5,29 @@ import { encrypt } from '../crypto.js';
 import Files from '../../../infrastructure/database/models/fileSchemas.js';
 import Notes from '../../../infrastructure/database/models/notesSchemas.js';
 
-export const createNote = async (req, res) => {
-  try {
-    const { content, fileName, title, type, password, hashtags } = req.body;
-
-    if (!content || !fileName || !title || !type || !hashtags) {
-      return res.status(400).json({
-        message: 'Контент, fileName, title, type, hashtags обязательны',
-      });
-    }
-
-    const file = await Files.findOne({ where: { name: fileName } });
-
-    if (!file) {
-      return res.status(404).json({ message: 'Файл не найден' });
-    }
-
-    const noteData = {
-      content: type === 'private' ? encrypt(content) : content,
-      fileName: type === 'private' ? encrypt(fileName) : fileName,
-      title: type === 'private' ? encrypt(title) : title,
-      fileId: file.id,
-      type,
-      ...(type === 'private' && { password: await bcrypt.hash(password, 15) }),
-      hashtags: hashtags,
-    };
-
-    const note = await Notes.create(noteData);
-
-    const types = await Notes.findAll({
-      attributes: ['type'],
-      group: ['type'],
-      raw: true,
-    });
-
-    const uniqueTypes = types.map((t) => t.type);
-
-    wss.clients.forEach((client) => {
-      if (client.readyState === 1) {
-        client.send(JSON.stringify({ event: 'create_note', note }));
-        client.send(JSON.stringify({ event: 'types_userUsed', types: uniqueTypes }));
-      }
-    });
-
-    res.status(201).json(note);
-  } catch (error) {
-    console.error('Ошибка создания заметки:', error);
-    res.status(500).json({ message: 'Ошибка сервера' });
+export class CreateNotesController {
+  constructor(createNoteUseCase) {
+    this.createNoteUseCase = createNoteUseCase;
   }
-};
+
+  async create(req, res) {
+    try {
+      const { title, content, fileName, type, password, hashtags } = req.body;
+
+      if (!title || !content || !fileName || !type || !hashtags) {
+        return res.status(400).json({ message: 'Все поля обязательны' });
+      }
+
+      if (!Array.isArray(hashtags)) {
+        return res.status(400).json({ message: 'Hashtags должен быть массивом' });
+      }
+
+      const note = await this.createNoteUseCase.execute(fileName, title, content, type, password, hashtags);
+      return res.status(201).json(note);
+    } catch (error) {
+      console.error('Ошибка создания заметки:', error);
+      return res.status(500).json({ message: 'Ошибка сервера' });
+    }
+  }
+}
+
