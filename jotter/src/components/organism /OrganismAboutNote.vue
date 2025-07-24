@@ -59,13 +59,25 @@ useWebSocket(webSocketURL);
 
 socket.onmessage = async (event) => {
   const data = JSON.parse(event.data);
+
   if (['create_note', 'notes_list'].includes(data.event)) {
-    const id = detailedInfo.value.id;
+    const id = detailedInfo.value?.id;
+
+    if (!id) {
+      console.warn('Нет ID заметки для обновления');
+      return;
+    }
 
     try {
       const response = await getMethod(serverURL, `notes/note/${id}`, $q, 'Обновлено по WebSocket');
 
+      if (!response) {
+        console.warn('Пустой ответ от сервера при WebSocket обновлении');
+        return;
+      }
+
       detailedInfo.value = response;
+
       if (response.type !== privateNote) {
         isDecrypted.value = true;
       }
@@ -76,6 +88,7 @@ socket.onmessage = async (event) => {
     }
   }
 };
+
 
 const isOpen = ref(props.isOpenDetailedInformation);
 const password = ref('');

@@ -22,7 +22,19 @@ export class CreateNotesController {
         return res.status(400).json({ message: 'Hashtags должен быть массивом' });
       }
 
-      const note = await this.createNoteUseCase.execute(fileName, title, content, type, password, hashtags);
+      const file = await Files.findOne({ where: { name: fileName } });
+      if (!file) {
+        return res.status(404).json({ message: 'Файл не найден' });
+      }
+
+      const note = await this.createNoteUseCase.execute(fileName, title, content, type, password, hashtags,   file.id);
+
+      wss.clients.forEach((client) => {
+        if (client.readyState === 1) {
+        client.send(JSON.stringify({ event: 'create_note', note }));
+        // client.send(JSON.stringify({ event: 'types_userUsed', types: uniqueTypes }));
+        }
+      });
       return res.status(201).json(note);
     } catch (error) {
       console.error('Ошибка создания заметки:', error);

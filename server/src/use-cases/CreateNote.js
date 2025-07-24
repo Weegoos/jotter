@@ -5,8 +5,8 @@ export class CreateNote {
         this.postRepository = postRepository;
     }
 
-    execute (title, content, fileName, type, password, hashtags) {
-        const post = new Note(fileName, title, content, type, password, hashtags);
+    execute (fileName, title, content, type, password, hashtags, fileId) {
+        const post = new Note(fileName, title, content, type, password, hashtags, fileId);
         return this.postRepository.create(post);
      }
 }

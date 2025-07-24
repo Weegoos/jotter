@@ -5,10 +5,12 @@ export class PostRepository {
 
     async create(note) {
         try {
-            const createdNote = await this.database.create(note);
-            return createdNote;
+           console.log("Creating note with data:", note);
+        const createdNote = await this.database.create(note);
+        return createdNote;
         } catch (error) {
-            throw new Error('Error creating note: ' + error.message);
+           console.error("Sequelize Validation Error:", error.errors);
+        throw new Error('Error creating note: ' + error.message);
         }
     }
 
