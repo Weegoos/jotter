@@ -2,7 +2,7 @@ import express from 'express';
 import authMiddleware from '../middlewares/authMiddleware.js';
 import './swagger/noteSwagger.js';
 import {
-  getAllNotesByType,
+  GetAllNotesByTypeController,
   GetNoteByIdController,
   GetNotesByFileIdController,
   searchNotes,
@@ -26,13 +26,28 @@ router.post('/create', authMiddleware, createNotesController.create.bind(createN
 
 router.get('/:fileId/search', authMiddleware, searchNotes);
 
-router.get('/:type', authMiddleware, getAllNotesByType);
 const getNoteUseCase = new GetNote(postNoteRepository);
 const getNotesByFileIdController = new GetNotesByFileIdController(getNoteUseCase);
-router.get('/:fileId/:pinned', authMiddleware, getNotesByFileIdController.handle.bind(getNotesByFileIdController));
+router.get(
+  '/:fileId/:pinned',
+  authMiddleware,
+  getNotesByFileIdController.handle.bind(getNotesByFileIdController)
+);
 
 const getNoteByIdController = new GetNoteByIdController(getNoteUseCase);
-router.get('/note/:noteId', authMiddleware, getNoteByIdController.handle.bind(getNoteByIdController));
+router.get(
+  '/note/:noteId',
+  authMiddleware,
+  getNoteByIdController.handle.bind(getNoteByIdController)
+);
+
+const getAllNotesByTypeController = new GetAllNotesByTypeController(getNoteUseCase);
+
+router.get(
+  '/:type',
+  authMiddleware,
+  getAllNotesByTypeController.handle.bind(getAllNotesByTypeController)
+);
 
 router.delete('/:noteId', authMiddleware, deleteNoteById);
 export default router;

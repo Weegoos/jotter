@@ -21,11 +21,10 @@ export class GetNote {
 
   async getAllByFileId(fileId, pinned, userId) {
     const filter = { fileId, pinned };
-   return await this.postRepository.getAllByFilter(filter, userId, fileId);
+    return await this.postRepository.getAllByFilter(filter, userId, fileId);
   }
 
   async execute(noteId, userId, password = null) {
-    // Найти заметку с привязкой к пользователю через файл
     const note = await this.postRepository.findByIdAndUser(noteId, userId);
     if (!note) {
       throw new Error('NOT_FOUND');
@@ -37,12 +36,20 @@ export class GetNote {
       const isMatch = await bcrypt.compare(password, note.password);
       if (!isMatch) throw new Error('INVALID_PASSWORD');
 
-      // Расшифровка
       note.content = decrypt(note.content);
       note.fileName = decrypt(note.fileName);
       note.title = decrypt(note.title);
     }
 
     return note;
+  }
+
+  async getByType(userId, type) {
+    const notes = await this.postRepository.findByType(userId, type);
+
+    if (!notes) {
+      throw new Error('NOT_FOUND');
+    }
+    return notes;
   }
 }

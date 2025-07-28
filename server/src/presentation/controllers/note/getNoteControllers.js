@@ -46,7 +46,6 @@ export class GetNoteByIdController {
       wssSend('noteData', note);
 
       return res.status(200).json(note);
-
     } catch (error) {
       console.error('Ошибка получения заметки:', error);
 
@@ -67,36 +66,31 @@ export class GetNoteByIdController {
   }
 }
 
-export const getAllNotesByType = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const { type } = req.params;
-
-    if (!type) {
-      res.status(400).json({ message: 'Укажите тип' });
-    }
-
-    const notes = await Notes.findAll({
-      where: { type: type },
-      include: [
-        {
-          model: Files,
-          where: { userId: userId },
-          attributes: [],
-        },
-      ],
-      order: [
-        ['updatedAt', 'DESC'],
-        ['createdAt', 'DESC'],
-      ],
-    });
-
-    res.status(200).json(notes);
-  } catch (error) {
-    console.error('Ошибка при получении публичных заметок:', error);
-    res.status(500).json({ message: 'Ошибка сервера при получении заметок' });
+export class GetAllNotesByTypeController {
+  constructor(getNoteByIdUseCase) {
+    this.getNoteByIdUseCase = getNoteByIdUseCase;
   }
-};
+
+  async handle(req, res) {
+    try {
+      const userId = req.user.id;
+      const { type } = req.params;
+
+      if (!type) {
+        res.status(400).json({ message: 'Укажите тип' });
+      }
+
+      const notes = await this.getNoteByIdUseCase.getByType(userId, type);
+      return res.status(200).json(notes);
+    } catch (error) {
+      console.error('Ошибка при получении публичных заметок:', error);
+      if (error.message === 'NOT_FOUND') {
+        return res.status(404).json({ message: 'Заметка не найдена.' });
+      }
+      res.status(500).json({ message: 'Ошибка сервера при получении заметок' });
+    }
+  }
+}
 
 export const searchNotes = async (req, res) => {
   try {

@@ -28,24 +28,39 @@ export class PostRepository {
         {
           model: Files,
           attributes: [],
-          where: { id: fileId, userId }
+          where: { id: fileId, userId },
         },
       ],
-
     });
   }
 
   async findByIdAndUser(noteId, userId) {
-  return await Notes.findOne({
-    where: { id: noteId },
-    include: [
-      {
-        model: Files,
-        where: { userId },
-        attributes: [],
-      },
-    ],
-  });
-}
+    return await Notes.findOne({
+      where: { id: noteId },
+      include: [
+        {
+          model: Files,
+          where: { userId },
+          attributes: [],
+        },
+      ],
+    });
+  }
 
+  async findByType(userId, type) {
+    return await Notes.findAll({
+      where: { type: type },
+      include: [
+        {
+          model: Files,
+          where: { userId: userId },
+          attributes: [],
+        },
+      ],
+      order: [
+        ['updatedAt', 'DESC'],
+        ['createdAt', 'DESC'],
+      ],
+    });
+  }
 }
