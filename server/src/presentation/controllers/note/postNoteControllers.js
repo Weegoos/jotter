@@ -1,9 +1,7 @@
-
-import { wss } from '../../../server.js';
 import bcrypt from 'bcryptjs';
 import { encrypt } from '../crypto.js';
 import Files from '../../../infrastructure/database/models/fileSchemas.js';
-import Notes from '../../../infrastructure/database/models/notesSchemas.js';
+import { wssSend } from '../wssSend.js';
 
 export class CreateNotesController {
   constructor(createNoteUseCase) {
@@ -28,13 +26,10 @@ export class CreateNotesController {
       }
 
       const note = await this.createNoteUseCase.execute(fileName, title, content, type, password, hashtags,   file.id);
-
-      wss.clients.forEach((client) => {
-        if (client.readyState === 1) {
-        client.send(JSON.stringify({ event: 'create_note', note }));
-        // client.send(JSON.stringify({ event: 'types_userUsed', types: uniqueTypes }));
-        }
-      });
+      if (!note) {
+        return res.status(500).json({ message: 'Не удалось создать заметку' });
+      }
+      wssSend('create_note', note);
       return res.status(201).json(note);
     } catch (error) {
       console.error('Ошибка создания заметки:', error);
