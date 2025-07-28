@@ -1,48 +1,38 @@
-
 import { wss } from '../../../server.js';
 import bcrypt from 'bcryptjs';
 import { decrypt } from '../crypto.js';
 import { Op } from 'sequelize';
 import Files from '../../../infrastructure/database/models/fileSchemas.js';
 import Notes from '../../../infrastructure/database/models/notesSchemas.js';
+import { wssSend } from '../wssSend.js';
 
-export const getAllNotesByFileID = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const { fileId, pinned } = req.params;
-
-    if (!fileId && !pinned) {
-      return res.status(400).json({ message: 'Ошибка: fileID и pinned отсутствует.' });
-    }
-
-    const file = await Files.findOne({
-      where: { id: fileId, userId: userId },
-    });
-
-    if (!file) {
-      return res.status(403).json({ message: 'Доступ запрещен или файл не найден.' });
-    }
-
-    const notes = await Notes.findAll({
-      where: { fileId: fileId, pinned: pinned },
-      order: [
-        ['updatedAt', 'DESC'],
-        ['createdAt', 'DESC'],
-      ],
-    });
-
-    wss.clients.forEach((client) => {
-      if (client.readyState === 1) {
-        client.send(JSON.stringify({ event: 'allNotes', fileId, notes }));
-      }
-    });
-
-    res.json(notes);
-  } catch (error) {
-    console.error('Ошибка получения заметок:', error);
-    res.status(500).json({ message: 'Ошибка сервера' });
+export class GetNotesByFileIdController {
+  constructor(getNoteUseCase) {
+    this.getNoteUseCase = getNoteUseCase;
   }
-};
+
+  async handle(req, res) {
+    try {
+      const { id: userId } = req.user;
+      const { fileId, pinned } = req.params;
+
+      if (!fileId || pinned === undefined) {
+        return res.status(400).json({ message: 'fileId и pinned обязательны' });
+      }
+
+      const file = await Files.findOne({ where: { id: fileId, userId } });
+      if (!file) return res.status(403).json({ message: 'Файл не найден или доступ запрещён.' });
+
+      const notes = await this.getNoteUseCase.getAllByFileId(fileId, pinned);
+
+      wssSend('allNotes', notes);
+      return res.status(200).json(notes);
+    } catch (error) {
+      console.error('Ошибка получения заметок:', error);
+      return res.status(500).json({ message: 'Ошибка сервера' });
+    }
+  }
+}
 
 export const getNoteByID = async (req, res) => {
   try {

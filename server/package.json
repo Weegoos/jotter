@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
-    "format": "prettier --write \"**/*.{js,vue,json,css,scss,html}\""
+    "format": "prettier --write \"src/**/*.{js,vue,json,css,scss,html}\""
   },
   "keywords": [
     "node",
@@ -42,6 +42,6 @@
     "eslint-plugin-vue": "^10.2.0",
     "globals": "^16.2.0",
     "nodemon": "^3.1.9",
-    "prettier": "^3.5.3"
+    "prettier": "^3.6.2"
   }
 }

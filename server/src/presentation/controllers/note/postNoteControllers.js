@@ -1,5 +1,5 @@
-import bcrypt from 'bcryptjs';
-import { encrypt } from '../crypto.js';
+// import bcrypt from 'bcryptjs';
+// import { encrypt } from '../crypto.js';
 import Files from '../../../infrastructure/database/models/fileSchemas.js';
 import { wssSend } from '../wssSend.js';
 
@@ -25,7 +25,15 @@ export class CreateNotesController {
         return res.status(404).json({ message: 'Файл не найден' });
       }
 
-      const note = await this.createNoteUseCase.execute(fileName, title, content, type, password, hashtags,   file.id);
+      const note = await this.createNoteUseCase.execute(
+        fileName,
+        title,
+        content,
+        type,
+        password,
+        hashtags,
+        file.id
+      );
       if (!note) {
         return res.status(500).json({ message: 'Не удалось создать заметку' });
       }
@@ -37,4 +45,3 @@ export class CreateNotesController {
     }
   }
 }
-

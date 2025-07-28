@@ -27,7 +27,7 @@ const options = {
       url: process.env.SERVER_URL, // ✅ ОБЯЗАТЕЛЬНО указать базовый URL
     },
   ],
-   apis: [
+  apis: [
     path.resolve('./src/presentation/routers/swagger/**/*.js'), // 👈 вот нужный путь
   ],
 };

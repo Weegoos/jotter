@@ -1,7 +1,7 @@
-import Hashtags from '../database/models/hashtagSchemas.js'
+import Hashtags from '../database/models/hashtagSchemas.js';
 
 const initializeHashTag = async () => {
-  await Hashtags.sync({ alter: true }),
+  (await Hashtags.sync({ alter: true }),
     await Hashtags.bulkCreate(
       [
         { name: 'Здоровье' },
@@ -16,7 +16,7 @@ const initializeHashTag = async () => {
         { name: 'Вдохновение' },
       ],
       { ignoreDuplicates: true }
-    );
+    ));
   console.log('Хэштеги загружены');
 };
 

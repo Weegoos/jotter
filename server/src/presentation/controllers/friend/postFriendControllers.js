@@ -1,4 +1,3 @@
-
 import { wss } from '../../../server.js';
 import User from '../../../infrastructure/database/models/userSchemas.js';
 import Friend from '../../../infrastructure/database/models/friendSchemas.js';

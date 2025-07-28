@@ -1,4 +1,3 @@
-
 import Friend from '../../../infrastructure/database/models/friendSchemas.js';
 import { wss } from '../../../server.js';
 

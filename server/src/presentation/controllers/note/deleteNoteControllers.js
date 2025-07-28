@@ -1,4 +1,3 @@
-
 import Notes from '../../../infrastructure/database/models/notesSchemas.js';
 import { wss } from '../../../server.js';
 
@@ -47,6 +46,6 @@ export const deleteNoteById = async (req, res) => {
 //   try {
 //     await Notes.destroy({ where });
 //   } catch (error) {
-    
+
 //   }
 // };

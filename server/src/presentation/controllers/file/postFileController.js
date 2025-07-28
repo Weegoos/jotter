@@ -1,4 +1,3 @@
-
 import Files from '../../../infrastructure/database/models/fileSchemas.js';
 import { wss } from '../../../server.js';
 import { WebSocket } from 'ws';

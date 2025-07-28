@@ -1,5 +1,4 @@
-import Hashtags from "../../../infrastructure/database/models/hashtagSchemas.js";
-
+import Hashtags from '../../../infrastructure/database/models/hashtagSchemas.js';
 
 export const getAllHashtags = async (req, res) => {
   try {
