@@ -1,3 +1,4 @@
+import Files from '../../infrastructure/database/models/fileSchemas.js';
 import Notes from '../../infrastructure/database/models/notesSchemas.js';
 
 export class PostRepository {
@@ -16,13 +17,35 @@ export class PostRepository {
     }
   }
 
-  async getAllByFilter(filter) {
+  async getAllByFilter(filter, userId, fileId) {
     return await Notes.findAll({
       where: filter,
       order: [
         ['updatedAt', 'DESC'],
         ['createdAt', 'DESC'],
       ],
+      include: [
+        {
+          model: Files,
+          attributes: [],
+          where: { id: fileId, userId }
+        },
+      ],
+
     });
   }
+
+  async findByIdAndUser(noteId, userId) {
+  return await Notes.findOne({
+    where: { id: noteId },
+    include: [
+      {
+        model: Files,
+        where: { userId },
+        attributes: [],
+      },
+    ],
+  });
+}
+
 }

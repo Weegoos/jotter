@@ -3,7 +3,7 @@ import authMiddleware from '../middlewares/authMiddleware.js';
 import './swagger/noteSwagger.js';
 import {
   getAllNotesByType,
-  getNoteByID,
+  GetNoteByIdController,
   GetNotesByFileIdController,
   searchNotes,
 } from '../controllers/note/getNoteControllers.js';
@@ -25,12 +25,14 @@ const createNotesController = new CreateNotesController(createNoteUseCase);
 router.post('/create', authMiddleware, createNotesController.create.bind(createNotesController));
 
 router.get('/:fileId/search', authMiddleware, searchNotes);
-router.get('/note/:noteId', authMiddleware, getNoteByID);
 
-const getNoteUseCase = new GetNote(postNoteRepository);
-const getNotesController = new GetNotesByFileIdController(getNoteUseCase);
-router.get('/:fileId/:pinned', authMiddleware, getNotesController.handle.bind(getNotesController));
 router.get('/:type', authMiddleware, getAllNotesByType);
+const getNoteUseCase = new GetNote(postNoteRepository);
+const getNotesByFileIdController = new GetNotesByFileIdController(getNoteUseCase);
+router.get('/:fileId/:pinned', authMiddleware, getNotesByFileIdController.handle.bind(getNotesByFileIdController));
+
+const getNoteByIdController = new GetNoteByIdController(getNoteUseCase);
+router.get('/note/:noteId', authMiddleware, getNoteByIdController.handle.bind(getNoteByIdController));
 
 router.delete('/:noteId', authMiddleware, deleteNoteById);
 export default router;

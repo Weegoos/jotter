@@ -1,6 +1,3 @@
-import { wss } from '../../../server.js';
-import bcrypt from 'bcryptjs';
-import { decrypt } from '../crypto.js';
 import { Op } from 'sequelize';
 import Files from '../../../infrastructure/database/models/fileSchemas.js';
 import Notes from '../../../infrastructure/database/models/notesSchemas.js';
@@ -20,10 +17,7 @@ export class GetNotesByFileIdController {
         return res.status(400).json({ message: 'fileId и pinned обязательны' });
       }
 
-      const file = await Files.findOne({ where: { id: fileId, userId } });
-      if (!file) return res.status(403).json({ message: 'Файл не найден или доступ запрещён.' });
-
-      const notes = await this.getNoteUseCase.getAllByFileId(fileId, pinned);
+      const notes = await this.getNoteUseCase.getAllByFileId(fileId, pinned, userId);
 
       wssSend('allNotes', notes);
       return res.status(200).json(notes);
@@ -33,63 +27,45 @@ export class GetNotesByFileIdController {
     }
   }
 }
+export class GetNoteByIdController {
+  constructor(getNoteByIdUseCase) {
+    this.getNoteByIdUseCase = getNoteByIdUseCase;
+  }
 
-export const getNoteByID = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const noteId = Number(req.params.noteId);
-    const { password } = req.query;
+  async handle(req, res) {
+    try {
+      const userId = req.user.id;
+      const noteId = Number(req.params.noteId);
+      const { password } = req.query;
 
-    if (!noteId) {
-      return res.status(400).json({ message: 'Ошибка: noteId отсутствует.' });
-    }
-
-    const note = await Notes.findOne({
-      where: { id: noteId },
-      include: [
-        {
-          model: Files,
-          where: { userId: userId },
-          attributes: [],
-        },
-      ],
-    });
-
-    if (!note) {
-      return res.status(404).json({ message: 'Заметка не найдена.' });
-    }
-
-    if (note.type === 'private') {
-      if (!password) {
-        return res.status(400).json({
-          message: 'Требуется пароль для доступа к приватной заметке.',
-        });
+      if (!noteId) {
+        return res.status(400).json({ message: 'noteId обязателен.' });
       }
 
-      const isMatch = await bcrypt.compare(password, note.password);
-      if (!isMatch) {
+      const note = await this.getNoteByIdUseCase.execute(noteId, userId, password);
+      wssSend('noteData', note);
+
+      return res.status(200).json(note);
+
+    } catch (error) {
+      console.error('Ошибка получения заметки:', error);
+
+      if (error.message === 'NOT_FOUND') {
+        return res.status(404).json({ message: 'Заметка не найдена.' });
+      }
+
+      if (error.message === 'PASSWORD_REQUIRED') {
+        return res.status(400).json({ message: 'Пароль обязателен.' });
+      }
+
+      if (error.message === 'INVALID_PASSWORD') {
         return res.status(403).json({ message: 'Неверный пароль.' });
       }
 
-      // Расшифровка данных
-      note.content = decrypt(note.content);
-      note.fileName = decrypt(note.fileName);
-      note.title = decrypt(note.title);
+      return res.status(500).json({ message: 'Ошибка сервера' });
     }
-
-    // WebSocket рассылка
-    wss.clients.forEach((client) => {
-      if (client.readyState === 1) {
-        client.send(JSON.stringify({ event: 'note_data', note }));
-      }
-    });
-
-    res.json(note);
-  } catch (error) {
-    console.error('Ошибка получения заметки:', error);
-    res.status(500).json({ message: 'Ошибка сервера' });
   }
-};
+}
 
 export const getAllNotesByType = async (req, res) => {
   try {
