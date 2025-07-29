@@ -38,18 +38,19 @@ router.get(
   searchNotesController.handle.bind(searchNotesController)
 );
 
-const getNotesByFileIdController = new GetNotesByFileIdController(getNoteUseCase);
-router.get(
-  '/:fileId/:pinned',
-  authMiddleware,
-  getNotesByFileIdController.handle.bind(getNotesByFileIdController)
-);
-
 const getNoteByIdController = new GetNoteByIdController(getNoteUseCase);
 router.get(
   '/note/:noteId',
   authMiddleware,
   getNoteByIdController.handle.bind(getNoteByIdController)
+);
+
+
+const getNotesByFileIdController = new GetNotesByFileIdController(getNoteUseCase);
+router.get(
+  '/:fileId/:pinned',
+  authMiddleware,
+  getNotesByFileIdController.handle.bind(getNotesByFileIdController)
 );
 
 const getAllNotesByTypeController = new GetAllNotesByTypeController(getNoteUseCase);

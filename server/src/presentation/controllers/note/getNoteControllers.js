@@ -34,7 +34,7 @@ export class GetNoteByIdController {
   async handle(req, res) {
     try {
       const userId = req.user.id;
-      const noteId = Number(req.params.noteId);
+      const noteId = req.params.noteId;
       const { password } = req.query;
 
       if (!noteId) {

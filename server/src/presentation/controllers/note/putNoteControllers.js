@@ -52,18 +52,19 @@ export const pinNote = async (req, res) => {
     if (value === undefined) {
       return res.status(400).json({ message: 'Все поля обязательный' });
     }
-
-    const userFile = await Files.findByPk(userId);
-
-    if (!userFile) {
-      return res.status(403).json({ message: 'Файл пользователя не найден' });
-    }
+    
 
     const note = await Notes.findOne({
       where: {
-        fileId: userFile.id,
         id: noteId,
       },
+      include: [
+        {
+          model: Files,
+          where: { userId },
+          attributes: [],
+        },
+      ],
     });
 
     if (!note) {
