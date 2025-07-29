@@ -89,7 +89,6 @@ socket.onmessage = async (event) => {
   }
 };
 
-
 const isOpen = ref(props.isOpenDetailedInformation);
 const password = ref('');
 const isDecrypted = ref(false);

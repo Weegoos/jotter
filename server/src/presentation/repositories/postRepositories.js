@@ -22,7 +22,7 @@ export class GetRepository {
     this.database = database;
   }
 
-    async getAllByFilter(filter, userId, fileId) {
+  async getAllByFilter(filter, userId, fileId) {
     return await Notes.findAll({
       where: filter,
       order: [

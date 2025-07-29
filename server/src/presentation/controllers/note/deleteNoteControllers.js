@@ -1,6 +1,6 @@
 import { wssSend } from '../wssSend.js';
 
-export class DeleteNoteByIdController{
+export class DeleteNoteByIdController {
   constructor(deleteNoteUseCase) {
     this.deleteNoteUseCase = deleteNoteUseCase;
   }
