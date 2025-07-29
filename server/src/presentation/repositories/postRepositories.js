@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import Files from '../../infrastructure/database/models/fileSchemas.js';
 import Notes from '../../infrastructure/database/models/notesSchemas.js';
 
@@ -60,6 +61,24 @@ export class PostRepository {
       order: [
         ['updatedAt', 'DESC'],
         ['createdAt', 'DESC'],
+      ],
+    });
+  }
+  async searchNote(userId, fileId, cleanedTitle) {
+    return await Notes.findAll({
+      where: {
+        fileId: fileId,
+        [Op.or]: [
+          { title: { [Op.like]: `%${cleanedTitle}%` } },
+          { content: { [Op.like]: `%${cleanedTitle}%` } },
+        ],
+      },
+      include: [
+        {
+          model: Files,
+          where: { userId: userId },
+          attributes: [],
+        },
       ],
     });
   }

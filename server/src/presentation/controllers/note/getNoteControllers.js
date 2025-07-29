@@ -1,6 +1,5 @@
-import { Op } from 'sequelize';
-import Files from '../../../infrastructure/database/models/fileSchemas.js';
-import Notes from '../../../infrastructure/database/models/notesSchemas.js';
+// import { Op } from 'sequelize';
+// import Notes from '../../../infrastructure/database/models/notesSchemas.js';
 import { wssSend } from '../wssSend.js';
 
 export class GetNotesByFileIdController {
@@ -92,49 +91,83 @@ export class GetAllNotesByTypeController {
   }
 }
 
-export const searchNotes = async (req, res) => {
-  try {
-    const { id } = req.user;
-
-    if (!id) {
-      return res.status(400).json({ message: 'Ошибка: id отсутствует.' });
-    }
-
-    const { fileId } = req.params;
-    const { search } = req.query;
-    if (!fileId) {
-      return res.status(400).json({ message: 'Ошибка: fileId отсутствует.' });
-    }
-
-    if (!search) {
-      return res.status(400).json({ message: 'Ошибка: search отсутствует.' });
-    }
-
-    const user = await Files.findOne({
-      where: {
-        userId: id,
-      },
-    });
-
-    if (!user) {
-      return res.status(403).json({ message: 'Доступ запрещен или файл не найден.' });
-    }
-
-    const cleanedTitle = search.trim();
-    const notes = await Notes.findAll({
-      where: {
-        fileId: fileId,
-        [Op.or]: [
-          { title: { [Op.like]: `%${cleanedTitle}%` } },
-          { content: { [Op.like]: `%${cleanedTitle}%` } },
-        ],
-      },
-    });
-    console.log(cleanedTitle);
-
-    return res.status(200).json({ notes });
-  } catch (error) {
-    console.error('Ошибка при получении заметок поиска:', error);
-    return res.status(500).json({ message: 'Ошибка сервера при получении заметок' });
+export class SearchNotesController {
+  constructor(searchNotesUseCase) {
+    this.searchNotesUseCase = searchNotesUseCase;
   }
-};
+
+  async handle(req, res) {
+    try {
+      const { id } = req.user;
+
+      if (!id) {
+        return res.status(400).json({ message: 'Ошибка: id отсутствует.' });
+      }
+
+      const { fileId } = req.params;
+      const { search } = req.query;
+
+      if (!fileId) {
+        return res.status(400).json({ message: 'Ошибка: fileId отсутствует.' });
+      }
+
+      if (!search) {
+        return res.status(400).json({ message: 'Ошибка: search отсутствует.' });
+      }
+      const cleanedTitle = search.trim();
+
+      const notes = await this.searchNotesUseCase.searchNotes(id, fileId, cleanedTitle);
+
+      return res.status(200).json({ notes });
+    } catch (error) {
+      console.error('Ошибка при получении заметок поиска:', error);
+      return res.status(500).json({ message: 'Ошибка сервера при получении заметок' });
+    }
+  }
+}
+
+// export const searchNotes = async (req, res) => {
+//   try {
+//     const { id } = req.user;
+
+//     if (!id) {
+//       return res.status(400).json({ message: 'Ошибка: id отсутствует.' });
+//     }
+
+//     const { fileId } = req.params;
+//     const { search } = req.query;
+//     if (!fileId) {
+//       return res.status(400).json({ message: 'Ошибка: fileId отсутствует.' });
+//     }
+
+//     if (!search) {
+//       return res.status(400).json({ message: 'Ошибка: search отсутствует.' });
+//     }
+
+//     // const user = await Files.findOne({
+//     //   where: {
+//     //     userId: id,
+//     //   },
+//     // });
+
+//     // if (!user) {
+//     //   return res.status(403).json({ message: 'Доступ запрещен или файл не найден.' });
+//     // }
+
+//     const cleanedTitle = search.trim();
+//     const notes = await Notes.findAll({
+//       where: {
+//         fileId: fileId,
+//         [Op.or]: [
+//           { title: { [Op.like]: `%${cleanedTitle}%` } },
+//           { content: { [Op.like]: `%${cleanedTitle}%` } },
+//         ],
+//       },
+//     });
+
+//     return res.status(200).json({ notes });
+//   } catch (error) {
+//     console.error('Ошибка при получении заметок поиска:', error);
+//     return res.status(500).json({ message: 'Ошибка сервера при получении заметок' });
+//   }
+// };

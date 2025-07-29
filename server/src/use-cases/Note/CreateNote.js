@@ -52,4 +52,12 @@ export class GetNote {
     }
     return notes;
   }
+
+  async searchNotes(userId, fileId, cleanedTitle) {
+    const notes = await this.postRepository.searchNote(userId, fileId, cleanedTitle);
+    if (!notes) {
+      throw new Error('NOT_FOUND');
+    }
+    return notes;
+  }
 }

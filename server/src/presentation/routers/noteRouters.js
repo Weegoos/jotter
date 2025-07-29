@@ -5,7 +5,7 @@ import {
   GetAllNotesByTypeController,
   GetNoteByIdController,
   GetNotesByFileIdController,
-  searchNotes,
+  SearchNotesController,
 } from '../controllers/note/getNoteControllers.js';
 import { pinNote, updateNote } from '../controllers/note/putNoteControllers.js';
 import { deleteNoteById } from '../controllers/note/deleteNoteControllers.js';
@@ -24,9 +24,16 @@ const createNoteUseCase = new CreateNote(postNoteRepository);
 const createNotesController = new CreateNotesController(createNoteUseCase);
 router.post('/create', authMiddleware, createNotesController.create.bind(createNotesController));
 
-router.get('/:fileId/search', authMiddleware, searchNotes);
-
+// get
 const getNoteUseCase = new GetNote(postNoteRepository);
+
+const searchNotesController = new SearchNotesController(getNoteUseCase);
+router.get(
+  '/:fileId/search',
+  authMiddleware,
+  searchNotesController.handle.bind(searchNotesController)
+);
+
 const getNotesByFileIdController = new GetNotesByFileIdController(getNoteUseCase);
 router.get(
   '/:fileId/:pinned',
@@ -42,7 +49,6 @@ router.get(
 );
 
 const getAllNotesByTypeController = new GetAllNotesByTypeController(getNoteUseCase);
-
 router.get(
   '/:type',
   authMiddleware,
