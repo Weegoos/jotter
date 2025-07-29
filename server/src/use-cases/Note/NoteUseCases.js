@@ -61,3 +61,21 @@ export class GetNote {
     return notes;
   }
 }
+
+export class DeleteNote {
+  constructor(database) {
+    this.database = database;
+  }
+
+  async execute(noteId) {
+    const note = await this.database.findById(noteId);
+    if (!note) {
+      throw new Error('Note not found');
+    }
+
+    await this.database.delete(note);
+    const uniqueTypes = await this.database.getUniqueTypes();
+
+    return { note, uniqueTypes };
+  }
+}

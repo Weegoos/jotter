@@ -9,7 +9,6 @@ export class PostRepository {
 
   async create(note) {
     try {
-      console.log('Creating note with data:', note);
       const createdNote = await this.database.create(note);
       return createdNote;
     } catch (error) {
@@ -17,8 +16,13 @@ export class PostRepository {
       throw new Error('Error creating note: ' + error.message);
     }
   }
+}
+export class GetRepository {
+  constructor(database) {
+    this.database = database;
+  }
 
-  async getAllByFilter(filter, userId, fileId) {
+    async getAllByFilter(filter, userId, fileId) {
     return await Notes.findAll({
       where: filter,
       order: [
@@ -81,5 +85,29 @@ export class PostRepository {
         },
       ],
     });
+  }
+}
+
+export class DeleteRepository {
+  constructor(database) {
+    this.database = database;
+  }
+
+  async findById(noteId) {
+    return this.database.findByPk(noteId);
+  }
+
+  async delete(note) {
+    return note.destroy();
+  }
+
+  async getUniqueTypes() {
+    const types = await this.database.findAll({
+      attributes: ['type'],
+      group: ['type'],
+      raw: true,
+    });
+
+    return types.map((t) => t.type);
   }
 }

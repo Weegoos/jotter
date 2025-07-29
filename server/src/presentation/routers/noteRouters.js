@@ -8,11 +8,11 @@ import {
   SearchNotesController,
 } from '../controllers/note/getNoteControllers.js';
 import { pinNote, updateNote } from '../controllers/note/putNoteControllers.js';
-import { deleteNoteById } from '../controllers/note/deleteNoteControllers.js';
+import { DeleteNoteByIdController } from '../controllers/note/deleteNoteControllers.js';
 import { CreateNotesController } from '../controllers/note/postNoteControllers.js';
-import { CreateNote, GetNote } from '../../use-cases/Note/CreateNote.js';
+import { CreateNote, DeleteNote, GetNote } from '../../use-cases/Note/NoteUseCases.js';
 import Notes from '../../infrastructure/database/models/notesSchemas.js';
-import { PostRepository } from '../repositories/postRepositories.js';
+import { DeleteRepository, GetRepository, PostRepository } from '../repositories/postRepositories.js';
 const router = express.Router();
 
 router.put('/update/:noteId', authMiddleware, updateNote);
@@ -25,7 +25,8 @@ const createNotesController = new CreateNotesController(createNoteUseCase);
 router.post('/create', authMiddleware, createNotesController.create.bind(createNotesController));
 
 // get
-const getNoteUseCase = new GetNote(postNoteRepository);
+const getNoteRepository = new GetRepository(Notes)
+const getNoteUseCase = new GetNote(getNoteRepository);
 
 const searchNotesController = new SearchNotesController(getNoteUseCase);
 router.get(
@@ -55,5 +56,10 @@ router.get(
   getAllNotesByTypeController.handle.bind(getAllNotesByTypeController)
 );
 
-router.delete('/:noteId', authMiddleware, deleteNoteById);
+// delete
+const deleteRepository = new DeleteRepository(Notes)
+const deleteNoteUseCase = new DeleteNote(deleteRepository);
+const deleteNoteByIdController = new DeleteNoteByIdController(deleteNoteUseCase)
+
+router.delete('/:noteId', authMiddleware, deleteNoteByIdController.handle.bind(deleteNoteByIdController));
 export default router;
