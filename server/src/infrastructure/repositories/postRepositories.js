@@ -1,32 +1,24 @@
 import { Op } from 'sequelize';
-import { INoteRepository } from './INoteRepository.js';
-// import Files from '../../infrastructure/database/models/fileSchemas.js';
-// import Notes from '../../infrastructure/database/models/notesSchemas.js';
-
-export class PostRepository {
-  constructor(database) {
-    this.database = database;
+import { INoteRepository } from '../../domain/repositories/INoteRepository.js';
+export class SequelizeNoteRepository extends INoteRepository {
+  constructor(noteModel, fileModel) {
+    super();
+    this.noteModel = noteModel;
+    this.fileModel = fileModel
   }
 
   async create(note) {
     try {
-      const createdNote = await this.database.create({ ...note });
+      const createdNote = await this.noteModel.create({ ...note });
       return createdNote;
     } catch (error) {
       console.error('Sequelize Validation Error:', error.errors);
       throw new Error('Error creating note: ' + error.message);
     }
   }
-}
-export class GetRepository extends INoteRepository {
-  constructor(database, fileDatabase) {
-    super();
-    this.database = database;
-    this.fileDatabase = fileDatabase;
-  }
 
-  async getAllByFilter(filter, userId, fileId) {
-    return await this.database.findAll({
+    async getAllByFilter(filter, userId, fileId) {
+    return await this.noteModel.findAll({
       where: filter,
       order: [
         ['updatedAt', 'DESC'],
@@ -34,7 +26,7 @@ export class GetRepository extends INoteRepository {
       ],
       include: [
         {
-          model: this.fileDatabase,
+          model: this.fileModel,
           attributes: [],
           where: { id: fileId, userId },
         },
@@ -43,11 +35,11 @@ export class GetRepository extends INoteRepository {
   }
 
   async findByIdAndUser(noteId, userId) {
-    return await this.database.findOne({
+    return await this.noteModel.findOne({
       where: { id: noteId },
       include: [
         {
-          model: this.fileDatabase,
+          model: this.fileModel,
           where: { userId },
           attributes: [],
         },
@@ -56,11 +48,11 @@ export class GetRepository extends INoteRepository {
   }
 
   async findByType(userId, type) {
-    return await this.database.findAll({
+    return await this.noteModel.findAll({
       where: { type: type },
       include: [
         {
-          model: this.fileDatabase,
+          model: this.fileModel,
           where: { userId: userId },
           attributes: [],
         },
@@ -72,7 +64,7 @@ export class GetRepository extends INoteRepository {
     });
   }
   async searchNote(userId, fileId, cleanedTitle) {
-    return await this.database.findAll({
+    return await this.noteModel.findAll({
       where: {
         fileId: fileId,
         [Op.or]: [
@@ -82,22 +74,16 @@ export class GetRepository extends INoteRepository {
       },
       include: [
         {
-          model: this.fileDatabase,
+          model: this.fileModel,
           where: { userId: userId },
           attributes: [],
         },
       ],
     });
   }
-}
 
-export class DeleteRepository {
-  constructor(database) {
-    this.database = database;
-  }
-
-  async findById(noteId) {
-    return this.database.findByPk(noteId);
+   async findById(noteId) {
+    return this.noteModel.findByPk(noteId);
   }
 
   async delete(note) {
@@ -105,7 +91,7 @@ export class DeleteRepository {
   }
 
   async getUniqueTypes() {
-    const types = await this.database.findAll({
+    const types = await this.noteModel.findAll({
       attributes: ['type'],
       group: ['type'],
       raw: true,

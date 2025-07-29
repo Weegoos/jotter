@@ -44,4 +44,41 @@ export class INoteRepository {
     console.log(userId, fileId, cleanedTitle);
     throw new Error('Method searchNote() must be implemented');
   }
+  /** 
+    * Найти заметку по ID
+    * @param {number} noteId
+    * @returns {Promise<Object>}
+  */
+
+  async findById(noteId){
+    console.log(noteId);
+    throw new Error('Method findById() must be implemented');
+  }
+  /**
+   * Удаление заметки
+   * @param {Object} note 
+   */
+  async delete(note) {
+    console.log(note);
+    throw new Error('Method delete() must be implemented');
+  }
+
+  /**
+   * Получить уникальные типы заметок пользователя
+   * @returns {Promise<Array>}
+   * @throws {Error} Если метод не реализован
+   */
+  async getUniqueTypes() {
+    throw new Error('Method getUniqueTypes() must be implemented');
+  }
+
+    /**
+     * Создание заметки
+     * @param {Object} noteData - Данные заметки
+     * @returns {Promise<Object>} - Созданная заметка
+     */
+    async create(noteData) {
+      console.log(noteData);
+      throw new Error('Method create() must be implemented');
+    }
 }

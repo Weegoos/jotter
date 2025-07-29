@@ -1,5 +1,4 @@
 import bcrypt from 'bcryptjs';
-// import { Note } from '../../entities/Note.js';
 import { decrypt } from '../../presentation/controllers/crypto.js';
 
 export class CreateNote {

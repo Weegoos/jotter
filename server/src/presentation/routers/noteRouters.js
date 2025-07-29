@@ -13,25 +13,23 @@ import { CreateNotesController } from '../controllers/note/postNoteControllers.j
 import { CreateNote, DeleteNote, GetNote } from '../../use-cases/Note/NoteUseCases.js';
 import Notes from '../../infrastructure/database/models/notesSchemas.js';
 import {
-  DeleteRepository,
-  GetRepository,
-  PostRepository,
-} from '../repositories/postRepositories.js';
+  SequelizeNoteRepository,
+} from '../../infrastructure/repositories/postRepositories.js';
 import Files from '../../infrastructure/database/models/fileSchemas.js';
 const router = express.Router();
 
 router.put('/update/:noteId', authMiddleware, updateNote);
 router.put('/:noteId/pin', authMiddleware, pinNote);
 
+const noteRepository = new SequelizeNoteRepository(Notes, Files);
 // DI Solid
-const postNoteRepository = new PostRepository(Notes);
-const createNoteUseCase = new CreateNote(postNoteRepository);
+
+const createNoteUseCase = new CreateNote(noteRepository);
 const createNotesController = new CreateNotesController(createNoteUseCase);
 router.post('/create', authMiddleware, createNotesController.create.bind(createNotesController));
 
 // get
-const getNoteRepository = new GetRepository(Notes, Files);
-const getNoteUseCase = new GetNote(getNoteRepository);
+const getNoteUseCase = new GetNote(noteRepository);
 
 const searchNotesController = new SearchNotesController(getNoteUseCase);
 router.get(
@@ -62,8 +60,7 @@ router.get(
 );
 
 // delete
-const deleteRepository = new DeleteRepository(Notes);
-const deleteNoteUseCase = new DeleteNote(deleteRepository);
+const deleteNoteUseCase = new DeleteNote(noteRepository);
 const deleteNoteByIdController = new DeleteNoteByIdController(deleteNoteUseCase);
 
 router.delete(
