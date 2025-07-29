@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { Note } from '../../entities/Note.js';
+// import { Note } from '../../entities/Note.js';
 import { decrypt } from '../../presentation/controllers/crypto.js';
 
 export class CreateNote {
@@ -7,25 +7,34 @@ export class CreateNote {
     this.postRepository = postRepository;
   }
 
-  execute(fileName, title, content, type, password, hashtags, fileId) {
-    const post = new Note(fileName, title, content, type, password, hashtags, fileId);
-    return this.postRepository.create(post);
+  async execute(fileName, title, content, type, password, hashtags, fileId) {
+    const noteData = {
+      fileName,
+      title,
+      content,
+      type,
+      password,
+      hashtags,
+      fileId,
+    };
+
+    return await this.postRepository.create(noteData);
   }
 }
 
 export class GetNote {
-  constructor(postRepository, fileRepository) {
-    this.postRepository = postRepository;
+  constructor(noteRepository, fileRepository) {
+    this.noteRepository = noteRepository;
     this.fileRepository = fileRepository;
   }
 
   async getAllByFileId(fileId, pinned, userId) {
     const filter = { fileId, pinned };
-    return await this.postRepository.getAllByFilter(filter, userId, fileId);
+    return await this.noteRepository.getAllByFilter(filter, userId, fileId);
   }
 
   async execute(noteId, userId, password = null) {
-    const note = await this.postRepository.findByIdAndUser(noteId, userId);
+    const note = await this.noteRepository.findByIdAndUser(noteId, userId);
     if (!note) {
       throw new Error('NOT_FOUND');
     }
@@ -45,7 +54,7 @@ export class GetNote {
   }
 
   async getByType(userId, type) {
-    const notes = await this.postRepository.findByType(userId, type);
+    const notes = await this.noteRepository.findByType(userId, type);
 
     if (!notes) {
       throw new Error('NOT_FOUND');
@@ -54,7 +63,7 @@ export class GetNote {
   }
 
   async searchNotes(userId, fileId, cleanedTitle) {
-    const notes = await this.postRepository.searchNote(userId, fileId, cleanedTitle);
+    const notes = await this.noteRepository.searchNote(userId, fileId, cleanedTitle);
     if (!notes) {
       throw new Error('NOT_FOUND');
     }

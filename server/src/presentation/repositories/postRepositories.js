@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
-import Files from '../../infrastructure/database/models/fileSchemas.js';
-import Notes from '../../infrastructure/database/models/notesSchemas.js';
+import { INoteRepository } from './INoteRepository.js';
+// import Files from '../../infrastructure/database/models/fileSchemas.js';
+// import Notes from '../../infrastructure/database/models/notesSchemas.js';
 
 export class PostRepository {
   constructor(database) {
@@ -9,7 +10,7 @@ export class PostRepository {
 
   async create(note) {
     try {
-      const createdNote = await this.database.create(note);
+      const createdNote = await this.database.create({ ...note });
       return createdNote;
     } catch (error) {
       console.error('Sequelize Validation Error:', error.errors);
@@ -17,13 +18,15 @@ export class PostRepository {
     }
   }
 }
-export class GetRepository {
-  constructor(database) {
+export class GetRepository extends INoteRepository {
+  constructor(database, fileDatabase) {
+    super();
     this.database = database;
+    this.fileDatabase = fileDatabase;
   }
 
   async getAllByFilter(filter, userId, fileId) {
-    return await Notes.findAll({
+    return await this.database.findAll({
       where: filter,
       order: [
         ['updatedAt', 'DESC'],
@@ -31,7 +34,7 @@ export class GetRepository {
       ],
       include: [
         {
-          model: Files,
+          model: this.fileDatabase,
           attributes: [],
           where: { id: fileId, userId },
         },
@@ -40,11 +43,11 @@ export class GetRepository {
   }
 
   async findByIdAndUser(noteId, userId) {
-    return await Notes.findOne({
+    return await this.database.findOne({
       where: { id: noteId },
       include: [
         {
-          model: Files,
+          model: this.fileDatabase,
           where: { userId },
           attributes: [],
         },
@@ -53,11 +56,11 @@ export class GetRepository {
   }
 
   async findByType(userId, type) {
-    return await Notes.findAll({
+    return await this.database.findAll({
       where: { type: type },
       include: [
         {
-          model: Files,
+          model: this.fileDatabase,
           where: { userId: userId },
           attributes: [],
         },
@@ -69,7 +72,7 @@ export class GetRepository {
     });
   }
   async searchNote(userId, fileId, cleanedTitle) {
-    return await Notes.findAll({
+    return await this.database.findAll({
       where: {
         fileId: fileId,
         [Op.or]: [
@@ -79,7 +82,7 @@ export class GetRepository {
       },
       include: [
         {
-          model: Files,
+          model: this.fileDatabase,
           where: { userId: userId },
           attributes: [],
         },

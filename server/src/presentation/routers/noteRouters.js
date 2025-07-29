@@ -17,6 +17,7 @@ import {
   GetRepository,
   PostRepository,
 } from '../repositories/postRepositories.js';
+import Files from '../../infrastructure/database/models/fileSchemas.js';
 const router = express.Router();
 
 router.put('/update/:noteId', authMiddleware, updateNote);
@@ -29,7 +30,7 @@ const createNotesController = new CreateNotesController(createNoteUseCase);
 router.post('/create', authMiddleware, createNotesController.create.bind(createNotesController));
 
 // get
-const getNoteRepository = new GetRepository(Notes);
+const getNoteRepository = new GetRepository(Notes, Files);
 const getNoteUseCase = new GetNote(getNoteRepository);
 
 const searchNotesController = new SearchNotesController(getNoteUseCase);
