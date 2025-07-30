@@ -1,3 +1,5 @@
+const FILE_NOT_FOUND = 'FILE NOT FOUND';
+
 export class FileUseCases {
   constructor(fileRepository) {
     this.fileRepository = fileRepository;
@@ -7,7 +9,7 @@ export class FileUseCases {
     try {
       const file = await this.fileRepository.findOne(fileId, userId);
       if (!file) {
-        throw new Error('FILE NOT FOUND');
+        throw new Error(FILE_NOT_FOUND);
       }
 
       file.status = status;
@@ -50,6 +52,24 @@ export class FileUseCases {
     } catch (error) {
       console.error('Error creating file:', error);
       throw new Error('Error creating file: ' + error.message);
+    }
+  }
+
+  async deleteFile(fileId, userId) {
+    try {
+      if (!fileId) {
+        throw new Error('fileId is required');
+      }
+      const file = await this.fileRepository.findOne(fileId, userId);
+      if (!file) {
+        throw new Error(FILE_NOT_FOUND);
+      }
+
+      await file.destroy();
+      return file;
+    } catch (error) {
+      console.error('Error deleting file:', error);
+      throw new Error('Error deleting file: ' + error.message);
     }
   }
 }

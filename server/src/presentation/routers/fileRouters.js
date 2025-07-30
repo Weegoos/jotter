@@ -13,7 +13,10 @@ import {
   EditFileStatusController,
   PinFileController,
 } from '../controllers/file/putFileControllers.js';
-import { deleteAllFiles, deleteFileById } from '../controllers/file/deleteFileControllers.js';
+import {
+  deleteAllFiles,
+  DeleteFileByIDController,
+} from '../controllers/file/deleteFileControllers.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
 import { SequelizeFileRepository } from '../../infrastructure/repositories/FileRepositories.js';
 import Files from '../../infrastructure/database/models/fileSchemas.js';
@@ -43,6 +46,13 @@ router.put('/:fileId/pin', authMiddleware, pinFileController.pin.bind(pinFileCon
 // post
 const createFileController = new CreateFileController(fileUseCases);
 router.post('/create', authMiddleware, createFileController.create.bind(createFileController));
-router.delete('/deleteFile/:fileId', authMiddleware, deleteFileById);
+
+// delete
+const deleteFileController = new DeleteFileByIDController(fileUseCases);
+router.delete(
+  '/deleteFile/:fileId',
+  authMiddleware,
+  deleteFileController.delete.bind(deleteFileController)
+);
 router.delete('/deleteAll', authMiddleware, deleteAllFiles);
 export default router;
