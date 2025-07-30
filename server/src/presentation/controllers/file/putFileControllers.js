@@ -1,6 +1,4 @@
-import Files from '../../../infrastructure/database/models/fileSchemas.js';
-import { wss } from '../../../server.js';
-import { WebSocket } from 'ws';
+import { wssSend } from '../wssSend.js';
 
 export class EditFileStatusController {
   constructor(fileRepository) {
@@ -17,15 +15,8 @@ export class EditFileStatusController {
       }
 
       const file = await this.fileRepository.saveNote(fileId, userId, status);
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(
-            JSON.stringify({
-              event: 'change_status',
-              file: file,
-            })
-          );
-        }
+      wssSend('change_status', {
+        file: file,
       });
 
       res.json({ message: 'Статус обновлен', file });
@@ -38,45 +29,31 @@ export class EditFileStatusController {
     }
   }
 }
-
-export const pinFile = async (req, res) => {
-  try {
-    const { id } = req.user;
-    const { fileId } = req.params;
-    const { value } = req.body;
-
-    if (value === undefined) {
-      return res.status(400).json({ message: 'Все поля обязательны' });
-    }
-
-    const file = await Files.findOne({
-      where: {
-        id: fileId,
-        userId: id,
-      },
-    });
-
-    if (!file) {
-      return res.status(404).json({ message: 'Файл не найден' });
-    }
-
-    file.pinned = value;
-    await file.save();
-
-    wss.clients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(
-          JSON.stringify({
-            event: 'change_status',
-            file: file,
-          })
-        );
-      }
-    });
-
-    return res.json({ message: 'Pinned обновился', file });
-  } catch (error) {
-    console.error('Ошибка:', error);
-    res.status(500).json({ message: 'Ошибка сервера' });
+export class PinFileController {
+  constructor(fileRepository) {
+    this.fileRepository = fileRepository;
   }
-};
+
+  async pin(req, res) {
+    try {
+      const { id } = req.user;
+      const { fileId } = req.params;
+      const { value } = req.body;
+
+      const file = await this.fileRepository.pinFile(fileId, id, value);
+      wssSend('change_status', {
+        file: file,
+      });
+
+      return res.json({ message: 'Pinned обновился', file });
+    } catch (error) {
+      if (error.message.includes('FILE NOT FOUND')) {
+        return res.status(404).json({ message: 'Файл не найден или доступ запрещен' });
+      }
+      if (error.message.includes('Value is required')) {
+        return res.status(400).json({ message: 'Все поля обязательны' });
+      }
+      res.status(500).json({ message: 'Ошибка сервера' });
+    }
+  }
+}
