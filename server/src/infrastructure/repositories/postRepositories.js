@@ -4,7 +4,7 @@ export class SequelizeNoteRepository extends INoteRepository {
   constructor(noteModel, fileModel) {
     super();
     this.noteModel = noteModel;
-    this.fileModel = fileModel
+    this.fileModel = fileModel;
   }
 
   async create(note) {
@@ -17,7 +17,7 @@ export class SequelizeNoteRepository extends INoteRepository {
     }
   }
 
-    async getAllByFilter(filter, userId, fileId) {
+  async getAllByFilter(filter, userId, fileId) {
     return await this.noteModel.findAll({
       where: filter,
       order: [
@@ -82,7 +82,7 @@ export class SequelizeNoteRepository extends INoteRepository {
     });
   }
 
-   async findById(noteId) {
+  async findById(noteId) {
     return this.noteModel.findByPk(noteId);
   }
 
@@ -112,5 +112,4 @@ export class SequelizeNoteRepository extends INoteRepository {
       ],
     });
   }
-
 }

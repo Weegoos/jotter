@@ -106,4 +106,15 @@ export class UpdateNote {
     await note.save();
     return note;
   }
+
+  async pinNote(noteId, value, userId) {
+    const note = await this.noteRepository.findOne(noteId, userId);
+    if (!note) {
+      throw new Error('Note not found');
+    }
+
+    note.pinned = value;
+    await note.save();
+    return note;
+  }
 }

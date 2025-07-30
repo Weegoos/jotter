@@ -7,14 +7,12 @@ import {
   GetNotesByFileIdController,
   SearchNotesController,
 } from '../controllers/note/getNoteControllers.js';
-import { pinNote, UpdateNoteController } from '../controllers/note/putNoteControllers.js';
+import { PinNoteController, UpdateNoteController } from '../controllers/note/putNoteControllers.js';
 import { DeleteNoteByIdController } from '../controllers/note/deleteNoteControllers.js';
 import { CreateNotesController } from '../controllers/note/postNoteControllers.js';
 import { CreateNote, DeleteNote, GetNote, UpdateNote } from '../../use-cases/Note/NoteUseCases.js';
 import Notes from '../../infrastructure/database/models/notesSchemas.js';
-import {
-  SequelizeNoteRepository,
-} from '../../infrastructure/repositories/postRepositories.js';
+import { SequelizeNoteRepository } from '../../infrastructure/repositories/postRepositories.js';
 import Files from '../../infrastructure/database/models/fileSchemas.js';
 const router = express.Router();
 
@@ -41,7 +39,6 @@ router.get(
   authMiddleware,
   getNoteByIdController.handle.bind(getNoteByIdController)
 );
-
 
 const getNotesByFileIdController = new GetNotesByFileIdController(getNoteUseCase);
 router.get(
@@ -70,6 +67,12 @@ router.delete(
 // put
 const updateNoteUseCase = new UpdateNote(noteRepository);
 const updateNoteController = new UpdateNoteController(updateNoteUseCase);
-router.put('/update/:noteId', authMiddleware, updateNoteController.handle.bind(updateNoteController));
-router.put('/:noteId/pin', authMiddleware, pinNote);
+router.put(
+  '/update/:noteId',
+  authMiddleware,
+  updateNoteController.handle.bind(updateNoteController)
+);
+
+const pinNoteController = new PinNoteController(updateNoteUseCase);
+router.put('/:noteId/pin', authMiddleware, pinNoteController.pin.bind(pinNoteController));
 export default router;
