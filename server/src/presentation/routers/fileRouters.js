@@ -3,7 +3,6 @@ import express from 'express';
 import './swagger/fileSwagger.js';
 import {
   GetFileController,
-  getFilesByStatus,
   getFilesName,
   getTrashedFiles,
   searchFiles,
@@ -56,6 +55,10 @@ const getFileController = new GetFileController(fileUseCases);
 router.get('/search', authMiddleware, searchFiles);
 router.get('/allFiles', authMiddleware, getFileController.getFilesByUserId.bind(getFileController));
 router.get('/filesName', authMiddleware, getFilesName);
-router.get('/filesStatus', authMiddleware, getFilesByStatus);
+router.get(
+  '/filesStatus',
+  authMiddleware,
+  getFileController.getFilesByStatus.bind(getFileController)
+);
 router.get('/trashedFiles', authMiddleware, getTrashedFiles);
 export default router;

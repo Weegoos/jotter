@@ -24,4 +24,13 @@ export class SequelizeFileRepository extends IFileRepository {
       order: [['createdAt', 'DESC']],
     });
   }
+
+  async findAndCountAll(userId, status, limit, offset, pinned) {
+    return await this.fileModel.findAndCountAll({
+      where: { userId: userId, status: status, pinned: pinned },
+      limit: limit,
+      offset: offset,
+      order: [['createdAt', 'DESC']],
+    });
+  }
 }

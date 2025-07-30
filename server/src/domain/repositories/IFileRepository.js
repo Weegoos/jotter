@@ -30,4 +30,19 @@ export class IFileRepository {
 
     throw new Error('Method findAll() not implemented');
   }
+
+  /**
+   * Найти и посчитать все файлы пользователя с возможностью фильтрации по статусу, лимиту, смещению и закреплению
+   * @param {Number} userId
+   * @param {*} status
+   * @param {*} limit
+   * @param {*} page
+   * @param {*} pinned
+   */
+
+  async findAndCountAll(userId, status, limit, page, pinned) {
+    console.log(userId, status, limit, page, pinned);
+
+    throw new Error('Method findAndCountAll() not implemented');
+  }
 }

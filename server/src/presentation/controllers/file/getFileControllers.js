@@ -1,6 +1,5 @@
 import { Op } from 'sequelize';
 import Files from '../../../infrastructure/database/models/fileSchemas.js';
-import { wss } from '../../../server.js';
 import { wssSend } from '../wssSend.js';
 
 export class GetFileController {
@@ -25,59 +24,48 @@ export class GetFileController {
       res.status(500).json({ message: 'Ошибка сервера' });
     }
   }
-}
 
-export const getFilesByStatus = async (req, res) => {
-  try {
-    const userId = req.user?.id;
-    const { status, pinned } = req.query;
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+  async getFilesByStatus(req, res) {
+    try {
+      const userId = req.user?.id;
+      const { status, pinned } = req.query;
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
 
-    if (!userId) {
-      return res.status(400).json({ message: 'Ошибка: userId отсутствует.' });
-    }
+      const { files, totalPages } = await this.fileUseCases.findFilesByStatus(
+        userId,
+        status,
+        parseInt(limit),
+        parseInt(page),
+        pinned
+      );
 
-    if (!status || !pinned) {
-      return res.status(400).json({ message: 'Ошибка: статус и pinned обязателен.' });
-    }
+      wssSend('get_files_by_status', {
+        files: files.rows,
+        totalCount: files.count,
+        totalPages,
+        currentPage: page,
+      });
 
-    // Найдем файлы с учетом пагинации
-    const offset = (page - 1) * limit;
-
-    const files = await Files.findAndCountAll({
-      where: { userId, status, pinned },
-      limit: limit,
-      offset: offset,
-    });
-
-    const totalPages = Math.ceil(files.count / limit);
-
-    wss.clients.forEach((client) => {
-      if (client.readyState === 1 && client.userId === userId) {
-        client.send(
-          JSON.stringify({
-            event: 'get_files_by_status',
-            files: files.rows,
-            totalCount: files.count,
-            totalPages,
-            currentPage: page,
-          })
-        );
+      res.json({
+        files: files.rows,
+        totalCount: files.count,
+        totalPages: totalPages,
+        currentPage: page,
+      });
+    } catch (error) {
+      if (error.message.includes('USER NOT FOUND')) {
+        return res.status(400).json({ message: 'Ошибка: userId отсутствует.' });
       }
-    });
 
-    res.json({
-      files: files.rows,
-      totalCount: files.count,
-      totalPages: totalPages,
-      currentPage: page,
-    });
-  } catch (error) {
-    console.error('Ошибка:', error);
-    res.status(500).json({ message: 'Ошибка сервера' });
+      if (error.message.includes('Status and pinned are required')) {
+        return res.status(400).json({ message: 'Ошибка: статус и pinned обязателен.' });
+      }
+      console.error('Ошибка:', error);
+      res.status(500).json({ message: 'Ошибка сервера' });
+    }
   }
-};
+}
 
 export const getTrashedFiles = async (req, res) => {
   try {
