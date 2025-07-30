@@ -19,4 +19,15 @@ export class IFileRepository {
 
     throw new Error('Method create() not implemented');
   }
+
+  /**
+   * Найти все файлы пользователя
+   * @param {Number} userId
+   */
+
+  async findAll(userId) {
+    console.log(userId);
+
+    throw new Error('Method findAll() not implemented');
+  }
 }

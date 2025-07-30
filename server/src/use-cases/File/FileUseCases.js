@@ -1,4 +1,5 @@
 const FILE_NOT_FOUND = 'FILE NOT FOUND';
+const USER_NOT_FOUND = 'USER NOT FOUND';
 
 export class FileUseCases {
   constructor(fileRepository) {
@@ -70,6 +71,20 @@ export class FileUseCases {
     } catch (error) {
       console.error('Error deleting file:', error);
       throw new Error('Error deleting file: ' + error.message);
+    }
+  }
+
+  async findAllUserFiles(userId) {
+    try {
+      if (!userId) {
+        throw new Error(USER_NOT_FOUND);
+      }
+
+      const files = await this.fileRepository.findAll(userId);
+      return files;
+    } catch (error) {
+      console.error('Error finding all user files:', error);
+      throw new Error('Error finding all user files: ' + error.message);
     }
   }
 }

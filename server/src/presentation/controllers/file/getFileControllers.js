@@ -1,26 +1,31 @@
 import { Op } from 'sequelize';
 import Files from '../../../infrastructure/database/models/fileSchemas.js';
 import { wss } from '../../../server.js';
+import { wssSend } from '../wssSend.js';
 
-export const getFilesByUserId = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    if (!userId) {
-      return res.status(400).json({ message: 'Ошибка: userId отсутствует.' });
-    }
-    const files = await Files.findAll({ where: { userId } });
-
-    wss.clients.forEach((client) => {
-      if (client.readyState === 1) {
-        client.send(JSON.stringify({ event: 'get_files', userId, files }));
-      }
-    });
-    res.json(files);
-  } catch (error) {
-    console.error('Ошибка:', error);
-    res.status(500).json({ message: 'Ошибка сервера' });
+export class GetFileController {
+  constructor(fileUseCases) {
+    this.fileUseCases = fileUseCases;
   }
-};
+
+  async getFilesByUserId(req, res) {
+    try {
+      const userId = req.user.id;
+      const files = await this.fileUseCases.findAllUserFiles(userId);
+      console.log(files);
+
+      wssSend('getFilesByUserId', { userId, files });
+
+      res.json(files);
+    } catch (error) {
+      if (error.message.includes('USER NOT FOUND')) {
+        return res.status(404).json({ message: 'Пользователь не найден.' });
+      }
+      console.error('Ошибка:', error);
+      res.status(500).json({ message: 'Ошибка сервера' });
+    }
+  }
+}
 
 export const getFilesByStatus = async (req, res) => {
   try {

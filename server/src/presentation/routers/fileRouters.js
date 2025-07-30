@@ -2,8 +2,8 @@ import express from 'express';
 
 import './swagger/fileSwagger.js';
 import {
+  GetFileController,
   getFilesByStatus,
-  getFilesByUserId,
   getFilesName,
   getTrashedFiles,
   searchFiles,
@@ -22,12 +22,6 @@ import { SequelizeFileRepository } from '../../infrastructure/repositories/FileR
 import Files from '../../infrastructure/database/models/fileSchemas.js';
 import { FileUseCases } from '../../use-cases/File/FileUseCases.js';
 const router = express.Router();
-
-router.get('/search', authMiddleware, searchFiles);
-router.get('/allFiles', authMiddleware, getFilesByUserId);
-router.get('/filesName', authMiddleware, getFilesName);
-router.get('/filesStatus', authMiddleware, getFilesByStatus);
-router.get('/trashedFiles', authMiddleware, getTrashedFiles);
 
 // DI Solid
 const fileRepository = new SequelizeFileRepository(Files);
@@ -55,4 +49,13 @@ router.delete(
   deleteFileController.delete.bind(deleteFileController)
 );
 router.delete('/deleteAll', authMiddleware, deleteAllFiles);
+
+// get
+const getFileController = new GetFileController(fileUseCases);
+
+router.get('/search', authMiddleware, searchFiles);
+router.get('/allFiles', authMiddleware, getFileController.getFilesByUserId.bind(getFileController));
+router.get('/filesName', authMiddleware, getFilesName);
+router.get('/filesStatus', authMiddleware, getFilesByStatus);
+router.get('/trashedFiles', authMiddleware, getTrashedFiles);
 export default router;

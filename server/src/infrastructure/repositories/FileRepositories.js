@@ -17,4 +17,11 @@ export class SequelizeFileRepository extends IFileRepository {
     const createdFile = await this.fileModel.create({ ...fileData });
     return createdFile;
   }
+
+  async findAll(userId) {
+    return await this.fileModel.findAll({
+      where: { userId: userId },
+      order: [['createdAt', 'DESC']],
+    });
+  }
 }
