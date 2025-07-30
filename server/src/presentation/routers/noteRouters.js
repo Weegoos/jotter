@@ -12,7 +12,7 @@ import { DeleteNoteByIdController } from '../controllers/note/deleteNoteControll
 import { CreateNotesController } from '../controllers/note/postNoteControllers.js';
 import { CreateNote, DeleteNote, GetNote, UpdateNote } from '../../use-cases/Note/NoteUseCases.js';
 import Notes from '../../infrastructure/database/models/notesSchemas.js';
-import { SequelizeNoteRepository } from '../../infrastructure/repositories/postRepositories.js';
+import { SequelizeNoteRepository } from '../../infrastructure/repositories/NoteRepositories.js';
 import Files from '../../infrastructure/database/models/fileSchemas.js';
 const router = express.Router();
 
