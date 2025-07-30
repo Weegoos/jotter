@@ -87,3 +87,23 @@ export class DeleteNote {
     return { note, uniqueTypes };
   }
 }
+
+export class UpdateNote {
+  constructor(noteRepository) {
+    this.noteRepository = noteRepository;
+  }
+
+  async execute(noteId, content, title, type, userId) {
+    const note = await this.noteRepository.findOne(noteId, userId);
+    if (!note) {
+      throw new Error('Note not found');
+    }
+
+    note.content = content;
+    note.title = title;
+    note.type = type;
+
+    await note.save();
+    return note;
+  }
+}

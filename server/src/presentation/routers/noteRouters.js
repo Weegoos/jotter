@@ -7,19 +7,16 @@ import {
   GetNotesByFileIdController,
   SearchNotesController,
 } from '../controllers/note/getNoteControllers.js';
-import { pinNote, updateNote } from '../controllers/note/putNoteControllers.js';
+import { pinNote, UpdateNoteController } from '../controllers/note/putNoteControllers.js';
 import { DeleteNoteByIdController } from '../controllers/note/deleteNoteControllers.js';
 import { CreateNotesController } from '../controllers/note/postNoteControllers.js';
-import { CreateNote, DeleteNote, GetNote } from '../../use-cases/Note/NoteUseCases.js';
+import { CreateNote, DeleteNote, GetNote, UpdateNote } from '../../use-cases/Note/NoteUseCases.js';
 import Notes from '../../infrastructure/database/models/notesSchemas.js';
 import {
   SequelizeNoteRepository,
 } from '../../infrastructure/repositories/postRepositories.js';
 import Files from '../../infrastructure/database/models/fileSchemas.js';
 const router = express.Router();
-
-router.put('/update/:noteId', authMiddleware, updateNote);
-router.put('/:noteId/pin', authMiddleware, pinNote);
 
 const noteRepository = new SequelizeNoteRepository(Notes, Files);
 // DI Solid
@@ -69,4 +66,10 @@ router.delete(
   authMiddleware,
   deleteNoteByIdController.handle.bind(deleteNoteByIdController)
 );
+
+// put
+const updateNoteUseCase = new UpdateNote(noteRepository);
+const updateNoteController = new UpdateNoteController(updateNoteUseCase);
+router.put('/update/:noteId', authMiddleware, updateNoteController.handle.bind(updateNoteController));
+router.put('/:noteId/pin', authMiddleware, pinNote);
 export default router;

@@ -81,4 +81,15 @@ export class INoteRepository {
       console.log(noteData);
       throw new Error('Method create() must be implemented');
     }
+
+    /**
+     * Находим заметку по ID и ID пользователя
+     * @param {Number} noteId 
+     * @param {Number} userId 
+     */
+
+    async findOne (noteId, userId) {
+      console.log(noteId, userId);
+      throw new Error('Method findOne() must be implemented');
+    }
 }

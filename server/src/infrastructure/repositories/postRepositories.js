@@ -99,4 +99,18 @@ export class SequelizeNoteRepository extends INoteRepository {
 
     return types.map((t) => t.type);
   }
+
+  async findOne(noteId, userId) {
+    return await this.noteModel.findOne({
+      where: { id: noteId },
+      include: [
+        {
+          model: this.fileModel,
+          attributes: [],
+          where: { userId: userId },
+        },
+      ],
+    });
+  }
+
 }
