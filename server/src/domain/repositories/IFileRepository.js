@@ -9,4 +9,14 @@ export class IFileRepository {
 
     throw new Error('Method findOne() not implemented');
   }
+
+  /**
+   * Создать новый файл
+   * @param {Object|*} fileData
+   */
+  async create(fileData) {
+    console.log(fileData);
+
+    throw new Error('Method create() not implemented');
+  }
 }

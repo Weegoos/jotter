@@ -37,4 +37,19 @@ export class FileUseCases {
       throw new Error('Error pinning file: ' + error.message);
     }
   }
+
+  async createFile(name, description, userId, status = 'active') {
+    try {
+      if (!name || !userId || !description) {
+        throw new Error('Name, userId, description are required');
+      }
+
+      const fileData = { name, description, userId, status };
+      const newFile = await this.fileRepository.create(fileData);
+      return newFile;
+    } catch (error) {
+      console.error('Error creating file:', error);
+      throw new Error('Error creating file: ' + error.message);
+    }
+  }
 }

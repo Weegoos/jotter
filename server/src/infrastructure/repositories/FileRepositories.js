@@ -1,3 +1,4 @@
+'use strict';
 import { IFileRepository } from '../../domain/repositories/IFileRepository.js';
 
 export class SequelizeFileRepository extends IFileRepository {
@@ -10,5 +11,10 @@ export class SequelizeFileRepository extends IFileRepository {
     return await this.fileModel.findOne({
       where: { id: fileId, userId },
     });
+  }
+
+  async create(fileData) {
+    const createdFile = await this.fileModel.create({ ...fileData });
+    return createdFile;
   }
 }

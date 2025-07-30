@@ -1,34 +1,24 @@
-import Files from '../../../infrastructure/database/models/fileSchemas.js';
-import { wss } from '../../../server.js';
-import { WebSocket } from 'ws';
-
-export const createFile = async (req, res) => {
-  try {
-    const { name, description } = req.body;
-    const userId = req.user.id;
-    if (!userId) {
-      return res.status(400).json({ message: 'userId обязателен!' });
-    }
-    const newFile = await Files.create({
-      name,
-      description,
-      userId,
-      status: 'active',
-    });
-    wss.clients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(
-          JSON.stringify({
-            event: 'create_file',
-            newFile: newFile,
-          })
-        );
-      }
-    });
-
-    res.status(201).json({ message: 'Файл создан!', file: newFile });
-  } catch (error) {
-    console.error('Ошибка при создании папки:', error);
-    res.status(500).json({ message: 'Ошибка сервера' });
+import { wssSend } from '../wssSend.js';
+export class CreateFileController {
+  constructor(fileUseCases) {
+    this.fileUseCases = fileUseCases;
   }
-};
+
+  async create(req, res) {
+    try {
+      const { name, description } = req.body;
+      const userId = req.user.id;
+
+      const newFile = await this.fileUseCases.createFile(name, description, userId, 'active');
+      wssSend('create_file', { newFile });
+
+      res.status(201).json({ message: 'Файл создан!', file: newFile });
+    } catch (error) {
+      if (error.message.includes('Name, userId, description are required')) {
+        return res.status(400).json({ message: 'Name, userId, description are required' });
+      }
+      console.error('Ошибка при создании файла:', error);
+      res.status(500).json({ message: 'Ошибка сервера' });
+    }
+  }
+}

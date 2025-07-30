@@ -8,7 +8,7 @@ import {
   getTrashedFiles,
   searchFiles,
 } from '../controllers/file/getFileControllers.js';
-import { createFile } from '../controllers/file/postFileController.js';
+import { CreateFileController } from '../controllers/file/postFileController.js';
 import {
   EditFileStatusController,
   PinFileController,
@@ -19,8 +19,6 @@ import { SequelizeFileRepository } from '../../infrastructure/repositories/FileR
 import Files from '../../infrastructure/database/models/fileSchemas.js';
 import { FileUseCases } from '../../use-cases/File/FileUseCases.js';
 const router = express.Router();
-
-router.post('/create', authMiddleware, createFile);
 
 router.get('/search', authMiddleware, searchFiles);
 router.get('/allFiles', authMiddleware, getFilesByUserId);
@@ -42,6 +40,9 @@ router.put(
 const pinFileController = new PinFileController(fileUseCases);
 router.put('/:fileId/pin', authMiddleware, pinFileController.pin.bind(pinFileController));
 
+// post
+const createFileController = new CreateFileController(fileUseCases);
+router.post('/create', authMiddleware, createFileController.create.bind(createFileController));
 router.delete('/deleteFile/:fileId', authMiddleware, deleteFileById);
 router.delete('/deleteAll', authMiddleware, deleteAllFiles);
 export default router;
