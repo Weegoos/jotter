@@ -100,4 +100,37 @@ export class UserUseCase {
 
     return users;
   }
+
+  async editUserInformation(userId, fullname, email, password) {
+    if (!userId) {
+      throw new Error('User ID is required');
+    }
+
+    const user = await this.userRepository.findByPk(userId);
+    if (!user) {
+      throw new Error(USER_NOT_FOUND);
+    }
+
+    if (fullname) {
+      user.fullname = fullname;
+    }
+
+    if (email) {
+      const existingUser = await this.userRepository.findOne('email', email);
+      if (existingUser && existingUser.id !== user.id) {
+        throw new Error('This email is already registered!');
+      }
+      user.email = email;
+    }
+
+    if (password) {
+      if (password.length < 6) {
+        throw new Error('Password is too short');
+      }
+      user.password = bcrypt.hashSync(password, 10);
+    }
+
+    await user.save();
+    return { message: 'User data successfully updated', user };
+  }
 }

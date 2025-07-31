@@ -4,7 +4,7 @@ import authMiddleware from '../middlewares/authMiddleware.js';
 import './swagger/_userSwagger.js';
 import { GetUserController } from '../controllers/user/getUserControllers.js';
 import { PostUserController } from '../controllers/user/postUserControllers.js';
-import { editUserInfo } from '../controllers/user/editUserControllers.js';
+import { PutUserController } from '../controllers/user/editUserControllers.js';
 import { SequelizeUserRepository } from '../../infrastructure/repositories/UserRepositories.js';
 import User from '../../infrastructure/database/models/userSchemas.js';
 import { UserUseCase } from '../../use-cases/User/UserUseCase.js';
@@ -20,7 +20,9 @@ const postUserController = new PostUserController(userUseCase);
 router.post('/register', postUserController.createUser.bind(postUserController));
 router.post('/login', postUserController.loginUser.bind(postUserController));
 
-router.put('/edit', authMiddleware, editUserInfo);
+// put
+const putUserController = new PutUserController(userUseCase);
+router.put('/edit', authMiddleware, putUserController.editUserInfo.bind(putUserController));
 
 // get
 const getUserController = new GetUserController(userUseCase);

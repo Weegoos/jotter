@@ -1,37 +1,29 @@
-import bcrypt from 'bcryptjs';
-import User from '../../../infrastructure/database/models/userSchemas.js';
-
-export const editUserInfo = async (req, res) => {
-  try {
-    const { fullname, email, password } = req.query; // теперь данные берутся из query
-    const user = await User.findByPk(req.user.id);
-    if (!user) {
-      return res.status(404).json({ message: 'Пользователь не найден' });
+export class PutUserController {
+  constructor(userUseCase) {
+    this.userUseCase = userUseCase;
+  }
+  
+  async editUserInfo(req, res) {
+    try {
+      const { fullname, email, password } = req.query;
+      const user = await this.userUseCase.editUserInformation(req.user.id, fullname, email, password);
+      res.json({ message: 'Данные пользователя успешно обновлены', user });
     }
-
-    if (fullname) {
-      user.fullname = fullname;
-    }
-
-    if (email) {
-      const existingUser = await User.findOne({ where: { email } });
-      if (existingUser && existingUser.id !== user.id) {
+    catch (error) {
+      if (error.message === 'User ID is required') {
+        return res.status(400).json({ message: 'ID пользователя обязателен' });
+      }
+      if (error.message === 'USER NOT FOUND') {
+        return res.status(404).json({ message: 'Пользователь не найден' });
+      }
+      if (error.message === 'This email is already registered!') {
         return res.status(400).json({ message: 'Этот email уже зарегистрирован!' });
       }
-      user.email = email;
-    }
-
-    if (password) {
-      if (password.length < 6) {
+      if (error.message === 'Password is too short') {
         return res.status(400).json({ message: 'Пароль слишком короткий' });
       }
-      user.password = await bcrypt.hash(password, 10);
+      console.error('Ошибка при редактировании данных:', error);
+      res.status(500).json({ message: 'Ошибка сервера' });
     }
-
-    await user.save();
-    res.json({ message: 'Данные пользователя успешно обновлены', user });
-  } catch (error) {
-    console.error('Ошибка при редактировании данных:', error);
-    res.status(500).json({ message: 'Ошибка сервера' });
   }
-};
+}
