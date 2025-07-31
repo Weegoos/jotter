@@ -2,9 +2,10 @@
 import { IFileRepository } from '../../domain/repositories/IFileRepository.js';
 
 export class SequelizeFileRepository extends IFileRepository {
-  constructor(fileModel) {
+  constructor(fileModel, OpModels) {
     super();
     this.fileModel = fileModel;
+    this.OpModels = OpModels;
   }
 
   async findOne(fileId, userId) {
@@ -47,6 +48,18 @@ export class SequelizeFileRepository extends IFileRepository {
       where: whereClause,
       limit,
       offset,
+      order: [['createdAt', 'DESC']],
+    });
+  }
+
+  async findAllByOp(userId, search) {
+    return await this.fileModel.findAll({
+      where: {
+        userId: userId,
+        name: {
+          [this.OpModels.like]: `%${search}%`,
+        },
+      },
       order: [['createdAt', 'DESC']],
     });
   }

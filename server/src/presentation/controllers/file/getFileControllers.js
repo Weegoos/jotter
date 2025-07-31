@@ -1,7 +1,4 @@
-import { Op } from 'sequelize';
-import Files from '../../../infrastructure/database/models/fileSchemas.js';
 import { wssSend } from '../wssSend.js';
-
 export class GetFileController {
   constructor(fileUseCases) {
     this.fileUseCases = fileUseCases;
@@ -113,35 +110,31 @@ export class GetFileController {
       res.status(500).json({ message: 'Ошибка сервера' });
     }
   }
-}
 
-export const searchFiles = async (req, res) => {
-  try {
-    const id = req.user.id;
-    const { search } = req.query;
-    if (!id) {
-      return res.status(400).json({ message: 'Ошибка: id отсутствует.' });
+  async searchFiles(req, res) {
+    try {
+      const id = req.user.id;
+      const { search } = req.query;
+
+      const file = await this.fileUseCases.searchFiles(id, search);
+
+      return res.status(200).json({
+        message: 'Поиск файлов по имени',
+        output: file,
+      });
+    } catch (error) {
+      console.error('Ошибка при поиске файла:', error);
+
+      if (error.message.includes('USER NOT FOUND')) {
+        return res.status(400).json({ message: 'Ошибка: userId отсутствует.' });
+      }
+      if (error.message.includes('Search term is required')) {
+        return res.status(400).json({ message: 'Ошибка: поисковый запрос обязателен.' });
+      }
+      if (error.message.includes('FILE NOT FOUND')) {
+        return res.status(404).json({ message: 'Файл не найден.' });
+      }
+      res.status(500).json({ message: 'Ошибка при поиске файла' });
     }
-
-    const file = await Files.findAll({
-      where: {
-        userId: id,
-        name: {
-          [Op.like]: `%${search}%`,
-        },
-      },
-    });
-
-    if (!file || file.length === 0) {
-      return res.status(404).json({ message: 'Файлы не найдены' });
-    }
-
-    return res.status(200).json({
-      message: 'Поиск файлов по имени',
-      output: file,
-    });
-  } catch (error) {
-    console.error('Ошибка при поиске файла:', error);
-    res.status(500).json({ message: 'Ошибка при поиске файла' });
   }
-};
+}

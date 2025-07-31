@@ -1,10 +1,7 @@
 import express from 'express';
 
 import './swagger/fileSwagger.js';
-import {
-  GetFileController,
-  searchFiles,
-} from '../controllers/file/getFileControllers.js';
+import { GetFileController } from '../controllers/file/getFileControllers.js';
 import { CreateFileController } from '../controllers/file/postFileController.js';
 import {
   EditFileStatusController,
@@ -18,10 +15,11 @@ import authMiddleware from '../middlewares/authMiddleware.js';
 import { SequelizeFileRepository } from '../../infrastructure/repositories/FileRepositories.js';
 import Files from '../../infrastructure/database/models/fileSchemas.js';
 import { FileUseCases } from '../../use-cases/File/FileUseCases.js';
+import { Op } from 'sequelize';
 const router = express.Router();
 
 // DI Solid
-const fileRepository = new SequelizeFileRepository(Files);
+const fileRepository = new SequelizeFileRepository(Files, Op);
 const fileUseCases = new FileUseCases(fileRepository);
 
 const editFileStatusController = new EditFileStatusController(fileUseCases);
@@ -50,7 +48,7 @@ router.delete('/deleteAll', authMiddleware, deleteAllFiles);
 // get
 const getFileController = new GetFileController(fileUseCases);
 
-router.get('/search', authMiddleware, searchFiles);
+router.get('/search', authMiddleware, getFileController.searchFiles.bind(getFileController));
 router.get('/allFiles', authMiddleware, getFileController.getFilesByUserId.bind(getFileController));
 router.get('/filesName', authMiddleware, getFileController.getFilesName.bind(getFileController));
 router.get(

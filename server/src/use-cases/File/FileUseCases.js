@@ -133,4 +133,25 @@ export class FileUseCases {
       throw new Error('Error getting files by name: ' + error.message);
     }
   }
+
+  async searchFiles(userId, search) {
+    try {
+      if (!userId) {
+        throw new Error(USER_NOT_FOUND);
+      }
+
+      if (!search) {
+        throw new Error('Search term is required');
+      }
+
+      const files = await this.fileRepository.findAllByOp(userId, search);
+      if (!files || files.length === 0) {
+        throw new Error(FILE_NOT_FOUND);
+      }
+      return files;
+    } catch (error) {
+      console.error('Error searching files:', error);
+      throw new Error('Error searching files: ' + error.message);
+    }
+  }
 }
