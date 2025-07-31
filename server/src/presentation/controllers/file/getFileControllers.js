@@ -58,48 +58,45 @@ export class GetFileController {
         return res.status(400).json({ message: 'Ошибка: userId отсутствует.' });
       }
 
-      if (error.message.includes('Status and pinned are required')) {
-        return res.status(400).json({ message: 'Ошибка: статус и pinned обязателен.' });
+      if (error.message.includes('Status is required and must be a string')) {
+        return res.status(400).json({ message: 'Ошибка: статус обязателен.' });
       }
       console.error('Ошибка:', error);
       res.status(500).json({ message: 'Ошибка сервера' });
     }
   }
-}
+  async getTrashedFiles(req, res) {
+    try {
+      const { id } = req.user;
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
 
-export const getTrashedFiles = async (req, res) => {
-  try {
-    const { id } = req.user;
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+      const { files, totalPages } = await this.fileUseCases.findFilesByStatus(
+        id,
+        'trashed',
+        parseInt(limit),
+        parseInt(page),
+      );
 
-    if (!id) {
-      return res.status(400).json({ message: 'Ошибка: id отсутствует.' });
+      res.json({
+        files: files.rows,
+        totalCount: files.count,
+        totalPages: totalPages,
+        currentPage: page,
+      });
+    } catch (error) {
+      console.error('Ошибка:', error);
+            if (error.message.includes('USER NOT FOUND')) {
+        return res.status(400).json({ message: 'Ошибка: userId отсутствует.' });
+      }
+
+      if (error.message.includes('Status is required and must be a string')) {
+        return res.status(400).json({ message: 'Ошибка: статус обязателен.' });
+      }
+      res.status(500).json({ message: 'Ошибка сервера' });
     }
-
-    const offset = (page - 1) * limit;
-
-    const files = await Files.findAndCountAll({
-      where: { userId: id, status: 'trashed' },
-      limit: limit,
-      offset: offset,
-    });
-
-    const totalPages = Math.ceil(files.count / limit);
-
-    console.log(id);
-
-    res.json({
-      files: files.rows,
-      totalCount: files.count,
-      totalPages: totalPages,
-      currentPage: page,
-    });
-  } catch (error) {
-    console.error('Ошибка:', error);
-    res.status(500).json({ message: 'Ошибка сервера' });
   }
-};
+}
 
 export const getFilesName = async (req, res) => {
   try {

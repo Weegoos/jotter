@@ -26,10 +26,19 @@ export class SequelizeFileRepository extends IFileRepository {
   }
 
   async findAndCountAll(userId, status, limit, offset, pinned) {
+    const whereClause = {
+      userId,
+      status,
+    };
+
+    if (typeof pinned !== 'undefined') {
+      whereClause.pinned = pinned;
+    }
+
     return await this.fileModel.findAndCountAll({
-      where: { userId: userId, status: status, pinned: pinned },
-      limit: limit,
-      offset: offset,
+      where: whereClause,
+      limit,
+      offset,
       order: [['createdAt', 'DESC']],
     });
   }

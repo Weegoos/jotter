@@ -4,7 +4,6 @@ import './swagger/fileSwagger.js';
 import {
   GetFileController,
   getFilesName,
-  getTrashedFiles,
   searchFiles,
 } from '../controllers/file/getFileControllers.js';
 import { CreateFileController } from '../controllers/file/postFileController.js';
@@ -60,5 +59,5 @@ router.get(
   authMiddleware,
   getFileController.getFilesByStatus.bind(getFileController)
 );
-router.get('/trashedFiles', authMiddleware, getTrashedFiles);
+router.get('/trashedFiles', authMiddleware, getFileController.getTrashedFiles.bind(getFileController));
 export default router;
