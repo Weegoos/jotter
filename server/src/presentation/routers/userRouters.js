@@ -7,7 +7,7 @@ import {
   getAllUsers,
   getUserInfo,
 } from '../controllers/user/getUserControllers.js';
-import { loginUser, PostUserController } from '../controllers/user/postUserControllers.js';
+import { PostUserController } from '../controllers/user/postUserControllers.js';
 import { editUserInfo } from '../controllers/user/editUserControllers.js';
 import { SequelizeUserRepository } from '../../infrastructure/repositories/UserRepositories.js';
 import User from '../../infrastructure/database/models/userSchemas.js';
@@ -20,7 +20,7 @@ const userRepository = new SequelizeUserRepository(User);
 const userUseCase = new UserUseCase(userRepository);
 const postUserController = new PostUserController(userUseCase);
 router.post('/register', postUserController.createUser.bind(postUserController));
-router.post('/login', loginUser);
+router.post('/login', postUserController.loginUser.bind(postUserController));
 
 router.put('/edit', authMiddleware, editUserInfo);
 

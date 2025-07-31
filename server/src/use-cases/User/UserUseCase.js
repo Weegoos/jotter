@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs';
+const USER_NOT_FOUND = 'USER NOT FOUND';
 
 export class UserUseCase {
   constructor(userRepository) {
@@ -38,5 +39,23 @@ export class UserUseCase {
     const newUser = await this.userRepository.create(fullname, cleanedEmail, hashedPassword);
 
     return newUser;
+  }
+
+  async loginUser(email, password) {
+    if (!email || !password) {
+      throw new Error('Email and password are required');
+    }
+
+    const user = await this.userRepository.findOne('email', email);
+    if (!user) {
+      throw new Error(USER_NOT_FOUND);
+    }
+
+    const isPasswordValid = bcrypt.compareSync(password, user.password);
+    if (!isPasswordValid) {
+      throw new Error('Invalid password');
+    }
+
+    return user;
   }
 }
