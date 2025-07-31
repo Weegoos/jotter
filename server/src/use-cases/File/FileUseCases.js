@@ -88,31 +88,49 @@ export class FileUseCases {
     }
   }
 
-async findFilesByStatus(userId, status, limit, page, pinned) {
-  try {
-    if (!userId) {
-      throw new Error(USER_NOT_FOUND);
+  async findFilesByStatus(userId, status, limit, page, pinned) {
+    try {
+      if (!userId) {
+        throw new Error(USER_NOT_FOUND);
+      }
+
+      if (typeof status !== 'string') {
+        throw new Error('Status is required and must be a string');
+      }
+
+      const offset = (page - 1) * limit;
+
+      const files = await this.fileRepository.findAndCountAll(
+        userId,
+        status,
+        limit,
+        offset,
+        pinned
+      );
+
+      const totalPages = Math.ceil(files.count / limit);
+      return { files, totalPages };
+    } catch (error) {
+      console.error('Error finding files by status:', error);
+      throw new Error('Error finding files by status: ' + error.message);
     }
-
-    if (typeof status !== 'string') {
-      throw new Error('Status is required and must be a string');
-    }
-
-    const offset = (page - 1) * limit;
-
-    const files = await this.fileRepository.findAndCountAll(
-      userId,
-      status,
-      limit,
-      offset,
-      pinned // может быть true, false или undefined — это теперь ок
-    );
-
-    const totalPages = Math.ceil(files.count / limit);
-    return { files, totalPages };
-  } catch (error) {
-    console.error('Error finding files by status:', error);
-    throw new Error('Error finding files by status: ' + error.message);
   }
-}
+
+  async getFilesByName(userId, status, attributes = ['name']) {
+    try {
+      if (!userId) {
+        throw new Error(USER_NOT_FOUND);
+      }
+
+      if (!status) {
+        throw new Error('Status is required');
+      }
+
+      const files = await this.fileRepository.findByName(userId, status, attributes);
+      return files;
+    } catch (error) {
+      console.error('Error getting files by name:', error);
+      throw new Error('Error getting files by name: ' + error.message);
+    }
+  }
 }

@@ -32,6 +32,17 @@ export class IFileRepository {
   }
 
   /**
+   * Найти файлы пользователя по имени и статусу
+   * @param {Number} userId
+   * @param {String} status
+   */
+
+  async findByName(userId, status) {
+    console.log(userId, status);
+    throw new Error('Method findByName() not implemented');
+  }
+
+  /**
    * Найти и посчитать все файлы пользователя с возможностью фильтрации по статусу, лимиту, смещению и закреплению
    * @param {Number} userId
    * @param {*} status

@@ -25,6 +25,14 @@ export class SequelizeFileRepository extends IFileRepository {
     });
   }
 
+  async findByName(userId, status, attributes = ['name']) {
+    return await this.fileModel.findAll({
+      where: { userId: userId, status: status },
+      order: [['createdAt', 'DESC']],
+      attributes: [attributes],
+    });
+  }
+
   async findAndCountAll(userId, status, limit, offset, pinned) {
     const whereClause = {
       userId,

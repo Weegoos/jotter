@@ -75,7 +75,7 @@ export class GetFileController {
         id,
         'trashed',
         parseInt(limit),
-        parseInt(page),
+        parseInt(page)
       );
 
       res.json({
@@ -86,7 +86,7 @@ export class GetFileController {
       });
     } catch (error) {
       console.error('Ошибка:', error);
-            if (error.message.includes('USER NOT FOUND')) {
+      if (error.message.includes('USER NOT FOUND')) {
         return res.status(400).json({ message: 'Ошибка: userId отсутствует.' });
       }
 
@@ -96,26 +96,24 @@ export class GetFileController {
       res.status(500).json({ message: 'Ошибка сервера' });
     }
   }
-}
 
-export const getFilesName = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    if (!userId) {
-      return res.status(400).json({ message: 'Ошибка: userId отсутствует.' });
+  async getFilesName(req, res) {
+    try {
+      const userId = req.user.id;
+      const files = await this.fileUseCases.getFilesByName(userId, 'active', 'name');
+      res.json(files.map((file) => file.name));
+    } catch (error) {
+      console.error('Ошибка:', error);
+      if (error.message.includes('USER NOT FOUND')) {
+        return res.status(400).json({ message: 'Ошибка: userId отсутствует.' });
+      }
+      if (error.message.includes('Status is required')) {
+        return res.status(400).json({ message: 'Ошибка: статус обязателен.' });
+      }
+      res.status(500).json({ message: 'Ошибка сервера' });
     }
-
-    const files = await Files.findAll({
-      where: { userId: userId, status: 'active' },
-      attributes: ['name'],
-    });
-
-    res.json(files.map((file) => file.name));
-  } catch (error) {
-    console.error('Ошибка:', error);
-    res.status(500).json({ message: 'Ошибка сервера' });
   }
-};
+}
 
 export const searchFiles = async (req, res) => {
   try {

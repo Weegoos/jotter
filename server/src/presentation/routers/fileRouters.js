@@ -3,7 +3,6 @@ import express from 'express';
 import './swagger/fileSwagger.js';
 import {
   GetFileController,
-  getFilesName,
   searchFiles,
 } from '../controllers/file/getFileControllers.js';
 import { CreateFileController } from '../controllers/file/postFileController.js';
@@ -53,11 +52,15 @@ const getFileController = new GetFileController(fileUseCases);
 
 router.get('/search', authMiddleware, searchFiles);
 router.get('/allFiles', authMiddleware, getFileController.getFilesByUserId.bind(getFileController));
-router.get('/filesName', authMiddleware, getFilesName);
+router.get('/filesName', authMiddleware, getFileController.getFilesName.bind(getFileController));
 router.get(
   '/filesStatus',
   authMiddleware,
   getFileController.getFilesByStatus.bind(getFileController)
 );
-router.get('/trashedFiles', authMiddleware, getFileController.getTrashedFiles.bind(getFileController));
+router.get(
+  '/trashedFiles',
+  authMiddleware,
+  getFileController.getTrashedFiles.bind(getFileController)
+);
 export default router;
