@@ -56,4 +56,16 @@ export class IFileRepository {
 
     throw new Error('Method findAndCountAll() not implemented');
   }
+
+  /**
+   * Поиск файлов пользователя по имени с использованием оператора LIKE
+   * @param {Number} userId 
+   * @param {*} search 
+   */
+
+  async findAllByOp(userId, search) {
+    console.log(userId, search);
+
+    throw new Error('Method findAllByOp() not implemented');
+  }
 }
