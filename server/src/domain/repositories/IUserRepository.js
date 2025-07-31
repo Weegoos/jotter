@@ -29,4 +29,24 @@ export class IUserRepository {
     console.log(userId);
     throw new Error('Method not implemented');
   }
+
+  /**
+   * Найти всех пользователей, кроме текущего
+   * @param {Number} userId 
+   */
+
+  async findAll(userId) {
+    console.log(userId);
+    throw new Error('Method not implemented');
+  }
+   /**
+    * Поиск всех пользователей по введенному имени
+    * Исключая текущего пользователя
+    * @param {*} fullname 
+    * @param {Number} currentUserId 
+    */
+  async findAllByInput(fullname, currentUserId) {
+    console.log(fullname, currentUserId);
+    throw new Error('Method not implemented');
+  }
 }
