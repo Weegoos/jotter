@@ -2,7 +2,7 @@ import express from 'express';
 
 import authMiddleware from '../middlewares/authMiddleware.js';
 import './swagger/_userSwagger.js';
-import { allUsersByInput, GetUserController } from '../controllers/user/getUserControllers.js';
+import { GetUserController } from '../controllers/user/getUserControllers.js';
 import { PostUserController } from '../controllers/user/postUserControllers.js';
 import { editUserInfo } from '../controllers/user/editUserControllers.js';
 import { SequelizeUserRepository } from '../../infrastructure/repositories/UserRepositories.js';
@@ -23,9 +23,13 @@ router.post('/login', postUserController.loginUser.bind(postUserController));
 router.put('/edit', authMiddleware, editUserInfo);
 
 // get
-const getUserController = new GetUserController(userRepository);
+const getUserController = new GetUserController(userUseCase);
 router.get('/me', authMiddleware, getUserController.getUserInfo.bind(getUserController));
 router.get('/allUsers', authMiddleware, getUserController.getAllUsers.bind(getUserController));
-router.get('/allUsersByInput', authMiddleware, allUsersByInput);
+router.get(
+  '/allUsersByInput',
+  authMiddleware,
+  getUserController.getAllUsersByInput.bind(getUserController)
+);
 
 export default router;

@@ -84,4 +84,20 @@ export class UserUseCase {
 
     return users;
   }
+
+  async findAllUsersByInput(fullname, currentUserId) {
+    if (!fullname) {
+      throw new Error('Fullname is required');
+    }
+    if (!currentUserId) {
+      throw new Error('Current user ID is required');
+    }
+
+    const users = await this.userRepository.findAllByInput(fullname, currentUserId);
+    if (!users || users.length === 0) {
+      throw new Error('No users found with the given input');
+    }
+
+    return users;
+  }
 }

@@ -36,4 +36,16 @@ export class SequelizeUserRepository extends IUserRepository {
       },
     });
   }
+  async findAllByInput(fullname, currentUserId) {
+    return await this.userDatabaseModel.findAll({
+      where: {
+        fullname: {
+          [this.OpModel.iLike]: `%${fullname}%`,
+        },
+        id: {
+          [this.OpModel.ne]: currentUserId, // исключаем текущего пользователя
+        },
+      },
+    });
+  }
 }
