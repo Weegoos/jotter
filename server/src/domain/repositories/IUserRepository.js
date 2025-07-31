@@ -19,4 +19,14 @@ export class IUserRepository {
     console.log(userFullname, userEmail, userPassword);
     throw new Error('Method not implemented');
   }
+
+  /**
+   * Найти пользователя по первичному ключу
+   * @param {Number} userId 
+   */
+
+  async findByPk(userId) {
+    console.log(userId);
+    throw new Error('Method not implemented');
+  }
 }

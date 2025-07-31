@@ -21,4 +21,8 @@ export class SequelizeUserRepository extends IUserRepository {
       password: userPassword,
     });
   }
+
+  async findByPk(userId) {
+    return await this.userDatabaseModel.findByPk(userId);
+  }
 }

@@ -58,4 +58,17 @@ export class UserUseCase {
 
     return user;
   }
+
+  async getUserInfo(userId) {
+    if (!userId) {
+      throw new Error('User ID is required');
+    }
+
+    const user = await this.userRepository.findByPk(userId);
+    if (!user) {
+      throw new Error(USER_NOT_FOUND);
+    }
+
+    return user;
+  }
 }

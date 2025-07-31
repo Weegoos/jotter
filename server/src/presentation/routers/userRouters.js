@@ -5,13 +5,14 @@ import './swagger/_userSwagger.js';
 import {
   allUsersByInput,
   getAllUsers,
-  getUserInfo,
+  GetUserController,
 } from '../controllers/user/getUserControllers.js';
 import { PostUserController } from '../controllers/user/postUserControllers.js';
 import { editUserInfo } from '../controllers/user/editUserControllers.js';
 import { SequelizeUserRepository } from '../../infrastructure/repositories/UserRepositories.js';
 import User from '../../infrastructure/database/models/userSchemas.js';
 import { UserUseCase } from '../../use-cases/User/UserUseCase.js';
+import { Op } from 'sequelize';
 const router = express.Router();
 
 // DI Solid
@@ -19,12 +20,15 @@ const userRepository = new SequelizeUserRepository(User);
 
 const userUseCase = new UserUseCase(userRepository);
 const postUserController = new PostUserController(userUseCase);
+// post
 router.post('/register', postUserController.createUser.bind(postUserController));
 router.post('/login', postUserController.loginUser.bind(postUserController));
 
 router.put('/edit', authMiddleware, editUserInfo);
 
-router.get('/me', authMiddleware, getUserInfo);
+// get
+const getUserController = new GetUserController(userRepository, Op)
+router.get('/me', authMiddleware, getUserController.getUserInfo.bind(getUserController));
 router.get('/allUsers', authMiddleware, getAllUsers);
 router.get('/allUsersByInput', authMiddleware, allUsersByInput);
 

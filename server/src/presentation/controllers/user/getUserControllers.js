@@ -1,13 +1,14 @@
 import { Op } from 'sequelize';
 import User from '../../../infrastructure/database/models/userSchemas.js';
+export class GetUserController {
+  constructor(userUseCase, OpModel) {
+    this.userUseCase = userUseCase;
+    this.OpModel = OpModel
+  }
 
-export const getUserInfo = async (req, res) => {
+  async getUserInfo (req, res) {
   try {
-    const user = await User.findByPk(req.user.id);
-
-    if (!user) {
-      return res.status(404).json({ message: 'Пользователь не найден' });
-    }
+    const user = await this.userUseCase.findByPk(req.user.id);
 
     res.json(user);
   } catch (error) {
@@ -15,6 +16,7 @@ export const getUserInfo = async (req, res) => {
     res.status(500).json({ message: 'Ошибка сервера' });
   }
 };
+}
 
 export const getAllUsers = async (req, res) => {
   try {
