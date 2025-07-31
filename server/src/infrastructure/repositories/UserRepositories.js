@@ -1,9 +1,10 @@
 import { IUserRepository } from '../../domain/repositories/IUserRepository.js';
 
 export class SequelizeUserRepository extends IUserRepository {
-  constructor(userDatabaseModel) {
+  constructor(userDatabaseModel, OpModel) {
     super();
     this.userDatabaseModel = userDatabaseModel;
+    this.OpModel = OpModel;
   }
 
   async findOne(parameter, parameterValue) {
@@ -24,5 +25,15 @@ export class SequelizeUserRepository extends IUserRepository {
 
   async findByPk(userId) {
     return await this.userDatabaseModel.findByPk(userId);
+  }
+
+  async findAll(userId) {
+    return await this.userDatabaseModel.findAll({
+      where: {
+        id: {
+          [this.OpModel.ne]: userId,
+        },
+      },
+    });
   }
 }

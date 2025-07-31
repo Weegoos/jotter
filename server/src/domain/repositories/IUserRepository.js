@@ -22,7 +22,7 @@ export class IUserRepository {
 
   /**
    * Найти пользователя по первичному ключу
-   * @param {Number} userId 
+   * @param {Number} userId
    */
 
   async findByPk(userId) {

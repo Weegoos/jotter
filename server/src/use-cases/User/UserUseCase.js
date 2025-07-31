@@ -71,4 +71,17 @@ export class UserUseCase {
 
     return user;
   }
+
+  async getAllUsers(currentUserId) {
+    if (!currentUserId) {
+      throw new Error('Current user ID is required');
+    }
+
+    const users = await this.userRepository.findAll(currentUserId);
+    if (!users || users.length === 0) {
+      throw new Error('No users found');
+    }
+
+    return users;
+  }
 }
