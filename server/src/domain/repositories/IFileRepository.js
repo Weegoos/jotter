@@ -59,8 +59,8 @@ export class IFileRepository {
 
   /**
    * Поиск файлов пользователя по имени с использованием оператора LIKE
-   * @param {Number} userId 
-   * @param {*} search 
+   * @param {Number} userId
+   * @param {*} search
    */
 
   async findAllByOp(userId, search) {
