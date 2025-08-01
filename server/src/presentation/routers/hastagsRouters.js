@@ -8,10 +8,9 @@ import { HashtagUseCase } from '../../use-cases/Hashtag/HashtagUseCase.js';
 const router = express.Router();
 
 // DI Solid
-const hashtagRepository = new HashtagRepository(Hashtags)
+const hashtagRepository = new HashtagRepository(Hashtags);
 const hashtagUseCase = new HashtagUseCase(hashtagRepository);
 const getHashtagController = new GetHashtagConroller(hashtagUseCase);
-
 
 router.get('/all', authMiddleware, getHashtagController.getAllHashtags.bind(getHashtagController));
 

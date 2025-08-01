@@ -2,14 +2,18 @@ export class PutUserController {
   constructor(userUseCase) {
     this.userUseCase = userUseCase;
   }
-  
+
   async editUserInfo(req, res) {
     try {
       const { fullname, email, password } = req.query;
-      const user = await this.userUseCase.editUserInformation(req.user.id, fullname, email, password);
+      const user = await this.userUseCase.editUserInformation(
+        req.user.id,
+        fullname,
+        email,
+        password
+      );
       res.json({ message: 'Данные пользователя успешно обновлены', user });
-    }
-    catch (error) {
+    } catch (error) {
       if (error.message === 'User ID is required') {
         return res.status(400).json({ message: 'ID пользователя обязателен' });
       }

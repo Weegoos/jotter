@@ -7,7 +7,7 @@ import { PostUserController } from '../controllers/user/postUserControllers.js';
 import { PutUserController } from '../controllers/user/editUserControllers.js';
 import { SequelizeUserRepository } from '../../infrastructure/repositories/UserRepositories.js';
 import User from '../../infrastructure/database/models/userSchemas.js';
-import { UserUseCase } from '../../use-cases/User/UserUseCase.js';
+import { UserUseCase } from '../../use-cases/User/UserUseCases.js';
 import { Op } from 'sequelize';
 const router = express.Router();
 
