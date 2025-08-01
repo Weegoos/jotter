@@ -1,31 +1,31 @@
 <template>
-  <div>
-    <section class="grid grid-cols-3 gap-4 m-[24px]">
-      <q-select v-model="fileName" :options="fileNameOptions" label="File Name" filled />
-      <q-select v-model="type" :options="typeOptions" label="Note's type" filled />
-      <q-select v-model="hashtags" :options="hashtagOptions" label="Hashtags" filled multiple />
-    </section>
-    <section
+  <section>
+    <div class="grid grid-cols-3 gap-4 m-[24px]">
+      <Select v-model="fileName" :options="fileNameOptions" label="File Name"></Select>
+      <Select v-model="type" :options="typeOptions" label="Note's type"></Select>
+      <Select v-model="hashtags" :options="hashtagOptions" label="Hashtags" multiple></Select>
+    </div>
+    <div
       class="m-[24px]"
       :class="type == privateNote ? 'grid grid-cols-2 grid-rows-1 gap-4' : ''"
     >
-      <q-input v-model="title" type="text" label="Title" filled autogrow />
-      <q-input
+      <Input v-model="title" type="text" label="Title" autogrow></Input>
+      <Input
         v-model="password"
         type="password"
         label="Password"
-        filled
+        autogrow
         v-if="type === privateNote"
-      />
-    </section>
-    <section class="m-[8px]">
+      ></Input>
+    </div>
+    <div class="m-[8px]">
       <BaseQEditor
         @saveWork="saveWork"
         @sendWork="sendWork"
         placeholder="Write something here..."
       />
-    </section>
-  </div>
+    </div>
+  </section>
 </template>
 
 <script setup>
@@ -34,7 +34,7 @@ import BaseQEditor from '../../components/molecules/MoleculeQEditor.vue';
 import { useQuasar } from 'quasar';
 import { useApiStore } from 'src/stores/api-store';
 import { postMethod } from 'src/composables/api-method/post';
-
+import { Input, Select } from 'src/components/atoms';
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
@@ -60,9 +60,8 @@ const getList = async () => {
     typeOptions.value = apiStore.noteTypes.map((type) => type.name);
 
     await apiStore.getHashtags(serverURL, $q);
-    console.log(apiStore.hashtags.hastags);
 
-    hashtagOptions.value = apiStore.hashtags.hastags.map((hash) => hash.name);
+    hashtagOptions.value = apiStore.hashtags.hashtags.map((hash) => hash.name);
   } catch (error) {
     console.error(error);
   }

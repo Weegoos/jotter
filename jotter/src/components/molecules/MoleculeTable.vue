@@ -63,6 +63,26 @@
         </q-btn-dropdown>
       </q-td>
     </template>
+    <template v-slot:body-cell-restore="props">
+      <q-td align="center">
+        <q-btn
+          class="bg-green-500 hover:bg-green-600 text-white"
+          icon="mdi-refresh"
+          size="sm"
+          @click="emit('restoreFile', props.row)"
+        />
+      </q-td>
+    </template>
+    <template v-slot:body-cell-delete="props">
+      <q-td align="center">
+        <q-btn
+          class="bg-rose-500 hover:bg-rose-600 text-white"
+          icon="mdi-delete"
+          size="sm"
+          @click="emit('deleteFile', props.row)"
+        />
+      </q-td>
+    </template>
   </q-table>
 </template>
 
@@ -81,5 +101,5 @@ const props = defineProps({
   title: String,
 });
 
-const emit = defineEmits(['pin', 'update', 'delete']);
+const emit = defineEmits(['pin', 'update', 'delete', 'deleteFile', 'restoreFile']);
 </script>

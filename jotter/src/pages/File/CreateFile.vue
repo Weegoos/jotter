@@ -1,12 +1,7 @@
 <template>
   <div>
-    <q-input
-      class="m-[16px]"
-      v-model="fileName"
-      type="text"
-      placeholder="Write file name"
-      autogrow
-    />
+    <Input class="m-[16px]" type="text" autogrow v-model="fileName" placeholder="Write file name">
+    </Input>
     <BaseQEditor
       @saveWork="saveWork"
       @sendWork="sendWork"
@@ -21,6 +16,7 @@ import BaseQEditor from '../../components/molecules/MoleculeQEditor.vue';
 import { useQuasar } from 'quasar';
 import { getCurrentInstance, onMounted, ref } from 'vue';
 import { postMethod } from 'src/composables/api-method/post';
+import { Input } from 'src/components/atoms';
 
 // global variables
 const { proxy } = getCurrentInstance();
