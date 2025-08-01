@@ -9,7 +9,14 @@ export class FriendUseCase {
         throw new Error('Неавторизованный пользователь');
       }
 
-      const friends = await this.friendRepository.findAll({ userId }, [['createdAt', 'DESC']]);
+      const friends = await this.friendRepository.findAll(
+        {
+          friendId: userId,
+          status: 'accepted',
+        },
+        [['createdAt', 'DESC']]
+      );
+
       return friends;
     } catch (error) {
       console.error('Ошибка при получении друзей:', error);
@@ -27,9 +34,14 @@ export class FriendUseCase {
         throw new Error('Параметр status обязателен');
       }
 
-      const friends = await this.friendRepository.findAll({ userId, status }, [
-        ['createdAt', 'DESC'],
-      ]);
+      const friends = await this.friendRepository.findAll(
+        {
+          friendId: userId,
+          status: status,
+        },
+        [['createdAt', 'DESC']]
+      );
+
       return friends;
     } catch (error) {
       console.error('Ошибка при получении друзей по статусу:', error);
@@ -48,6 +60,10 @@ export class FriendUseCase {
       }
 
       const friendUser = await this.friendRepository.findOneFromUser({ fullname });
+      const currentUser = await this.friendRepository.findOneFromUser({
+        id: userId,
+      });
+      console.log(currentUser);
 
       if (!friendUser) {
         throw new Error('Пользователь с таким именем не найден');
@@ -72,7 +88,7 @@ export class FriendUseCase {
       const friendData = {
         userId,
         friendId,
-        fullname: friendUser.fullname,
+        fullname: currentUser.fullname,
         status: 'pending',
       };
 

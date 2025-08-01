@@ -16,7 +16,7 @@ const Friend = sequelize.define(
     timestamps: true,
   }
 );
-Friend.belongsTo(User, { foreignKey: 'friendId', onDelete: 'CASCADE' });
+Friend.belongsTo(User, { foreignKey: 'userId', as: 'sender', onDelete: 'CASCADE' });
 User.hasMany(Friend, { foreignKey: 'userId' });
 
 export default Friend;

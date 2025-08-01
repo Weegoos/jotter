@@ -34,6 +34,6 @@ router.get(
 
 router.put('/changeStatus', authMiddleware, changeFriendStatus);
 
-// router.delete('/deleteById', authMiddleware, deleteFileById);
+// router.delete('/deleteById', authMiddleware, );
 
 export default router;
