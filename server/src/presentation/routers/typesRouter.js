@@ -2,12 +2,7 @@ import express from 'express';
 import authMiddleware from '../middlewares/authMiddleware.js';
 
 import './swagger/typesSwagger.js';
-import {
-  getAllAccessLevelTypes,
-  getAllContentTypes,
-  getAllGeneralTypes,
-  GetTypeController,
-} from '../controllers/types/typesGetControllers.js';
+import { GetTypeController } from '../controllers/types/typesGetControllers.js';
 import { TypeRepository } from '../../infrastructure/repositories/TypeRepositories.js';
 import Types from '../../infrastructure/database/models/typeSchemas.js';
 import { TypeUseCases } from '../../use-cases/Types/TypesUseCases.js';
@@ -24,7 +19,9 @@ router.get(
   '/:fileId/note-types/used',
   getTypeController.getAllTypeUsedByUser.bind(getTypeController)
 );
-router.get('/general', authMiddleware, getAllGeneralTypes);
-router.get('/content', authMiddleware, getAllContentTypes);
-router.get('/accessLevel', authMiddleware, getAllAccessLevelTypes);
+router.get(
+  '/description',
+  authMiddleware,
+  getTypeController.getTypesByDescription.bind(getTypeController)
+);
 export default router;

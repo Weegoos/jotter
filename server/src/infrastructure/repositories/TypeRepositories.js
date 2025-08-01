@@ -7,7 +7,25 @@ export class TypeRepository extends IHashtagRepository {
     this.noteModel = noteModel;
   }
 
-  async findAll(userAttributes = {}, whereCondition = {}, userRaw = true, sequelizeCondition = {}) {
+  async findAllFromType(
+    userAttributes = {},
+    whereCondition = {},
+    userRaw = true,
+    sequelizeCondition = {}
+  ) {
+    return await this.typeModel.findAll({
+      attributes: userAttributes || sequelizeCondition,
+      where: whereCondition,
+      raw: userRaw,
+    });
+  }
+
+  async findAllFromNote(
+    userAttributes = {},
+    whereCondition = {},
+    userRaw = true,
+    sequelizeCondition = {}
+  ) {
     return await this.noteModel.findAll({
       attributes: userAttributes || sequelizeCondition,
       where: whereCondition,

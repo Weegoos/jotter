@@ -6,7 +6,7 @@ export class TypeUseCases {
   }
 
   async getAllTypes() {
-    const types = await this.typeRepository.findAll({}, {}, true);
+    const types = await this.typeRepository.findAllFromType({}, {}, true);
     if (!types || types.length === 0) {
       throw new Error('No types found');
     }
@@ -24,7 +24,7 @@ export class TypeUseCases {
       throw new Error('fileId must be a number');
     }
 
-    const types = await this.typeRepository.findAll(
+    const types = await this.typeRepository.findAllFromNote(
       [[Sequelize.fn('DISTINCT', Sequelize.col('type')), 'type']],
       { fileId },
       true
@@ -37,5 +37,18 @@ export class TypeUseCases {
     const uniqueTypes = types.map((t) => t.type);
 
     return uniqueTypes;
+  }
+
+  async getTypesByDescription(description) {
+    if (!description) {
+      throw new Error('Description is required');
+    }
+    const types = await this.typeRepository.findAllFromType({}, { description }, true);
+
+    if (!types || types.length === 0) {
+      throw new Error('No types found for the given description');
+    }
+
+    return types;
   }
 }

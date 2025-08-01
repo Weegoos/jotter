@@ -1,18 +1,16 @@
 import express from 'express';
-import Types from '../../../infrastructure/database/models/typeSchemas.js';
 import { wssSend } from '../wssSend.js';
 
 const router = express.Router();
-
 export class GetTypeController {
   constructor(typeUseCase) {
     this.typeUseCase = typeUseCase;
   }
 
-  async getAllTypes(res) {
+  async getAllTypes(req, res) {
     try {
       const types = await this.typeUseCase.getAllTypes();
-      res.json(types);
+      res.status(200).json(types);
     } catch (error) {
       if (error.message === 'No types found') {
         return res.status(404).json({ message: 'Типы не найдены' });
@@ -43,45 +41,16 @@ export class GetTypeController {
       res.status(500).json({ message: 'Ошибка сервера' });
     }
   }
+
+  async getTypesByDescription(req, res) {
+    try {
+      const { description } = req.query;
+      const types = await this.typeUseCase.getTypesByDescription(description);
+      res.json(types);
+    } catch (error) {
+      console.error('Ошибка:', error);
+      res.status(500).json({ message: 'Ошибка сервера' });
+    }
+  }
 }
-
-export const getAllGeneralTypes = async (req, res) => {
-  try {
-    const generalTypes = await Types.findAll({
-      where: { description: 'general' },
-    });
-
-    res.json(generalTypes);
-  } catch (error) {
-    console.error('Ошибка:', error);
-    res.status(500).json({ message: 'Ошибка сервера' });
-  }
-};
-
-export const getAllContentTypes = async (req, res) => {
-  try {
-    const generalTypes = await Types.findAll({
-      where: { description: 'content' },
-    });
-
-    res.json(generalTypes);
-  } catch (error) {
-    console.error('Ошибка:', error);
-    res.status(500).json({ message: 'Ошибка сервера' });
-  }
-};
-
-export const getAllAccessLevelTypes = async (req, res) => {
-  try {
-    const generalTypes = await Types.findAll({
-      where: { description: 'content' },
-    });
-
-    res.json(generalTypes);
-  } catch (error) {
-    console.error('Ошибка:', error);
-    res.status(500).json({ message: 'Ошибка сервера' });
-  }
-};
-
 export default router;

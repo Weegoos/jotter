@@ -88,16 +88,24 @@
  *                   example: "Ошибка сервера"
  */
 
-// -------------------- types/getAllAccessLevelTypes -----------------------
+// -------------------- types/description -----------------------
 
 /**
  * @swagger
- * /types/general:
+ * /types/description:
  *   get:
- *     summary: Получить все типы с описанием "general"
- *     description: Возвращает список всех типов, у которых `description` равно "general".
+ *     summary: Получить типы по описанию
+ *     description: Возвращает список типов, фильтрованных по значению поля `description`.
  *     tags:
  *       - Types
+ *     parameters:
+ *       - in: query
+ *         name: description
+ *         schema:
+ *           type: string
+ *           enum: [general, content, accessLevel]
+ *         required: true
+ *         description: Описание типа (description), по которому будет фильтрация.
  *     responses:
  *       200:
  *         description: Успешный ответ. Возвращает массив объектов с типами.
@@ -117,88 +125,6 @@
  *                   description:
  *                     type: string
  *                     example: "general"
- *       500:
- *         description: Ошибка сервера
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Ошибка сервера"
- */
-
-// -------------------- types/getAllContentTypes -----------------------
-
-/**
- * @swagger
- * /types/content:
- *   get:
- *     summary: Получить все типы с описанием "content"
- *     description: Возвращает список всех типов, у которых `description` равно "content".
- *     tags:
- *       - Types
- *     responses:
- *       200:
- *         description: Успешный ответ. Возвращает массив объектов с типами.
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: integer
- *                     example: 1
- *                   name:
- *                     type: string
- *                     example: "public"
- *                   description:
- *                     type: string
- *                     example: "content"
- *       500:
- *         description: Ошибка сервера
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Ошибка сервера"
- */
-
-// -------------------- types/getAllAccessLevelTypes -----------------------
-
-/**
- * @swagger
- * /types/accessLevel:
- *   get:
- *     summary: Получить все типы с описанием "accessLevel"
- *     description: Возвращает список всех типов, у которых `description` равно "accessLevel".
- *     tags:
- *       - Types
- *     responses:
- *       200:
- *         description: Успешный ответ. Возвращает массив объектов с типами.
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: integer
- *                     example: 1
- *                   name:
- *                     type: string
- *                     example: "public"
- *                   description:
- *                     type: string
- *                     example: "accessLevel"
  *       500:
  *         description: Ошибка сервера
  *         content:
