@@ -1,4 +1,4 @@
-import { wss } from '../../../server.js';
+import { wssSend } from '../wssSend.js';
 export class PutFriendController {
   constructor(friendUseCase) {
     this.friendUseCase = friendUseCase;
@@ -11,11 +11,7 @@ export class PutFriendController {
 
       const friend = await this.friendUseCase.changeFriendStatus(userId, status, friendId);
 
-      wss.clients.forEach((client) => {
-        if (client.readyState === 1) {
-          client.send(JSON.stringify({ event: 'changeFriendStatus', friend }));
-        }
-      });
+      wssSend('changeFriendStatus', { friend });
 
       res.status(200).json({ message: 'Статус обновлён', friend });
     } catch (error) {
