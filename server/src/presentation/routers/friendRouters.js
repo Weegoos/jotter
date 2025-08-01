@@ -3,7 +3,7 @@ import authMiddleware from '../middlewares/authMiddleware.js';
 import './swagger/friendSwagger.js';
 import { GetFriendController } from '../controllers/friend/getFriendControllers.js';
 import { PostFriendControllers } from '../controllers/friend/postFriendControllers.js';
-import { changeFriendStatus } from '../controllers/friend/putFriendControllers.js';
+import { PutFriendController } from '../controllers/friend/putFriendControllers.js';
 import { SequelizeFriendRepository } from '../../infrastructure/repositories/FriendRepositories.js';
 import Friend from '../../infrastructure/database/models/friendSchemas.js';
 import { FriendUseCase } from '../../use-cases/Friend/FriendUseCase.js';
@@ -32,7 +32,14 @@ router.get(
   getFriendController.getFriendsByStatusController.bind(getFriendController)
 );
 
-router.put('/changeStatus', authMiddleware, changeFriendStatus);
+// put
+const putFriendController = new PutFriendController(friendUseCase);
+
+router.put(
+  '/changeStatus',
+  authMiddleware,
+  putFriendController.changeFriendStatus.bind(putFriendController)
+);
 
 // router.delete('/deleteById', authMiddleware, );
 

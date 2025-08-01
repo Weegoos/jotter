@@ -1,3 +1,5 @@
+const USER_NOT_FOUND = 'USER_NOT_FOUND';
+
 export class FriendUseCase {
   constructor(friendRepository) {
     this.friendRepository = friendRepository;
@@ -99,5 +101,33 @@ export class FriendUseCase {
       console.error('Ошибка при добавлении в друзья:', error);
       throw new Error('Ошибка сервера');
     }
+  }
+
+  async changeFriendStatus(userId, status, friendId) {
+    if (!userId) {
+      throw new Error(USER_NOT_FOUND);
+    }
+
+    if (!friendId) {
+      throw new Error('friendId is required');
+    }
+
+    if (!status) {
+      throw new Error('status is required');
+    }
+
+    const friend = await this.friendRepository.findOneFromFriend({
+      id: friendId,
+      friendId: userId,
+    });
+
+    if (!friend) {
+      throw new Error('Friendship not found');
+    }
+
+    friend.status = status;
+    await friend.save;
+
+    return friend;
   }
 }
