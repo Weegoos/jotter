@@ -1,5 +1,6 @@
 import Friend from '../../../infrastructure/database/models/friendSchemas.js';
 import { wss } from '../../../server.js';
+import { wssSend } from '../wssSend.js';
 export class GetFriendController {
   constructor(friendUseCase) {
     this.friendUseCase = friendUseCase;
@@ -12,7 +13,32 @@ export class GetFriendController {
       const friends = await this.friendUseCase.getAllFriends(userId);
       res.status(200).json({ friends });
     } catch (error) {
+      if (error.message === 'Неавторизованный пользователь') {
+        return res.status(401).json({ message: error.message });
+      }
       console.error('Ошибка при получении друзей:', error);
+      res.status(500).json({ message: 'Ошибка сервера' });
+    }
+  }
+
+  async getFriendsByStatusController(req, res) {
+    try {
+      const userId = req.user?.id;
+      const { status } = req.query;
+
+      const friends = await this.friendUseCase.getFriendsByStatus(userId, status);
+
+      wssSend('allFriendsByStatus', friends);
+
+      res.status(200).json({ friends });
+    } catch (error) {
+      if (
+        error.message === 'Неавторизованный пользователь' ||
+        error.message === 'Параметр status обязателен'
+      ) {
+        return res.status(400).json({ message: error.message });
+      }
+      console.error('Ошибка при добавлении в друзья:', error);
       res.status(500).json({ message: 'Ошибка сервера' });
     }
   }
