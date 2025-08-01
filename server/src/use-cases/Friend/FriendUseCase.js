@@ -130,4 +130,26 @@ export class FriendUseCase {
 
     return friend;
   }
+
+  async deleteFriendById(userId, friendId) {
+    if (!userId) {
+      throw new Error(USER_NOT_FOUND);
+    }
+
+    if (!friendId) {
+      throw new Error('friendId is required');
+    }
+
+    const friend = await this.friendRepository.findOneFromFriend({
+      id: friendId,
+      friendId: userId,
+    });
+
+    if (!friend) {
+      throw new Error('Friendship not found');
+    }
+
+    await friend.destroy();
+    return friend;
+  }
 }

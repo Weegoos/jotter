@@ -8,7 +8,7 @@ import { SequelizeFriendRepository } from '../../infrastructure/repositories/Fri
 import Friend from '../../infrastructure/database/models/friendSchemas.js';
 import { FriendUseCase } from '../../use-cases/Friend/FriendUseCase.js';
 import User from '../../infrastructure/database/models/userSchemas.js';
-// import { deleteFileById } from '../controllers/file/deleteFileControllers.js';
+import {DeleteFriendController } from '../controllers/friend/deleteFriendControllers.js';
 const router = express.Router();
 
 // Di Solid
@@ -41,6 +41,8 @@ router.put(
   putFriendController.changeFriendStatus.bind(putFriendController)
 );
 
-// router.delete('/deleteById', authMiddleware, );
+// delete
+const deleteFriendController = new DeleteFriendController(friendUseCase)
+router.delete('/deleteById', authMiddleware, deleteFriendController.deleteFriendById.bind(deleteFriendController));
 
 export default router;

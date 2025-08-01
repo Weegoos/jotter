@@ -26,7 +26,7 @@ async function connectDB() {
   try {
     await sequelize.authenticate();
     console.log('✅ Подключение к базе данных установлено.');
-    await sequelize.sync({ alter: true });
+    await sequelize.sync({ force: false });
     console.log('✅ Таблицы синхронизированы.');
     return sequelize;
   } catch (error) {
