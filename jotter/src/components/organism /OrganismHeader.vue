@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHr LpR lFf" style="min-height: 100%">
+  <!-- <q-layout view="hHr LpR lFf" style="min-height: 100%"> -->
   <q-header
     data-testid="main-header"
     :model-value="headerValue"
@@ -47,7 +47,7 @@
       </div>
     </div>
   </q-header>
-  </q-layout>
+  <!-- </q-layout> -->
 </template>
 
 <script setup>

@@ -1,15 +1,26 @@
 import express from 'express';
 import authMiddleware from '../middlewares/authMiddleware.js';
 import './swagger/friendSwagger.js';
-import { getAllFriends, getUserByStatus } from '../controllers/friend/getFriendControllers.js';
+import {
+  GetFriendController,
+  getUserByStatus,
+} from '../controllers/friend/getFriendControllers.js';
 import { sendRequestToTheFriend } from '../controllers/friend/postFriendControllers.js';
 import { changeFriendStatus } from '../controllers/friend/putFriendControllers.js';
+import { SequelizeFriendRepository } from '../../infrastructure/repositories/FriendRepositories.js';
+import Friend from '../../infrastructure/database/models/friendSchemas.js';
+import { FriendUseCase } from '../../use-cases/Friend/FriendUseCase.js';
 // import { deleteFileById } from '../controllers/file/deleteFileControllers.js';
 const router = express.Router();
 
+// Di Solid
+const friendRepository = new SequelizeFriendRepository(Friend);
+const friendUseCase = new FriendUseCase(friendRepository);
 router.post('/add', authMiddleware, sendRequestToTheFriend);
 
-router.get('/getAll', authMiddleware, getAllFriends);
+// get
+const getFriendController = new GetFriendController(friendUseCase);
+router.get('/getAll', authMiddleware, getFriendController.getAllFriends.bind(getFriendController));
 router.get('/getByStatus', authMiddleware, getUserByStatus);
 
 router.put('/changeStatus', authMiddleware, changeFriendStatus);
