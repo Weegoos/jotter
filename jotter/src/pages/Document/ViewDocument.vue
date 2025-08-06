@@ -2,6 +2,18 @@
   <section>
     <div class="grid lg:grid-cols-2 text-font">
       <q-scroll-area style="width: 100%; height: 100vh">
+        <div class="flex flex-row gap-4">
+         <div class="basis-3/4 ">
+           <Form @submit="submitDocument">
+            <Input v-model="searchDocument" placeholder="Поиск по заметкам..." />
+          </Form>
+         </div>
+         <div class="flex-2">
+          <q-btn icon="mdi-plus"  @click="$router.push('/create-document')">
+            <Tooltip label="Add a note" />
+          </q-btn>
+         </div>
+        </div>
         <div class="flex-1">
           <p class="logo-font text-h4 text-bold p-[20px] text-black">
             <q-icon name="mdi-pin" /> Pinned Notes
@@ -45,7 +57,8 @@ import { useRoute, useRouter } from 'vue-router';
 import { deleteMethod } from 'src/composables/api-method/delete';
 import { putMethod } from 'src/composables/api-method/put';
 import { useWebSocket } from 'src/composables/javascript-function/websocket';
-import { ListToViewDocument } from 'src/components/molecules';
+import { Form, ListToViewDocument } from 'src/components/molecules';
+import { Button, Input, Tooltip } from 'src/components/atoms';
 
 // global variables
 const { proxy } = getCurrentInstance();
@@ -82,7 +95,6 @@ watch(
 );
 
 const noteContent = ref('');
-
 const showNoteContent = async (noteInfo) => {
   router.push(`/view-notes/${id}/${noteInfo.id}`);
   const response = await getMethod(serverURL, `notes/note/${noteInfo.id}`, $q, 'Заметки получены!');
@@ -92,7 +104,6 @@ const showNoteContent = async (noteInfo) => {
 const rows = ref([]);
 const pinnedNote = ref([]);
 const savedNote = ref([]);
-
 const getNotesByPinned = async (id, pinnedValue) => {
   try {
     const response = await getMethod(
@@ -152,15 +163,6 @@ onMounted(() => {
 
 const isOpenDetailedInformation = ref(false);
 const detailedInformation = ref([]);
-const viewDetailedInfoAboutNote = (evt, row, index) => {
-  detailedInformation.value = row;
-  isOpenDetailedInformation.value = true;
-};
-
-const closeDetailedInformationSection = () => {
-  isOpenDetailedInformation.value = false;
-};
-
 const updateNote = (row) => {
   router.push(`/update-note/${row.id}`);
 };
