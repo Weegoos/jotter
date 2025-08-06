@@ -7,90 +7,24 @@
       <q-icon name="mdi-pin" /> Pinned Files
     </p>
     <div class="grid lg:grid-cols-4 gap-4 flex-wrap p-[10px]">
-      <q-card
-        v-for="(pinnedFile, index) in pinnedFiles"
-        :key="index"
-        @click="pushToTheFile(pinnedFile)"
-      >
-        <q-card-section>
-          <div class="flex">
-            <div class="flex-1">
-              <h6>{{ useDateFormat(pinnedFile.updatedAt) }}</h6>
-            </div>
-            <div class="flex-2">
-              <q-btn
-                flat
-                icon="mdi-dots-horizontal"
-                @click="
-                  (e) => {
-                    e.stopPropagation();
-                    viewMenu();
-                  }
-                "
-              >
-                <q-menu anchor="bottom right" self="top right">
-                  <q-item clickable @click="pinFile(pinnedFile)">
-                    <q-item-section avatar>
-                      <q-icon color="orange" name="mdi-pin" />
-                    </q-item-section>
-                    <q-item-section>Unpin</q-item-section>
-                  </q-item>
-                  <q-item clickable @click="changeFileStatus(pinnedFile)">
-                    <q-item-section avatar>
-                      <q-icon color="red" name="mdi-delete" />
-                    </q-item-section>
-                    <q-item-section>Move to the trash</q-item-section>
-                  </q-item>
-                </q-menu>
-              </q-btn>
-            </div>
-          </div>
-          <div class="text-h6">{{ pinnedFile.name }}</div>
-          <p>{{ pinnedFile.description || 'Description' }}</p>
-        </q-card-section>
-      </q-card>
+      <CardToGetFile
+        :document="pinnedFiles"
+        :textForPinButton="String('Unpin')"
+        @pin="pinFile"
+        @changeStatus="changeFileStatus"
+        @pushToNote="pushToTheNote"
+      />
     </div>
 
     <p class="logo-font text-h4 text-bold p-[10px] text-black"><q-icon name="mdi-file" /> Files</p>
     <div class="grid lg:grid-cols-4 gap-4 flex-wrap p-[10px]">
-      <q-card v-for="(file, index) in rows" :key="index" @click="pushToTheFile(file)">
-        <q-card-section>
-          <div class="flex">
-            <div class="flex-1">
-              <h6>{{ useDateFormat(file.updatedAt) }}</h6>
-            </div>
-            <div class="flex-2">
-              <q-btn
-                flat
-                icon="mdi-dots-horizontal"
-                @click="
-                  (e) => {
-                    e.stopPropagation();
-                    viewMenu();
-                  }
-                "
-              >
-                <q-menu anchor="bottom right" self="top right">
-                  <q-item clickable @click="pinFile(file)">
-                    <q-item-section avatar>
-                      <q-icon color="orange" name="mdi-pin" />
-                    </q-item-section>
-                    <q-item-section>Pin</q-item-section>
-                  </q-item>
-                  <q-item clickable @click="changeFileStatus(file)">
-                    <q-item-section avatar>
-                      <q-icon color="red" name="mdi-delete" />
-                    </q-item-section>
-                    <q-item-section>Move to the trash</q-item-section>
-                  </q-item>
-                </q-menu>
-              </q-btn>
-            </div>
-          </div>
-          <div class="text-h6">{{ file.name }}</div>
-          <p>{{ file.description || 'Description' }}</p>
-        </q-card-section>
-      </q-card>
+      <CardToGetFile
+        :document="rows"
+        :textForPinButton="String('Pin')"
+        @pin="pinFile"
+        @changeStatus="changeFileStatus"
+        @pushToNote="pushToTheNote"
+      />
     </div>
     <div class="p-[10px]">
       <Button
@@ -107,11 +41,10 @@
 <script setup>
 import { useQuasar } from 'quasar';
 import { Button, Input } from 'src/components/atoms';
-import { Form, Table } from 'src/components/molecules';
+import { CardToGetFile, Form, Table } from 'src/components/molecules';
 import BasePagination from 'src/components/molecules/MoleculePagination.vue';
 import { getMethod } from 'src/composables/api-method/get';
 import { putMethod } from 'src/composables/api-method/put';
-import { useDateFormat } from 'src/composables/javascript-function/formatDate';
 import { getCurrentInstance, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -201,16 +134,13 @@ const searchFiles = () => {
     console.error('Ошибка в searchFiles:', error);
   }
 };
-function viewMenu() {
-  // логика открытия меню
-}
 const current = ref(1);
 const pagination = (page) => {
   current.value = page;
   getFiles(current.value);
 };
 
-const pushToTheFile = (row) => {
+const pushToTheNote = (row) => {
   router.push(`/view-notes/${row.id}/0`);
   console.log(row.id);
 };
