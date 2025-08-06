@@ -6,135 +6,28 @@
           <p class="logo-font text-h4 text-bold p-[20px] text-black">
             <q-icon name="mdi-pin" /> Pinned Notes
           </p>
-          <q-list
-            bordered
-            v-for="(note, index) in pinnedNote.filter((note) => note.type !== 'saved')"
-            :key="index"
-          >
-            <q-item
-              clickable
-              v-ripple
-              @click="showNoteContent(note)"
-              :class="note.id == noteId ? 'bg-grey-4' : ''"
-            >
-              <q-item-section>
-                <section class="grid grid-cols-2">
-                  <div>
-                    <p class="text-h6">{{ note.title }}</p>
-                  </div>
-                  <div align="right">
-                    <q-btn
-                      flat
-                      icon="mdi-dots-horizontal"
-                      @click="
-                        (e) => {
-                          e.stopPropagation();
-                        }
-                      "
-                    >
-                      <q-menu anchor="bottom right" self="top right">
-                        <q-item clickable @click="pinNote(note)">
-                          <q-item-section avatar>
-                            <q-icon color="orange" name="mdi-pin" />
-                          </q-item-section>
-                          <q-item-section>Unpin</q-item-section>
-                        </q-item>
-                        <q-item clickable @click="deleteNote(note)">
-                          <q-item-section avatar>
-                            <q-icon color="red" name="mdi-delete" />
-                          </q-item-section>
-                          <q-item-section>Move to the trash</q-item-section>
-                        </q-item>
-                      </q-menu>
-                    </q-btn>
-                  </div>
-                </section>
-                <div class="py-[10px] q-gutter-sm">
-                  <q-btn color="primary" class="rounded-full" no-caps :label="note.type" />
-
-                  <q-btn
-                    v-for="(hashtag, index) in note.hashtags"
-                    :key="index"
-                    color="secondary"
-                    class="rounded-full"
-                    no-caps
-                    :label="hashtag"
-                  />
-                </div>
-              </q-item-section>
-            </q-item>
-            <q-separator dark />
-          </q-list>
+          <ListToViewDocument
+            :document="pinnedNote.filter((note) => note.type !== 'saved')"
+            :noteId="Number(noteId)"
+            :pinButtonText="String('Unpin')"
+            @showNoteContent="showNoteContent"
+            @pin="pinNote"
+            @delete="deleteNote"
+            @edit="updateNote"
+          />
 
           <p class="logo-font text-h4 text-bold p-[20px] text-black">
             <q-icon name="mdi-note" /> Notes
           </p>
-          <q-list
-            bordered
-            v-for="(note, index) in rows.filter((note) => note.type !== 'saved')"
-            :key="index"
-          >
-            <q-item
-              clickable
-              v-ripple
-              @click="showNoteContent(note)"
-              :class="note.id == noteId ? 'bg-grey-4' : ''"
-            >
-              <q-item-section>
-                <section class="grid grid-cols-3">
-                  <div class="col-span-2">
-                    <p class="text-h6">{{ note.title }}</p>
-                  </div>
-                  <div align="right">
-                    <q-btn
-                      flat
-                      icon="mdi-dots-horizontal"
-                      @click="
-                        (e) => {
-                          e.stopPropagation();
-                        }
-                      "
-                    >
-                      <q-menu anchor="bottom right" self="top right">
-                        <q-item clickable @click="pinNote(note)">
-                          <q-item-section avatar>
-                            <q-icon color="orange" name="mdi-pin" />
-                          </q-item-section>
-                          <q-item-section>Pin</q-item-section>
-                        </q-item>
-                        <q-item clickable @click="updateNote(note)">
-                          <q-item-section avatar>
-                            <q-icon color="amber-5" name="mdi-pencil" />
-                          </q-item-section>
-                          <q-item-section>Edit</q-item-section>
-                        </q-item>
-                        <q-item clickable @click="deleteNote(note)">
-                          <q-item-section avatar>
-                            <q-icon color="red" name="mdi-delete" />
-                          </q-item-section>
-                          <q-item-section>Move to the trash</q-item-section>
-                        </q-item>
-                      </q-menu>
-                    </q-btn>
-                  </div>
-                </section>
-
-                <div class="mt-[10px] q-gutter-sm">
-                  <q-btn color="primary" class="rounded-full" no-caps :label="note.type" />
-
-                  <q-btn
-                    v-for="(hashtag, index) in note.hashtags"
-                    :key="index"
-                    color="secondary"
-                    class="rounded-full"
-                    no-caps
-                    :label="hashtag"
-                  />
-                </div>
-              </q-item-section>
-            </q-item>
-            <q-separator dark />
-          </q-list>
+          <ListToViewDocument
+            :document="rows.filter((note) => note.type !== 'saved')"
+            :noteId="Number(noteId)"
+            :pinButtonText="String('Pin')"
+            @showNoteContent="showNoteContent"
+            @pin="pinNote"
+            @delete="deleteNote"
+            @edit="updateNote"
+          />
         </div>
       </q-scroll-area>
       <div class="p-[15px] flex-2">
@@ -147,15 +40,12 @@
 <script setup>
 import { useQuasar } from 'quasar';
 import { getMethod } from 'src/composables/api-method/get';
-import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue';
+import { getCurrentInstance, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useDateFormat } from 'src/composables/javascript-function/formatDate';
 import { deleteMethod } from 'src/composables/api-method/delete';
 import { putMethod } from 'src/composables/api-method/put';
 import { useWebSocket } from 'src/composables/javascript-function/websocket';
-import { Form, Table } from 'src/components/molecules';
-import { Input } from 'src/components/atoms';
-import { NoteInformation } from 'src/components/organism ';
+import { ListToViewDocument } from 'src/components/molecules';
 
 // global variables
 const { proxy } = getCurrentInstance();

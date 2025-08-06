@@ -4,3 +4,4 @@ export { default as Drawer } from './MoleculeDrawer.vue';
 export { default as Pagination } from './MoleculePagination.vue';
 export { default as Editor } from './MoleculeQEditor.vue';
 export { default as CardToGetFile } from './MoleculeCardToGetFile.vue';
+export { default as ListToViewDocument } from './MoleculeListToViewDocument.vue';
