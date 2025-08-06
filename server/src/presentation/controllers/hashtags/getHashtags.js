@@ -16,4 +16,17 @@ export class GetHashtagConroller {
       res.status(500).json({ message: 'Ошибка сервера' });
     }
   }
+
+  async getAllHashtagsByFileID(req, res) {
+    try {
+      const { fileId } = req.body;
+
+      const hashtags = await this.hashtagUseCase.getAllHashtagsByFileID(fileId);
+
+      return res.status(200).json({ hashtags, message: 'Хэштеги успешно получены' });
+    } catch (error) {
+      console.error('Ошибка при получении хэштегов:', error);
+      res.status(500).json({ message: 'Ошибка сервера' });
+    }
+  }
 }

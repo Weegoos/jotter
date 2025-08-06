@@ -1,52 +1,12 @@
 <template>
   <div v-if="rows?.length">
-    <q-table
-      class="m-[8px]"
-      bordered
-      title="Files"
-      :rows="rows"
+    <Table
+      :notes="Object(rows)"
+      :title="'Файлы'"
       :columns="columns"
-      row-key="name"
-      hide-bottom
-      v-if="rows?.length"
-    >
-      <template v-slot:body-cell-name="props">
-        <q-td :props="props">
-          <div
-            v-html="props.row.name"
-            class="max-w-[150px] whitespace-nowrap overflow-hidden text-ellipsis"
-          ></div>
-        </q-td>
-      </template>
-      <template v-slot:body-cell-description="props">
-        <q-td :props="props">
-          <div
-            v-html="props.row.description"
-            class="max-w-[150px] whitespace-nowrap overflow-hidden text-ellipsis"
-          ></div>
-        </q-td>
-      </template>
-      <template v-slot:body-cell-restore="props">
-        <q-td align="center">
-          <q-btn
-            class="bg-green-500 hover:bg-green-600 text-white"
-            icon="mdi-refresh"
-            size="sm"
-            @click="restoreFile(props.row)"
-          />
-        </q-td>
-      </template>
-      <template v-slot:body-cell-delete="props">
-        <q-td align="center">
-          <q-btn
-            class="bg-rose-500 hover:bg-rose-600 text-white"
-            icon="mdi-delete"
-            size="sm"
-            @click="deleteFile(props.row)"
-          />
-        </q-td>
-      </template>
-    </q-table>
+      @deleteFile="deleteFile"
+      @restoreFile="restoreFile"
+    />
     <BasePagination :variableName="Object(filesByStatus)" @pagination="pagination" />
   </div>
   <div v-else>
@@ -61,6 +21,7 @@ import { getMethod } from 'src/composables/api-method/get';
 import { putMethod } from 'src/composables/api-method/put';
 import { computed, getCurrentInstance, onMounted, ref } from 'vue';
 import BasePagination from 'src/components/molecules/MoleculePagination.vue';
+import { Table } from 'src/components/molecules';
 // global variables
 const { proxy } = getCurrentInstance();
 const $q = useQuasar();
