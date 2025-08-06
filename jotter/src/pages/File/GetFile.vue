@@ -53,11 +53,17 @@
                 "
               >
                 <q-menu anchor="bottom right" self="top right">
-                  <q-item clickable>
-                    <q-item-section>New tab</q-item-section>
+                  <q-item clickable @click="pinFile(pinnedFile)">
+                    <q-item-section avatar>
+                      <q-icon color="orange" name="mdi-pin" />
+                    </q-item-section>
+                    <q-item-section>Unpin</q-item-section>
                   </q-item>
-                  <q-item clickable>
-                    <q-item-section>New incognito tab</q-item-section>
+                  <q-item clickable @click="changeFileStatus(pinnedFile)">
+                    <q-item-section avatar>
+                      <q-icon color="red" name="mdi-delete" />
+                    </q-item-section>
+                    <q-item-section>Move to the trash</q-item-section>
                   </q-item>
                 </q-menu>
               </q-btn>
@@ -65,6 +71,48 @@
           </div>
           <div class="text-h6">{{ pinnedFile.name }}</div>
           <p>{{ pinnedFile.description || 'Description' }}</p>
+        </q-card-section>
+      </q-card>
+    </div>
+
+    <p class="logo-font text-h4 text-bold p-[10px] text-black"><q-icon name="mdi-file" /> File</p>
+    <div class="grid lg:grid-cols-4 gap-4 flex-wrap p-[10px]">
+      <q-card v-for="(file, index) in rows" :key="index" @click="pushToTheFile(file)">
+        <q-card-section>
+          <div class="flex">
+            <div class="flex-1">
+              <h6>{{ useDateFormat(file.updatedAt) }}</h6>
+            </div>
+            <div class="flex-2">
+              <q-btn
+                flat
+                icon="mdi-dots-horizontal"
+                @click="
+                  (e) => {
+                    e.stopPropagation();
+                    viewMenu();
+                  }
+                "
+              >
+                <q-menu anchor="bottom right" self="top right">
+                  <q-item clickable @click="pinFile(file)">
+                    <q-item-section avatar>
+                      <q-icon color="orange" name="mdi-pin" />
+                    </q-item-section>
+                    <q-item-section>Pin</q-item-section>
+                  </q-item>
+                  <q-item clickable @click="changeFileStatus(file)">
+                    <q-item-section avatar>
+                      <q-icon color="red" name="mdi-delete" />
+                    </q-item-section>
+                    <q-item-section>Move to the trash</q-item-section>
+                  </q-item>
+                </q-menu>
+              </q-btn>
+            </div>
+          </div>
+          <div class="text-h6">{{ file.name }}</div>
+          <p>{{ file.description || 'Description' }}</p>
         </q-card-section>
       </q-card>
     </div>
@@ -168,7 +216,9 @@ const searchFiles = () => {
     console.error('Ошибка в searchFiles:', error);
   }
 };
-
+function viewMenu() {
+  // логика открытия меню
+}
 const current = ref(1);
 const pagination = (page) => {
   current.value = page;
@@ -180,7 +230,7 @@ const pushToTheFile = (row) => {
   console.log(row.id);
 };
 
-const changeFileStatus = async (info, event) => {
+const changeFileStatus = async (info) => {
   try {
     await putMethod(
       serverURL,

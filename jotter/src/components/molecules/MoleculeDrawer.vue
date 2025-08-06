@@ -56,6 +56,11 @@ const drawerOptions = [
     icon: 'mdi-file',
     url: '/get-file',
   },
+  {
+    name: 'Trash',
+    icon: 'mdi-delete-empty',
+    url: '/trash'
+  }
 ];
 </script>
 
