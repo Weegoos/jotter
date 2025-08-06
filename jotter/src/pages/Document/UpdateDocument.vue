@@ -2,7 +2,7 @@
   <div>
     <section class="grid grid-cols-2 gap-4 m-[24px]">
       <Select v-model="type" :options="typeOptions" label="Note's type"></Select>
-      <Input v-model="title" type="text" label="Title" autogrow ></Input>
+      <Input v-model="title" type="text" label="Title" autogrow></Input>
     </section>
     <section class="m-[8px]">
       <BaseQEditor @sendWork="sendWork" :modelValue="contents" />

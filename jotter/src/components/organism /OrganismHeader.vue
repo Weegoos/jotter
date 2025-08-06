@@ -1,14 +1,16 @@
 <template>
-  <!-- <q-layout view="hHr LpR lFf" style="min-height: 100%"> -->
-  <q-header
-    data-testid="main-header"
-    :model-value="headerValue"
-    @update:model-value="updateHeader"
-    reveal
-    elevated
-    class="bg-white p-4 text-black"
-  >
-    <div class="grid grid-rows-1 gap-4" :class="props.userFullname ? 'grid-cols-3' : 'grid-cols-2'">
+  <q-layout view="lhh LpR lFf" style="min-height: 100%">
+    <q-header
+      data-testid="main-header"
+      :model-value="headerValue"
+      @update:model-value="updateHeader"
+      reveal
+      elevated
+      class="bg-white p-4 text-black"
+    >
+      <Drawer />
+
+      <!-- <div class="grid grid-rows-1 gap-4" :class="props.userFullname ? 'grid-cols-3' : 'grid-cols-2'">
       <section>
         <Icon data-testid="toggle-icon" @click="emit('toggleDrawer')" />
       </section>
@@ -45,14 +47,15 @@
           @emitClick="$router.push('/login')"
         />
       </div>
-    </div>
-  </q-header>
-  <!-- </q-layout> -->
+    </div> -->
+    </q-header>
+  </q-layout>
 </template>
 
 <script setup>
 import { getCurrentInstance, ref, watch } from 'vue';
 import { Button, Icon, PopoverItem } from 'src/components/atoms';
+import { Drawer } from '../molecules';
 const props = defineProps({
   header: Boolean,
   userFullname: String,
@@ -61,6 +64,7 @@ const props = defineProps({
   file: Object,
   document: Object,
   profile: Object,
+  drawer: Boolean,
 });
 
 const emit = defineEmits(['update:header', 'toggleDrawer']);

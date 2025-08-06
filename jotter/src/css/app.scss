@@ -1,1 +1,22 @@
 // app global css in SCSS form
+@font-face {
+  font-family: Logo;
+  src: url(../font/KantumruyPro-Thin.ttf);
+}
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.logo-font {
+  font-family: Logo;
+}
+
+.drawer {
+  background-color: #457064;
+  color: white;
+}

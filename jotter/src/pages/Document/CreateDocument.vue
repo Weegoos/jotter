@@ -5,10 +5,7 @@
       <Select v-model="type" :options="typeOptions" label="Note's type"></Select>
       <Select v-model="hashtags" :options="hashtagOptions" label="Hashtags" multiple></Select>
     </div>
-    <div
-      class="m-[24px]"
-      :class="type == privateNote ? 'grid grid-cols-2 grid-rows-1 gap-4' : ''"
-    >
+    <div class="m-[24px]" :class="type == privateNote ? 'grid grid-cols-2 grid-rows-1 gap-4' : ''">
       <Input v-model="title" type="text" label="Title" autogrow></Input>
       <Input
         v-model="password"

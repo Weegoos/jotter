@@ -7,7 +7,7 @@ export default {};
 </script>
 
 <style scoped>
-.my-gradient {
+/* .my-gradient {
   @apply bg-gradient-to-tr from-[#0f2027] to-[#2c5364];
-}
+} */
 </style>

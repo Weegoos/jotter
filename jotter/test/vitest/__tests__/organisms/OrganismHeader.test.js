@@ -38,9 +38,7 @@ describe('OrganismHeader.vue', () => {
     },
     emits: ['toggleDrawer'],
   });
-  it ('', () => {
-
-  })
+  it('', () => {});
   // it('should correctly render', () => {
   //   expect(wrapper.exists()).toBeTruthy();
   // });
