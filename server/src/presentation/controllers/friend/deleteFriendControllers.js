@@ -9,12 +9,12 @@ export class DeleteFriendController {
       const userId = req.user?.id;
       const { friendId } = req.query;
 
-      const friend = await this.friendUseCase.deleteFriendById(userId, friendId)
-      wssSend('deleteFromFriend', {friend})
+      const friend = await this.friendUseCase.deleteFriendById(userId, friendId);
+      wssSend('deleteFromFriend', { friend });
 
       res.status(200).json({ message: 'Друг успешно удален.' });
     } catch (error) {
-       if (error.message.includes('Friendship not found')) {
+      if (error.message.includes('Friendship not found')) {
         return res.status(400).json({ message: 'Дружба не найдена' });
       }
       if (

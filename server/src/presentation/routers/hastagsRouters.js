@@ -4,14 +4,21 @@ import { GetHashtagConroller } from '../controllers/hashtags/getHashtags.js';
 import { HashtagRepository } from '../../infrastructure/repositories/HashtagRepositories.js';
 import Hashtags from '../../infrastructure/database/models/hashtagSchemas.js';
 import { HashtagUseCase } from '../../use-cases/Hashtag/HashtagUseCase.js';
+import Notes from '../../infrastructure/database/models/notesSchemas.js';
+import Files from '../../infrastructure/database/models/fileSchemas.js';
 
 const router = express.Router();
 
 // DI Solid
-const hashtagRepository = new HashtagRepository(Hashtags);
+const hashtagRepository = new HashtagRepository(Hashtags, Notes, Files);
 const hashtagUseCase = new HashtagUseCase(hashtagRepository);
 const getHashtagController = new GetHashtagConroller(hashtagUseCase);
 
 router.get('/all', authMiddleware, getHashtagController.getAllHashtags.bind(getHashtagController));
+router.get(
+  '/:fileId',
+  authMiddleware,
+  getHashtagController.getAllHashtagsByFileID.bind(getHashtagController)
+);
 
 export default router;
