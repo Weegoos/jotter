@@ -1,16 +1,14 @@
 <template>
-  <q-layout view="lhh LpR lFf" style="min-height: 100%">
-    <q-header
-      data-testid="main-header"
-      :model-value="headerValue"
-      @update:model-value="updateHeader"
-      reveal
-      elevated
-      class="bg-white p-4 text-black"
-    >
-      <Drawer />
+  <!-- <q-layout view="lhh LpR lFf" container style="height: 100vh"> -->
+  <q-header
+    data-testid="main-header"
+    :model-value="headerValue"
+    @update:model-value="updateHeader"
+    class="bg-white p-4 text-black"
+  >
+    <Drawer />
 
-      <!-- <div class="grid grid-rows-1 gap-4" :class="props.userFullname ? 'grid-cols-3' : 'grid-cols-2'">
+    <!-- <div class="grid grid-rows-1 gap-4" :class="props.userFullname ? 'grid-cols-3' : 'grid-cols-2'">
       <section>
         <Icon data-testid="toggle-icon" @click="emit('toggleDrawer')" />
       </section>
@@ -48,8 +46,8 @@
         />
       </div>
     </div> -->
-    </q-header>
-  </q-layout>
+  </q-header>
+  <!-- </q-layout> -->
 </template>
 
 <script setup>

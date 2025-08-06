@@ -1,5 +1,5 @@
 <template>
-  <div v-if="Object.keys(rows).length > 0 || Object.keys(pinnedFiles).length > 0">
+  <!-- <div v-if="Object.keys(rows).length > 0 || Object.keys(pinnedFiles).length > 0">
     <Form @submit="searchFiles" class="q-pa-sm">
       <Input v-model="search" placeholder="Поиск по файлам" />
     </Form>
@@ -25,7 +25,50 @@
   </div>
   <div v-else>
     <p class="text-center text-h6">Файлов нету...</p>
-  </div>
+  </div> -->
+  <section>
+    <p class="logo-font text-h4 text-bold p-[10px] text-black">
+      <q-icon name="mdi-pin" /> Pinned File
+    </p>
+    <div class="grid lg:grid-cols-4 gap-4 flex-wrap p-[10px]">
+      <q-card
+        v-for="(pinnedFile, index) in pinnedFiles"
+        :key="index"
+        @click="pushToTheFile(pinnedFile)"
+      >
+        <q-card-section>
+          <div class="flex">
+            <div class="flex-1">
+              <h6>{{ useDateFormat(pinnedFile.updatedAt) }}</h6>
+            </div>
+            <div class="flex-2">
+              <q-btn
+                flat
+                icon="mdi-dots-horizontal"
+                @click="
+                  (e) => {
+                    e.stopPropagation();
+                    viewMenu();
+                  }
+                "
+              >
+                <q-menu anchor="bottom right" self="top right">
+                  <q-item clickable>
+                    <q-item-section>New tab</q-item-section>
+                  </q-item>
+                  <q-item clickable>
+                    <q-item-section>New incognito tab</q-item-section>
+                  </q-item>
+                </q-menu>
+              </q-btn>
+            </div>
+          </div>
+          <div class="text-h6">{{ pinnedFile.name }}</div>
+          <p>{{ pinnedFile.description || 'Description' }}</p>
+        </q-card-section>
+      </q-card>
+    </div>
+  </section>
 </template>
 
 <script setup>
@@ -74,43 +117,6 @@ socket.onerror = (error) => {
 
 const rows = ref([]);
 const pinnedFiles = ref([]);
-const columns = computed(() => [
-  {
-    name: 'name',
-    label: 'Name',
-    field: (row) => row.name,
-    align: 'left',
-    style: 'width: 20%',
-  },
-  {
-    name: 'description',
-    label: 'Description',
-    field: (row) => row.description,
-    align: 'left',
-    style: 'width: 20%',
-  },
-  {
-    name: 'created_at',
-    label: 'Created At',
-    field: (row) => useDateFormat(row.createdAt),
-    align: 'left',
-    style: 'width: 20%',
-  },
-  {
-    name: 'updated_at',
-    label: 'Updated At',
-    field: (row) => useDateFormat(row.updatedAt),
-    align: 'left',
-    style: 'width: 20%',
-  },
-  {
-    name: 'actions',
-    label: 'Actions',
-    field: 'id',
-    align: 'center',
-    style: 'width: 20%',
-  },
-]);
 
 const filesByStatus = ref([]);
 
@@ -169,7 +175,7 @@ const pagination = (page) => {
   getFiles(current.value);
 };
 
-const pushToTheFile = (info, row) => {
+const pushToTheFile = (row) => {
   router.push(`/view-notes/${row.id}`);
   console.log(row.id);
 };

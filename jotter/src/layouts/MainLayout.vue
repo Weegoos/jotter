@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-layout view="hHr LpR lFf" container class="w-screen h-screen">
+    <q-layout view="lhh LpR lFf" container class="w-screen h-screen">
       <BaseHeader v-if="!authPage" @toggleDrawer="toggleDrawer" />
       <BaseDrawer :drawer="drawer" />
       <q-page-container>
