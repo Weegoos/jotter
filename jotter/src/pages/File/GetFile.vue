@@ -1,34 +1,10 @@
 <template>
-  <!-- <div v-if="Object.keys(rows).length > 0 || Object.keys(pinnedFiles).length > 0">
-    <Form @submit="searchFiles" class="q-pa-sm">
-      <Input v-model="search" placeholder="Поиск по файлам" />
-    </Form>
-    <Table
-      :notes="Object(pinnedFiles)"
-      :title="'Закрепленные файлы'"
-      :columns="columns"
-      @row-click="pushToTheFile"
-      @delete="changeFileStatus"
-      @pin="pinFile"
-      @update="editFile"
-    />
-    <Table
-      :notes="Object(rows)"
-      :title="'Файлы'"
-      :columns="columns"
-      @row-click="pushToTheFile"
-      @delete="changeFileStatus"
-      @pin="pinFile"
-      @update="editFile"
-    />
-    <BasePagination :variableName="Object(filesByStatus)" @pagination="pagination" />
-  </div>
-  <div v-else>
-    <p class="text-center text-h6">Файлов нету...</p>
-  </div> -->
   <section>
+    <Form @submit="searchFiles" class="q-pa-sm">
+      <Input v-model="search" placeholder="File Search" />
+    </Form>
     <p class="logo-font text-h4 text-bold p-[10px] text-black">
-      <q-icon name="mdi-pin" /> Pinned File
+      <q-icon name="mdi-pin" /> Pinned Files
     </p>
     <div class="grid lg:grid-cols-4 gap-4 flex-wrap p-[10px]">
       <q-card
@@ -75,7 +51,7 @@
       </q-card>
     </div>
 
-    <p class="logo-font text-h4 text-bold p-[10px] text-black"><q-icon name="mdi-file" /> File</p>
+    <p class="logo-font text-h4 text-bold p-[10px] text-black"><q-icon name="mdi-file" /> Files</p>
     <div class="grid lg:grid-cols-4 gap-4 flex-wrap p-[10px]">
       <q-card v-for="(file, index) in rows" :key="index" @click="pushToTheFile(file)">
         <q-card-section>
@@ -116,18 +92,27 @@
         </q-card-section>
       </q-card>
     </div>
+    <div class="p-[10px]">
+      <Button
+        label="Add new file"
+        icon="mdi-plus"
+        text-color="black"
+        class="border-dotted border-2 p-[15px] w-[200px]"
+        @click="$router.push('/create-file')"
+      ></Button>
+    </div>
   </section>
 </template>
 
 <script setup>
 import { useQuasar } from 'quasar';
-import { Input } from 'src/components/atoms';
+import { Button, Input } from 'src/components/atoms';
 import { Form, Table } from 'src/components/molecules';
 import BasePagination from 'src/components/molecules/MoleculePagination.vue';
 import { getMethod } from 'src/composables/api-method/get';
 import { putMethod } from 'src/composables/api-method/put';
 import { useDateFormat } from 'src/composables/javascript-function/formatDate';
-import { computed, getCurrentInstance, onMounted, ref } from 'vue';
+import { getCurrentInstance, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 // global variables
@@ -226,7 +211,7 @@ const pagination = (page) => {
 };
 
 const pushToTheFile = (row) => {
-  router.push(`/view-notes/${row.id}`);
+  router.push(`/view-notes/${row.id}/0`);
   console.log(row.id);
 };
 

@@ -4,8 +4,12 @@
       <q-toolbar class="h-[100px] q-my-xl text-white">
         <q-item clickable v-ripple>
           <q-toolbar-title class="logo-font text-white text-h2">
-            <span>Jot</span>
-            <span class="text-amber-14">ter</span>
+            <h1 class="text-4xl font-bold">
+              <span
+                class="bg-gradient-to-r from-white via-green-300 to-black logo-font text-h3 bg-clip-text text-transparent"
+                >Jotter</span
+              >
+            </h1>
           </q-toolbar-title>
         </q-item>
       </q-toolbar>
@@ -22,8 +26,19 @@
           </q-item-section>
           <q-item-section>{{ option.name }}</q-item-section>
         </q-item>
-      </q-list></q-drawer
-    >
+      </q-list>
+      <q-card class="absolute inset-x-0 bottom-0 h-16 text-black">
+        <q-card-section class="flex">
+          <q-avatar class="flex-1">
+            <img src="https://cdn.quasar.dev/img/avatar.png" />
+          </q-avatar>
+          <div class="flex-2">
+            <p>Batyr Ashim</p>
+            <p>batyr.ashim@mail.ru</p>
+          </div>
+        </q-card-section>
+      </q-card>
+    </q-drawer>
   </div>
 </template>
 
@@ -59,8 +74,8 @@ const drawerOptions = [
   {
     name: 'Trash',
     icon: 'mdi-delete-empty',
-    url: '/trash'
-  }
+    url: '/trash',
+  },
 ];
 </script>
 

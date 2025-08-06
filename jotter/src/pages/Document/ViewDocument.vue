@@ -1,53 +1,153 @@
 <template>
-  <div v-if="Object.keys(rows).length > 0 || Object.keys(pinnedNote).length > 0">
-    <Form @submit="submitDocument" class="q-pa-sm">
-      <Input v-model="searchDocument" placeholder="Поиск по заметка..." />
-    </Form>
-    <Table
-      :notes="pinnedNote.filter((note) => note.type !== 'saved')"
-      :title="'Закрепленные заметки'"
-      :columns="columns"
-      @delete="deleteNote"
-      @pin="pinNote"
-      @update="updateNote"
-      @row-click="viewDetailedInfoAboutNote"
-    />
+  <section>
+    <div class="grid lg:grid-cols-2 text-font">
+      <q-scroll-area style="width: 100%; height: 100vh">
+        <div class="flex-1">
+          <p class="logo-font text-h4 text-bold p-[20px] text-black">
+            <q-icon name="mdi-pin" /> Pinned Notes
+          </p>
+          <q-list
+            bordered
+            v-for="(note, index) in pinnedNote.filter((note) => note.type !== 'saved')"
+            :key="index"
+          >
+            <q-item
+              clickable
+              v-ripple
+              @click="showNoteContent(note)"
+              :class="note.id == noteId ? 'bg-grey-4' : ''"
+            >
+              <q-item-section>
+                <section class="grid grid-cols-2">
+                  <div>
+                    <p class="text-h6">{{ note.title }}</p>
+                  </div>
+                  <div align="right">
+                    <q-btn
+                      flat
+                      icon="mdi-dots-horizontal"
+                      @click="
+                        (e) => {
+                          e.stopPropagation();
+                        }
+                      "
+                    >
+                      <q-menu anchor="bottom right" self="top right">
+                        <q-item clickable @click="pinNote(note)">
+                          <q-item-section avatar>
+                            <q-icon color="orange" name="mdi-pin" />
+                          </q-item-section>
+                          <q-item-section>Unpin</q-item-section>
+                        </q-item>
+                        <q-item clickable @click="deleteNote(note)">
+                          <q-item-section avatar>
+                            <q-icon color="red" name="mdi-delete" />
+                          </q-item-section>
+                          <q-item-section>Move to the trash</q-item-section>
+                        </q-item>
+                      </q-menu>
+                    </q-btn>
+                  </div>
+                </section>
+                <div class="py-[10px] q-gutter-sm">
+                  <q-btn color="primary" class="rounded-full" no-caps :label="note.type" />
 
-    <Table
-      :notes="rows.filter((note) => note.type !== 'saved')"
-      :title="String('Заметки')"
-      :columns="columns"
-      @delete="deleteNote"
-      @pin="pinNote"
-      @update="updateNote"
-      @row-click="viewDetailedInfoAboutNote"
-    />
+                  <q-btn
+                    v-for="(hashtag, index) in note.hashtags"
+                    :key="index"
+                    color="secondary"
+                    class="rounded-full"
+                    no-caps
+                    :label="hashtag"
+                  />
+                </div>
+              </q-item-section>
+            </q-item>
+            <q-separator dark />
+          </q-list>
 
-    <Table
-      :notes="savedNote"
-      :title="'Черновики'"
-      :columns="columns"
-      @delete="deleteNote"
-      @update="updateNote"
-      @row-click="viewDetailedInfoAboutNote"
-    />
+          <p class="logo-font text-h4 text-bold p-[20px] text-black">
+            <q-icon name="mdi-note" /> Notes
+          </p>
+          <q-list
+            bordered
+            v-for="(note, index) in rows.filter((note) => note.type !== 'saved')"
+            :key="index"
+          >
+            <q-item
+              clickable
+              v-ripple
+              @click="showNoteContent(note)"
+              :class="note.id == noteId ? 'bg-grey-4' : ''"
+            >
+              <q-item-section>
+                <section class="grid grid-cols-3">
+                  <div class="col-span-2">
+                    <p class="text-h6">{{ note.title }}</p>
+                  </div>
+                  <div align="right">
+                    <q-btn
+                      flat
+                      icon="mdi-dots-horizontal"
+                      @click="
+                        (e) => {
+                          e.stopPropagation();
+                        }
+                      "
+                    >
+                      <q-menu anchor="bottom right" self="top right">
+                        <q-item clickable @click="pinNote(note)">
+                          <q-item-section avatar>
+                            <q-icon color="orange" name="mdi-pin" />
+                          </q-item-section>
+                          <q-item-section>Pin</q-item-section>
+                        </q-item>
+                        <q-item clickable @click="updateNote(note)">
+                          <q-item-section avatar>
+                            <q-icon color="amber-5" name="mdi-pencil" />
+                          </q-item-section>
+                          <q-item-section>Edit</q-item-section>
+                        </q-item>
+                        <q-item clickable @click="deleteNote(note)">
+                          <q-item-section avatar>
+                            <q-icon color="red" name="mdi-delete" />
+                          </q-item-section>
+                          <q-item-section>Move to the trash</q-item-section>
+                        </q-item>
+                      </q-menu>
+                    </q-btn>
+                  </div>
+                </section>
 
-    <NoteInformation
-      :isOpenDetailedInformation="isOpenDetailedInformation"
-      @closeDetailedInformationSection="closeDetailedInformationSection"
-      :detailedInformation="detailedInformation"
-      @openDecryptedNote="onDecryptedNoteOpen"
-    />
-  </div>
-  <div v-else>
-    <p class="text-center text-h6">Файл пуст</p>
-  </div>
+                <div class="mt-[10px] q-gutter-sm">
+                  <q-btn color="primary" class="rounded-full" no-caps :label="note.type" />
+
+                  <q-btn
+                    v-for="(hashtag, index) in note.hashtags"
+                    :key="index"
+                    color="secondary"
+                    class="rounded-full"
+                    no-caps
+                    :label="hashtag"
+                  />
+                </div>
+              </q-item-section>
+            </q-item>
+            <q-separator dark />
+          </q-list>
+        </div>
+      </q-scroll-area>
+      <div class="p-[15px] flex-2">
+        <p v-html="noteContent || 'Здесь будет отображаться текст'"></p>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script setup>
 import { useQuasar } from 'quasar';
 import { getMethod } from 'src/composables/api-method/get';
-import { computed, getCurrentInstance, onMounted, ref } from 'vue';
+import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useDateFormat } from 'src/composables/javascript-function/formatDate';
 import { deleteMethod } from 'src/composables/api-method/delete';
@@ -81,49 +181,23 @@ socket.onmessage = (event) => {
 };
 
 const route = useRoute();
-const id = route.params.id;
+const id = route.params.fileId;
+const noteId = ref(route.params.noteId);
 
-const columns = computed(() => [
-  {
-    name: 'title',
-    label: 'Name',
-    align: 'left',
-    field: (row) => (row.type !== 'private' ? row.title : 'Введите пароль'),
-    sortable: true,
-    style: 'width: 20%',
-  },
-  {
-    name: 'type',
-    label: 'Type',
-    align: 'left',
-    field: (row) => row.type,
-    sortable: true,
-    style: 'width: 20%',
-  },
-  {
-    name: 'created_at',
-    label: 'Created At',
-    align: 'left',
-    field: (row) => useDateFormat(row.createdAt),
-    sortable: true,
-    style: 'width: 20%',
-  },
-  {
-    name: 'updated_at',
-    label: 'Updated At',
-    align: 'left',
-    field: (row) => useDateFormat(row.updatedAt),
-    sortable: true,
-    style: 'width: 20%',
-  },
-  {
-    name: 'actions',
-    label: 'Actions',
-    align: 'center',
-    field: 'id',
-    style: 'width: 20%',
-  },
-]);
+watch(
+  () => route.params.noteId,
+  (newId) => {
+    noteId.value = newId;
+  }
+);
+
+const noteContent = ref('');
+
+const showNoteContent = async (noteInfo) => {
+  router.push(`/view-notes/${id}/${noteInfo.id}`);
+  const response = await getMethod(serverURL, `notes/note/${noteInfo.id}`, $q, 'Заметки получены!');
+  noteContent.value = response.content;
+};
 
 const rows = ref([]);
 const pinnedNote = ref([]);

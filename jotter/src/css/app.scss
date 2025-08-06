@@ -4,16 +4,26 @@
   src: url(../font/KantumruyPro-Thin.ttf);
 }
 
+@font-face {
+  font-family: MainFont;
+  src: url(../font/KantumruyPro-Italic-VariableFont_wght.ttf);
+}
+
 *,
 *::after,
 *::before {
   margin: 0;
   padding: 0;
   border: 0;
+  overflow: hidden;
 }
 
 .logo-font {
   font-family: Logo;
+}
+
+.text-font {
+  font-family: MainFont;
 }
 
 .drawer {
