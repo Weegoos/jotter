@@ -28,7 +28,7 @@ const routes = [
     component: () => import('pages/Document/CreateDocument.vue'),
   },
   {
-    path: '/view-notes/:id',
+    path: '/view-notes/:fileId/:noteId',
     component: () => import('pages/Document/ViewDocument.vue'),
   },
   {

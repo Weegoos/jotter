@@ -211,7 +211,7 @@ const pagination = (page) => {
 };
 
 const pushToTheFile = (row) => {
-  router.push(`/view-notes/${row.id}`);
+  router.push(`/view-notes/${row.id}/0`);
   console.log(row.id);
 };
 

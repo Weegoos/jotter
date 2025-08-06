@@ -26,8 +26,19 @@
           </q-item-section>
           <q-item-section>{{ option.name }}</q-item-section>
         </q-item>
-      </q-list></q-drawer
-    >
+      </q-list>
+      <q-card class="absolute inset-x-0 bottom-0 h-16 text-black">
+        <q-card-section class="flex">
+          <q-avatar class="flex-1">
+            <img src="https://cdn.quasar.dev/img/avatar.png" />
+          </q-avatar>
+          <div class="flex-2">
+            <p>Batyr Ashim</p>
+            <p>batyr.ashim@mail.ru</p>
+          </div>
+        </q-card-section>
+      </q-card>
+    </q-drawer>
   </div>
 </template>
 
