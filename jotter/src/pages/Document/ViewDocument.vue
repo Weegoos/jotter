@@ -43,7 +43,9 @@
         </div>
       </q-scroll-area>
       <div class="p-[15px] flex-2">
-        <div class="note-content" v-html="noteContent || 'Здесь будет отображаться текст'"></div>
+        <q-scroll-area style="width: 100%; height: 100vh">
+          <div class="note-content" v-html="noteContent || 'Здесь будет отображаться текст'"></div>
+        </q-scroll-area>
       </div>
     </div>
   </section>

@@ -5,7 +5,7 @@ export class HashtagRepository extends IHashtagRepository {
     super();
     this.hashtagModel = hashtagModel;
     this.noteModel = noteModel;
-    this.fileModel = fileModel
+    this.fileModel = fileModel;
   }
 
   async findAll(whereCondition = {}, orderCondition = []) {
@@ -19,13 +19,17 @@ export class HashtagRepository extends IHashtagRepository {
     return await this.hashtagModel.findAll({
       where: whereCondition,
       order: orderCondition,
-      include: [{
-    model: this.noteModel,
-    include: [{
-      model: this.fileModel,
-      where: { id: fileId }, // здесь ID нужного файла
-    }],
-  }],
+      include: [
+        {
+          model: this.noteModel,
+          include: [
+            {
+              model: this.fileModel,
+              where: { id: fileId }, // здесь ID нужного файла
+            },
+          ],
+        },
+      ],
     });
   }
 }
