@@ -17,4 +17,6 @@ const taskControllers = new TaskControllers(taskUseCase);
 // post
 router.post('/', authMiddleware, taskControllers.createTask.bind(taskControllers));
 
+// get
+router.get('/', authMiddleware, taskControllers.getAllTasks.bind(taskControllers));
 export default router;

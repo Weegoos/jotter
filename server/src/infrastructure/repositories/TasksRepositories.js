@@ -10,4 +10,10 @@ export class SequelizeTasksRepositories extends ITasksRepository {
   async create(taskData) {
     return await this.taskDatabaseModel.create({ ...taskData });
   }
+
+  async findAll(userId) {
+    return await this.taskDatabaseModel.findAll({
+      where: { userId: userId },
+    });
+  }
 }
