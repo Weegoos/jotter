@@ -38,9 +38,29 @@ export class TaskControllers {
       console.log(id);
       return res.status(200).json({ message: 'Все задачи успешно получены', allTasks });
     } catch (error) {
-      console.error('Ошибка при создании задач:', error);
+      console.error('Ошибка при получении всех задач:', error);
       if (error.message === 'USER_NOT_FOUND') {
         return res.status(401).json({ message: 'Пользователь не найден' });
+      }
+      return res.status(500).json({ message: 'Ошибка сервера' });
+    }
+  }
+
+  async getTaskById(req, res) {
+    try {
+      const { id } = req.user;
+      const { taskId: taskId } = req.params;
+
+      const task = await this.taskUseCase.findTaskById(id, taskId);
+      return await res.status(200).json({ message: 'Заметка получена', task });
+    } catch (error) {
+      console.error('Ошибка при получении задач по ID:', error);
+      if (error.message === 'USER_NOT_FOUND') {
+        return res.status(401).json({ message: 'Пользователь не найден' });
+      }
+
+      if (error.message === 'TASK_NOT_FOUND') {
+        return res.status(401).json({ message: 'Задача не найдена' });
       }
       return res.status(500).json({ message: 'Ошибка сервера' });
     }

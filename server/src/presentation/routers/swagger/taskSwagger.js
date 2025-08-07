@@ -68,3 +68,85 @@
  *       500:
  *         description: Ошибка сервера
  */
+
+// -------------------- GET Tasks -----------
+/**
+ * @swagger
+ * /tasks:
+ *   get:
+ *     summary: Получить все задачи пользователя
+ *     tags:
+ *       - Tasks
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Все задачи успешно получены
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Все задачи успешно получены
+ *                 allTasks:
+ *                   type: array
+ *       401:
+ *         description: Пользователь не найден или не авторизован
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+// --------------------- GET Task By Id ----------------------
+/**
+ * @swagger
+ * /tasks/{taskId}:
+ *   get:
+ *     summary: Получить задачу по ID
+ *     description: Возвращает задачу, принадлежащую текущему авторизованному пользователю.
+ *     tags:
+ *       - Tasks
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID задачи
+ *     responses:
+ *       200:
+ *         description: Успешное получение задачи
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Заметка получена
+ *                 task:
+ *                   $ref: '#/components/schemas/Task'
+ *       401:
+ *         description: Пользователь не найден или задача не найдена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Пользователь не найден
+ *       500:
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Ошибка сервера
+ */

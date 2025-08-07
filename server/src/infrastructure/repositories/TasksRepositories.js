@@ -16,4 +16,10 @@ export class SequelizeTasksRepositories extends ITasksRepository {
       where: { userId: userId },
     });
   }
+
+  async findOne(userId, taskId) {
+    return await this.taskDatabaseModel.findOne({
+      where: { userId: userId, id: taskId },
+    });
+  }
 }
