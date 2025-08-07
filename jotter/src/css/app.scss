@@ -15,7 +15,24 @@
   margin: 0;
   padding: 0;
   border: 0;
-  overflow: hidden;
+}
+
+.note-content ul {
+  list-style: disc;
+  padding-left: 1.5em;
+  margin-left: 1em;
+  overflow: visible;
+}
+
+.note-content ol {
+  list-style: decimal;
+  padding-left: 1.5em;
+  margin-left: 1em;
+  overflow: visible;
+}
+
+.note-content li {
+  margin-bottom: 0.5em;
 }
 
 .logo-font {

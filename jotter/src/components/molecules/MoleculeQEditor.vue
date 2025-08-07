@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md q-gutter-sm">
+  <div class="q-pa-md q-gutter-sm note-content">
     <q-editor
       v-model="qeditor"
       :dense="$q.screen.lt.md"
