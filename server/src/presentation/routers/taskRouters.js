@@ -20,4 +20,11 @@ router.post('/', authMiddleware, taskControllers.createTask.bind(taskControllers
 // get
 router.get('/', authMiddleware, taskControllers.getAllTasks.bind(taskControllers));
 router.get('/:taskId', authMiddleware, taskControllers.getTaskById.bind(taskControllers));
+
+// put
+router.put(
+  '/:taskId',
+  authMiddleware,
+  taskControllers.completelyUpdateTheTask.bind(taskControllers)
+);
 export default router;

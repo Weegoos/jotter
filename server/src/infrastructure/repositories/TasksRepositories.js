@@ -22,4 +22,9 @@ export class SequelizeTasksRepositories extends ITasksRepository {
       where: { userId: userId, id: taskId },
     });
   }
+
+  async update(taskData, taskId) {
+    await this.taskDatabaseModel.update(taskData, { where: { id: taskId } });
+    return await this.taskDatabaseModel.findByPk(taskId);
+  }
 }

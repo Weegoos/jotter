@@ -127,8 +127,6 @@
  *                 message:
  *                   type: string
  *                   example: Заметка получена
- *                 task:
- *                   $ref: '#/components/schemas/Task'
  *       401:
  *         description: Пользователь не найден или задача не найдена
  *         content:
@@ -149,4 +147,82 @@
  *                 message:
  *                   type: string
  *                   example: Ошибка сервера
+ */
+
+// -------------------- PUT tasks/{taskId} ------------------
+/**
+ * @swagger
+ * /tasks/{taskId}:
+ *   put:
+ *     summary: Полностью обновить задачу
+ *     description: Обновляет все поля задачи по её идентификатору
+ *     tags:
+ *       - Tasks
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID задачи
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - description
+ *               - status
+ *               - priority
+ *               - target_date
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: Обновлённая задача
+ *               description:
+ *                 type: string
+ *                 example: Полное обновление описания задачи
+ *               status:
+ *                 type: string
+ *                 enum: [pending, in_progress, done]
+ *                 example: in_progress
+ *               priority:
+ *                 type: string
+ *                 enum: [low, medium, high]
+ *                 example: high
+ *               target_date:
+ *                 type: string
+ *                 format: date
+ *                 example: 2025-08-31
+ *               time_period:
+ *                 type: string
+ *                 enum: [daily, weekly, monthly, yearly]
+ *                 example: weekly
+ *     responses:
+ *       200:
+ *         description: Задача успешно обновлена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Задача успешно обновлена
+ *       401:
+ *         description: Пользователь не найден или задача не найдена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Пользователь не найден
+ *       500:
+ *         description: Внутренняя ошибка сервера
  */

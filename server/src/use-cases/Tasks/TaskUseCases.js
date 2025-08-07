@@ -50,4 +50,25 @@ export class TaskUseCases {
     }
     return await task;
   }
+
+  async updateTask(userId, title, description, status, priority, target_date, time_period, taskId) {
+    if (!userId) {
+      throw new Error(USER_NOT_FOUND);
+    }
+    const task_data = {
+      userId,
+      title,
+      description,
+      status,
+      priority,
+      target_date,
+      time_period,
+    };
+
+    if (!taskId || !task_data) {
+      throw new Error(TASK_NOT_FOUND);
+    }
+
+    return await this.taskRepository.update(task_data, taskId);
+  }
 }
