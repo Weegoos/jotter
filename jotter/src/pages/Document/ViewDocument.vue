@@ -3,16 +3,16 @@
     <div class="grid lg:grid-cols-2 text-font">
       <q-scroll-area style="width: 100%; height: 100vh">
         <div class="flex flex-row gap-4">
-         <div class="basis-3/4 ">
-           <Form @submit="submitDocument">
-            <Input v-model="searchDocument" placeholder="Поиск по заметкам..." />
-          </Form>
-         </div>
-         <div class="flex-2">
-          <q-btn icon="mdi-plus"  @click="$router.push('/create-document')">
-            <Tooltip label="Add a note" />
-          </q-btn>
-         </div>
+          <div class="basis-3/4">
+            <Form @submit="submitDocument">
+              <Input v-model="searchDocument" placeholder="Поиск по заметкам..." />
+            </Form>
+          </div>
+          <div class="flex-2">
+            <q-btn icon="mdi-plus" @click="$router.push('/create-document')">
+              <Tooltip label="Add a note" />
+            </q-btn>
+          </div>
         </div>
         <div class="flex-1">
           <p class="logo-font text-h4 text-bold p-[20px] text-black">
@@ -43,7 +43,9 @@
         </div>
       </q-scroll-area>
       <div class="p-[15px] flex-2">
-        <p v-html="noteContent || 'Здесь будет отображаться текст'"></p>
+        <q-scroll-area style="width: 100%; height: 100vh">
+          <div class="note-content" v-html="noteContent || 'Здесь будет отображаться текст'"></div>
+        </q-scroll-area>
       </div>
     </div>
   </section>
@@ -57,7 +59,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { deleteMethod } from 'src/composables/api-method/delete';
 import { putMethod } from 'src/composables/api-method/put';
 import { useWebSocket } from 'src/composables/javascript-function/websocket';
-import { Form, ListToViewDocument } from 'src/components/molecules';
+import { Editor, Form, ListToViewDocument } from 'src/components/molecules';
 import { Button, Input, Tooltip } from 'src/components/atoms';
 
 // global variables
