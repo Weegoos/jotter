@@ -149,7 +149,7 @@
  *                   example: Ошибка сервера
  */
 
-// -------------------- Patch tasks/{taskId} ------------------
+// -------------------- PATCH /tasks/{taskId} ---------------------
 /**
  * @swagger
  * /tasks/{taskId}:
@@ -227,7 +227,59 @@
  *         description: Внутренняя ошибка сервера
  */
 
-// --------------- Put tasks/${taskId}
+// -------------------- PATCH /tasks/{taskId}/status -----------------------
+/**
+ * @swagger
+ * /tasks/{taskId}/status:
+ *   patch:
+ *     summary: Обновить статус задачи
+ *     description: Частично обновляет задачу, изменяя только её статус. Требуется авторизация.
+ *     tags:
+ *       - Tasks
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID задачи, статус которой нужно обновить
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - status
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 example: "in_progress"
+ *     responses:
+ *       200:
+ *         description: Статус задачи успешно обновлён
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Статус задачи успешно обновлён"
+ *       400:
+ *         description: Статус не найден в теле запроса
+ *       401:
+ *         description: Пользователь не найден или не авторизован
+ *       404:
+ *         description: Задача не найдена или доступ запрещён
+ *       500:
+ *         description: Ошибка сервера
+ */
+
+
+// --------------- PUT tasks/${taskId} ----------------------
 
 /**
  * @swagger
