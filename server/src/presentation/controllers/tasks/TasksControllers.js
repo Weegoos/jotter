@@ -33,7 +33,7 @@ export class TaskControllers {
   async getAllTasks(req, res) {
     try {
       const { id } = req.user;
-      const allTasks = await this.taskUseCase.findAllTasks(id);
+      const allTasks = await this.taskUseCase.findAllTasks(id, { userId: id });
       return res.status(200).json({ message: 'Все задачи успешно получены', allTasks });
     } catch (error) {
       console.error('Ошибка при получении всех задач:', error);

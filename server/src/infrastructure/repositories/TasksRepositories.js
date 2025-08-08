@@ -11,9 +11,9 @@ export class SequelizeTasksRepositories extends ITasksRepository {
     return await this.taskDatabaseModel.create({ ...taskData });
   }
 
-  async findAll(userId) {
+  async findAll(whereConditions) {
     return await this.taskDatabaseModel.findAll({
-      where: { userId: userId },
+      where: whereConditions,
     });
   }
 

@@ -27,12 +27,12 @@ export class TaskUseCases {
     return await this.taskRepository.create(taskData);
   }
 
-  async findAllTasks(userId) {
+  async findAllTasks(userId, whereConditions) {
     if (!userId) {
       throw new Error(USER_NOT_FOUND);
     }
 
-    return await this.taskRepository.findAll(userId);
+    return await this.taskRepository.findAll(whereConditions);
   }
 
   async findTaskById(userId, taskId) {
