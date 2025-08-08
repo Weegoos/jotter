@@ -33,7 +33,7 @@ export class TaskControllers {
   async getAllTasks(req, res) {
     try {
       const { id } = req.user;
-      const allTasks = await this.taskUseCase.findAllTasks(id);
+      const allTasks = await this.taskUseCase.findAllTasks(id, { userId: id });
       return res.status(200).json({ message: 'Все задачи успешно получены', allTasks });
     } catch (error) {
       console.error('Ошибка при получении всех задач:', error);
@@ -59,6 +59,60 @@ export class TaskControllers {
 
       if (error.message === 'TASK_NOT_FOUND') {
         return res.status(401).json({ message: 'Задача не найдена' });
+      }
+      return res.status(500).json({ message: 'Ошибка сервера' });
+    }
+  }
+
+  async getCalendarView(req, res) {
+    try {
+      const userId = req.user.id;
+      const { target_date } = req.query;
+
+      const tasks = await this.taskUseCase.findAllWithOpUseCase(userId, target_date, target_date);
+      return res.status(200).json({ message: 'Задачи успешно получены', tasks });
+    } catch (error) {
+      console.error('Ошибка при получении задач по дням:', error);
+      if (error.message === 'USER_NOT_FOUND') {
+        return res.status(401).json({ message: 'Пользователь не найден' });
+      }
+      if (error.message === 'Tasks not found') {
+        return res.status(401).json({ message: 'Задачи не найдены' });
+      }
+      return res.status(500).json({ message: 'Ошибка сервера' });
+    }
+  }
+
+  async getTaskSummary(req, res) {
+    try {
+      const userId = req.user.id;
+      const { from_date, to_date } = req.query;
+
+      const tasks = await this.taskUseCase.findAllWithOpUseCase(userId, from_date, to_date);
+      const total = tasks.length;
+      const pending = tasks.filter((task) => task.status === 'pending').length;
+      const completed = tasks.filter((task) => task.status === 'done').length;
+      const in_progress = tasks.filter((task) => task.status === 'in_progress').length;
+      const avg_completion_percent = Math.round((completed / total) * 100);
+
+      return res
+        .status(200)
+        .json({
+          message: 'Задачи успешно получены',
+          total: total,
+          pending: pending,
+          completed: completed,
+          in_progress: in_progress,
+          avg_completion_percent: avg_completion_percent,
+          tasks,
+        });
+    } catch (error) {
+      console.error('Ошибка при получении задач по календарю:', error);
+      if (error.message === 'USER_NOT_FOUND') {
+        return res.status(401).json({ message: 'Пользователь не найден' });
+      }
+      if (error.message === 'Tasks not found') {
+        return res.status(401).json({ message: 'Задачи не найдены' });
       }
       return res.status(500).json({ message: 'Ошибка сервера' });
     }

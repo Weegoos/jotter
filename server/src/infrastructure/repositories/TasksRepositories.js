@@ -1,19 +1,34 @@
 import { ITasksRepository } from '../../domain/repositories/ITasksRepository.js';
 
 export class SequelizeTasksRepositories extends ITasksRepository {
-  constructor(taskDatabaseModel, userDatabaseModel) {
+  constructor(taskDatabaseModel, userDatabaseModel, opModel) {
     super();
     this.taskDatabaseModel = taskDatabaseModel;
     this.userDatabaseModel = userDatabaseModel;
+    this.opModel = opModel;
   }
 
   async create(taskData) {
     return await this.taskDatabaseModel.create({ ...taskData });
   }
 
-  async findAll(userId) {
+  async findAll(whereConditions) {
     return await this.taskDatabaseModel.findAll({
-      where: { userId: userId },
+      where: whereConditions,
+    });
+  }
+
+  async findAllWithOp(userId, from_date, to_date) {
+    return await this.taskDatabaseModel.findAll({
+      where: {
+        userId: userId,
+        target_date: {
+          [this.opModel.between]: [
+            new Date(`${from_date}T00:00:00`),
+            new Date(`${to_date}T23:59:59`),
+          ],
+        },
+      },
     });
   }
 
@@ -64,7 +79,7 @@ export class SequelizeTasksRepositories extends ITasksRepository {
     });
 
     if (!task) {
-      throw new Error('TASK_NOT_FOUND'); // или твоя константа
+      throw new Error('TASK_NOT_FOUND');
     }
 
     return task;
