@@ -18,14 +18,14 @@ export class SequelizeTasksRepositories extends ITasksRepository {
     });
   }
 
-  async findAllWithOp(userId, target_date) {
+  async findAllWithOp(userId, from_date, to_date) {
     return await this.taskDatabaseModel.findAll({
       where: {
         userId: userId,
         target_date: {
           [this.opModel.between]: [
-            new Date(`${target_date}T00:00:00`),
-            new Date(`${target_date}T23:59:59`),
+            new Date(`${from_date}T00:00:00`),
+            new Date(`${to_date}T23:59:59`),
           ],
         },
       },

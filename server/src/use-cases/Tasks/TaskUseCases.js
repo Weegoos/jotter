@@ -43,7 +43,7 @@ export class TaskUseCases {
       throw new Error('Tasks not found');
     }
 
-    return await this.taskRepository.findAllWithOp(userId, target_date);
+    return await this.taskRepository.findAllWithOp(userId, target_date, target_date);
   }
 
   async findTaskById(userId, taskId) {
