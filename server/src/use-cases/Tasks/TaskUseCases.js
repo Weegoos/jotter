@@ -35,15 +35,15 @@ export class TaskUseCases {
     return await this.taskRepository.findAll(userId, whereConditions);
   }
 
-  async findAllWithOpUseCase(userId, target_date) {
+  async findAllWithOpUseCase(userId, from_date, to_date) {
     if (!userId) {
       throw new Error(USER_NOT_FOUND);
     }
-    if (!target_date) {
+    if (!from_date || !to_date) {
       throw new Error('Tasks not found');
     }
 
-    return await this.taskRepository.findAllWithOp(userId, target_date, target_date);
+    return await this.taskRepository.findAllWithOp(userId, from_date, to_date);
   }
 
   async findTaskById(userId, taskId) {

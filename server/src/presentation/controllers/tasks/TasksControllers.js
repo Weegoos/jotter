@@ -73,7 +73,7 @@ export class TaskControllers {
         return res.status(404).json({ message: 'Задачи не найдены' });
       }
 
-      const tasks = await this.taskUseCase.findAllWithOpUseCase(userId, target_date);
+      const tasks = await this.taskUseCase.findAllWithOpUseCase(userId, target_date, target_date);
       return res.status(200).json({ message: 'Задачи успешно получены', tasks });
     } catch (error) {
       console.error('Ошибка при получении задач по ID:', error);
