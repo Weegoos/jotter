@@ -28,6 +28,11 @@ router.patch(
   authMiddleware,
   taskControllers.updateTaskStatus.bind(taskControllers)
 );
+router.patch(
+  '/:taskId/priority',
+  authMiddleware,
+  taskControllers.updateTaskPriority.bind(taskControllers)
+);
 
 // put
 router.put(

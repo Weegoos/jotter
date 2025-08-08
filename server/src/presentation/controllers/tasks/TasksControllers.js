@@ -156,9 +156,34 @@ export class TaskControllers {
       }
 
       const updatedTask = await this.taskUseCase.updateTask(userId, taskId, { status });
-      return res.status(200).json({ message: 'Статус задачи успешно обновлена', updatedTask });
+      return res.status(200).json({ message: 'Статус задачи успешно обновлен', updatedTask });
     } catch (error) {
       console.error('Ошибка при обновлении статуса задачи по ID:', error);
+      if (error.message === 'USER_NOT_FOUND') {
+        return res.status(401).json({ message: 'Пользователь не найден' });
+      }
+
+      if (error.message === 'TASK_NOT_FOUND') {
+        return res.status(401).json({ message: 'Задача не найдена или доступ запрещен' });
+      }
+      return res.status(500).json({ message: 'Ошибка сервера' });
+    }
+  }
+
+  async updateTaskPriority(req, res) {
+    try {
+      const userId = req.user.id;
+      const { priority } = req.body;
+      const { taskId } = req.params;
+
+      if (!priority) {
+        return res.status(401).json({ message: 'Приоритет задачи не найден' });
+      }
+
+      const updatedTask = await this.taskUseCase.updateTask(userId, taskId, { priority });
+      return res.status(200).json({ message: 'Приоритет задачи успешно обновлен', updatedTask });
+    } catch (error) {
+      console.error('Ошибка при обновлении приоритета задачи по ID:', error);
       if (error.message === 'USER_NOT_FOUND') {
         return res.status(401).json({ message: 'Пользователь не найден' });
       }

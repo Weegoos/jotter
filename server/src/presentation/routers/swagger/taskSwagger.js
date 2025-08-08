@@ -278,6 +278,61 @@
  *         description: Ошибка сервера
  */
 
+// -------------------- PATCH /tasks/{taskId}/priority -----------------------
+/**
+ * @swagger
+ * /tasks/{taskId}/priority:
+ *   patch:
+ *     summary: Обновить приоритет задачи
+ *     description: Частично обновляет задачу, изменяя только её приоритет. Требуется авторизация.
+ *     tags:
+ *       - Tasks
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID задачи, приоритет которой нужно обновить
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - priority
+ *             properties:
+ *               priority:
+ *                 type: string
+ *                 enum:
+ *                   - low
+ *                   - medium
+ *                   - high
+ *                 example: "high"
+ *     responses:
+ *       200:
+ *         description: Приоритет задачи успешно обновлён
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Приоритет задачи успешно обновлён"
+ *       400:
+ *         description: Приоритет не найден в теле запроса
+ *       401:
+ *         description: Пользователь не найден или не авторизован
+ *       404:
+ *         description: Задача не найдена или доступ запрещён
+ *       500:
+ *         description: Ошибка сервера
+ */
+
 
 // --------------- PUT tasks/${taskId} ----------------------
 
