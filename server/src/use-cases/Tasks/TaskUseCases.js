@@ -51,18 +51,12 @@ export class TaskUseCases {
     return await task;
   }
 
-  async updateTask(userId, title, description, status, priority, target_date, time_period, taskId) {
+  async updateTask(userId, taskId, taskData) {
     if (!userId) {
       throw new Error(USER_NOT_FOUND);
     }
     const task_data = {
-      userId,
-      title,
-      description,
-      status,
-      priority,
-      target_date,
-      time_period,
+      ...taskData,
     };
 
     if (!taskId || !task_data) {

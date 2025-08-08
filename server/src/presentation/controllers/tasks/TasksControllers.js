@@ -70,16 +70,16 @@ export class TaskControllers {
       const { title, description, status, priority, target_date, time_period } = req.body;
       const { taskId } = req.params;
 
-      const updatedTask = await this.taskUseCase.updateTask(
-        userId,
+      const task_data = {
         title,
         description,
         status,
         priority,
         target_date,
         time_period,
-        taskId
-      );
+      };
+
+      const updatedTask = await this.taskUseCase.updateTask(userId, taskId, task_data);
       return res.status(201).json({ message: 'Заметка успешно обновлена', updatedTask });
     } catch (error) {
       console.error('Ошибка при обвнолении задач по ID:', error);

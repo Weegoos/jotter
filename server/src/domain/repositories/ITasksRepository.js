@@ -43,9 +43,9 @@ export class ITasksRepository {
 
   /**
    * Обновить полностью задачу
-   * @param {Number} taskId 
-   * @param {Object} taskData 
-   * @param {Number} userId 
+   * @param {Number} taskId
+   * @param {Object} taskData
+   * @param {Number} userId
    */
 
   async save(taskId, taskData, userId) {
@@ -55,12 +55,12 @@ export class ITasksRepository {
 
   /**
    * Удалить задачу
-   * @param {Number} taskId 
-   * @param {Number} userId 
+   * @param {Number} taskId
+   * @param {Number} userId
    */
 
   async destroy(taskId, userId) {
     console.log(taskId, userId);
-     throw new Error('The function destroy must be implemented');
+    throw new Error('The function destroy must be implemented');
   }
 }
