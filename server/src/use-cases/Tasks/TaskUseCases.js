@@ -71,4 +71,39 @@ export class TaskUseCases {
 
     return await this.taskRepository.update(task_data, taskId);
   }
+
+  async updateTaskThroughSaveMethod(
+    userId,
+    title,
+    description,
+    status,
+    priority,
+    target_date,
+    time_period,
+    taskId
+  ) {
+    if (!userId) {
+      throw new Error(USER_NOT_FOUND);
+    }
+
+    if (!taskId) {
+      throw new Error(TASK_NOT_FOUND);
+    }
+
+    const task_data = {
+      userId,
+      title,
+      description,
+      status,
+      priority,
+      target_date,
+      time_period,
+    };
+
+    if (!task_data) {
+      throw new Error(TASK_NOT_FOUND);
+    }
+
+    return await this.taskRepository.save(taskId, task_data, userId);
+  }
 }

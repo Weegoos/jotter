@@ -21,6 +21,9 @@ router.post('/', authMiddleware, taskControllers.createTask.bind(taskControllers
 router.get('/', authMiddleware, taskControllers.getAllTasks.bind(taskControllers));
 router.get('/:taskId', authMiddleware, taskControllers.getTaskById.bind(taskControllers));
 
+// patch
+router.patch('/:taskId', authMiddleware, taskControllers.partialTaskUpdate.bind(taskControllers));
+
 // put
 router.put(
   '/:taskId',

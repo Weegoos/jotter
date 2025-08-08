@@ -27,4 +27,25 @@ export class SequelizeTasksRepositories extends ITasksRepository {
     await this.taskDatabaseModel.update(taskData, { where: { id: taskId } });
     return await this.taskDatabaseModel.findByPk(taskId);
   }
+
+  async save(taskId, taskData, userId) {
+    const task = await this.taskDatabaseModel.findOne({
+      where: { userId: userId, id: taskId },
+    });
+
+    if (!task) {
+      throw new Error('TASK_NOT_FOUND'); // или твоя константа
+    }
+
+    task.title = taskData.title;
+    task.description = taskData.description;
+    task.status = taskData.status;
+    task.priority = taskData.priority;
+    task.target_date = taskData.target_date;
+    task.time_period = taskData.time_period;
+
+    await task.save();
+
+    return task;
+  }
 }
