@@ -79,7 +79,7 @@ export class SequelizeTasksRepositories extends ITasksRepository {
     });
 
     if (!task) {
-      throw new Error('TASK_NOT_FOUND'); // или твоя константа
+      throw new Error('TASK_NOT_FOUND');
     }
 
     return task;

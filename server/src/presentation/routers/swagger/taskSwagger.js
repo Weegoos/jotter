@@ -205,6 +205,53 @@
  *         description: Ошибка сервера
  */
 
+// --------------------- GET /tasks/summary ----------------------
+/**
+ * @swagger
+ * /tasks/summary:
+ *   get:
+ *     summary: Получить задачи за указанный период
+ *     description: Возвращает список задач пользователя в пределах заданного диапазона дат.
+ *     tags:
+ *       - Tasks
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: from_date
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: true
+ *         description: Начальная дата периода (включительно)
+ *         example: 2025-08-01
+ *       - in: query
+ *         name: to_date
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: true
+ *         description: Конечная дата периода (включительно)
+ *         example: 2025-08-31
+ *     responses:
+ *       200:
+ *         description: Список задач за указанный период
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Задачи успешно получены
+ *                 tasks:
+ *                   type: array
+ *       401:
+ *         description: Пользователь не найден или задачи не найдены
+ *       500:
+ *         description: Ошибка сервера
+ */
+
 // -------------------- PATCH /tasks/{taskId} ---------------------
 /**
  * @swagger

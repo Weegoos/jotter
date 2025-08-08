@@ -21,6 +21,7 @@ router.post('/', authMiddleware, taskControllers.createTask.bind(taskControllers
 // get
 router.get('/', authMiddleware, taskControllers.getAllTasks.bind(taskControllers));
 router.get('/calendar-view', authMiddleware, taskControllers.getCalendarView.bind(taskControllers));
+router.get('/summary', authMiddleware, taskControllers.getTaskSummary.bind(taskControllers));
 router.get('/:taskId', authMiddleware, taskControllers.getTaskById.bind(taskControllers));
 
 // patch
