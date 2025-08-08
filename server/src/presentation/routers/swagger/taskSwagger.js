@@ -68,3 +68,375 @@
  *       500:
  *         description: Ошибка сервера
  */
+
+// -------------------- GET Tasks -----------
+/**
+ * @swagger
+ * /tasks:
+ *   get:
+ *     summary: Получить все задачи пользователя
+ *     tags:
+ *       - Tasks
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Все задачи успешно получены
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Все задачи успешно получены
+ *                 allTasks:
+ *                   type: array
+ *       401:
+ *         description: Пользователь не найден или не авторизован
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+// --------------------- GET Task By Id ----------------------
+/**
+ * @swagger
+ * /tasks/{taskId}:
+ *   get:
+ *     summary: Получить задачу по ID
+ *     description: Возвращает задачу, принадлежащую текущему авторизованному пользователю.
+ *     tags:
+ *       - Tasks
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID задачи
+ *     responses:
+ *       200:
+ *         description: Успешное получение задачи
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Заметка получена
+ *       401:
+ *         description: Пользователь не найден или задача не найдена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Пользователь не найден
+ *       500:
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Ошибка сервера
+ */
+
+// -------------------- PATCH /tasks/{taskId} ---------------------
+/**
+ * @swagger
+ * /tasks/{taskId}:
+ *   patch:
+ *     summary: Частично обновить задачу
+ *     description: Обновляет все поля задачи по её идентификатору
+ *     tags:
+ *       - Tasks
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID задачи
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - description
+ *               - status
+ *               - priority
+ *               - target_date
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: Обновлённая задача
+ *               description:
+ *                 type: string
+ *                 example: Полное обновление описания задачи
+ *               status:
+ *                 type: string
+ *                 enum: [pending, in_progress, done]
+ *                 example: in_progress
+ *               priority:
+ *                 type: string
+ *                 enum: [low, medium, high]
+ *                 example: high
+ *               target_date:
+ *                 type: string
+ *                 format: date
+ *                 example: 2025-08-31
+ *               time_period:
+ *                 type: string
+ *                 enum: [daily, weekly, monthly, yearly]
+ *                 example: weekly
+ *     responses:
+ *       200:
+ *         description: Задача успешно обновлена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Задача успешно обновлена
+ *       401:
+ *         description: Пользователь не найден или задача не найдена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Пользователь не найден
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
+
+// -------------------- PATCH /tasks/{taskId}/status -----------------------
+/**
+ * @swagger
+ * /tasks/{taskId}/status:
+ *   patch:
+ *     summary: Обновить статус задачи
+ *     description: Частично обновляет задачу, изменяя только её статус. Требуется авторизация.
+ *     tags:
+ *       - Tasks
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID задачи, статус которой нужно обновить
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - status
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 example: "in_progress"
+ *     responses:
+ *       200:
+ *         description: Статус задачи успешно обновлён
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Статус задачи успешно обновлён"
+ *       400:
+ *         description: Статус не найден в теле запроса
+ *       401:
+ *         description: Пользователь не найден или не авторизован
+ *       404:
+ *         description: Задача не найдена или доступ запрещён
+ *       500:
+ *         description: Ошибка сервера
+ */
+
+// -------------------- PATCH /tasks/{taskId}/priority -----------------------
+/**
+ * @swagger
+ * /tasks/{taskId}/priority:
+ *   patch:
+ *     summary: Обновить приоритет задачи
+ *     description: Частично обновляет задачу, изменяя только её приоритет. Требуется авторизация.
+ *     tags:
+ *       - Tasks
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID задачи, приоритет которой нужно обновить
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - priority
+ *             properties:
+ *               priority:
+ *                 type: string
+ *                 enum:
+ *                   - low
+ *                   - medium
+ *                   - high
+ *                 example: "high"
+ *     responses:
+ *       200:
+ *         description: Приоритет задачи успешно обновлён
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Приоритет задачи успешно обновлён"
+ *       400:
+ *         description: Приоритет не найден в теле запроса
+ *       401:
+ *         description: Пользователь не найден или не авторизован
+ *       404:
+ *         description: Задача не найдена или доступ запрещён
+ *       500:
+ *         description: Ошибка сервера
+ */
+
+
+// --------------- PUT tasks/${taskId} ----------------------
+
+/**
+ * @swagger
+ * /tasks/{taskId}:
+ *   put:
+ *     summary: Полностью обновить задачу
+ *     description: Обновляет все поля существующей задачи по её ID. Требуется авторизация.
+ *     tags:
+ *       - Tasks
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID задачи, которую нужно обновить
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - description
+ *               - status
+ *               - priority
+ *               - target_date
+ *               - time_period
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: "Новая задача"
+ *               description:
+ *                 type: string
+ *                 example: "Подробное описание задачи"
+ *               status:
+ *                 type: string
+ *                 enum: [pending, in_progress, done]
+ *                 example: "in_progress"
+ *               priority:
+ *                 type: string
+ *                 enum: [low, medium, high]
+ *                 example: "high"
+ *               target_date:
+ *                 type: string
+ *                 format: date
+ *                 example: "2025-08-15"
+ *               time_period:
+ *                 type: string
+ *                 enum: [daily, weekly, monthly, yearly]
+ *                 example: "daily"
+ *     responses:
+ *       201:
+ *         description: Задача успешно обновлена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Заметка успешно обновлена"
+ *       401:
+ *         description: Пользователь не найден или задача не найдена
+ *       500:
+ *         description: Ошибка сервера
+ */
+
+// ----------------- DELETE /tasks/{taskId} --------------------
+/**
+ * @swagger
+ * /tasks/{taskId}:
+ *   delete:
+ *     summary: Удалить задачу по ID
+ *     description: Удаляет задачу по её ID для авторизованного пользователя. Требуется авторизация.
+ *     tags:
+ *       - Tasks
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID задачи, которую нужно удалить
+ *     responses:
+ *       201:
+ *         description: Задача успешно удалена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Заметка успешно удалена"
+ *       401:
+ *         description: Пользователь не найден или задача не найдена/нет доступа
+ *       500:
+ *         description: Ошибка сервера
+ */

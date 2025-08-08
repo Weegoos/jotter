@@ -17,4 +17,30 @@ const taskControllers = new TaskControllers(taskUseCase);
 // post
 router.post('/', authMiddleware, taskControllers.createTask.bind(taskControllers));
 
+// get
+router.get('/', authMiddleware, taskControllers.getAllTasks.bind(taskControllers));
+router.get('/:taskId', authMiddleware, taskControllers.getTaskById.bind(taskControllers));
+
+// patch
+router.patch('/:taskId', authMiddleware, taskControllers.partialTaskUpdate.bind(taskControllers));
+router.patch(
+  '/:taskId/status',
+  authMiddleware,
+  taskControllers.updateTaskStatus.bind(taskControllers)
+);
+router.patch(
+  '/:taskId/priority',
+  authMiddleware,
+  taskControllers.updateTaskPriority.bind(taskControllers)
+);
+
+// put
+router.put(
+  '/:taskId',
+  authMiddleware,
+  taskControllers.completelyUpdateTheTask.bind(taskControllers)
+);
+
+// delete
+router.delete('/:taskId', authMiddleware, taskControllers.destroyTaskById.bind(taskControllers));
 export default router;
