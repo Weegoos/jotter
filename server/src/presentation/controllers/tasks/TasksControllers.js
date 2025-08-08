@@ -88,7 +88,7 @@ export class TaskControllers {
       }
 
       if (error.message === 'TASK_NOT_FOUND') {
-        return res.status(401).json({ message: 'Задача не найдена' });
+        return res.status(401).json({ message: 'Задача не найдена или доступ запрещен' });
       }
       return res.status(500).json({ message: 'Ошибка сервера' });
     }

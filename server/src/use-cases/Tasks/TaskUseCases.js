@@ -69,7 +69,7 @@ export class TaskUseCases {
       throw new Error(TASK_NOT_FOUND);
     }
 
-    return await this.taskRepository.update(task_data, taskId);
+    return await this.taskRepository.update(task_data, taskId, userId);
   }
 
   async updateTaskThroughSaveMethod(
