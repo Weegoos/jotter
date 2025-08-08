@@ -30,4 +30,7 @@ router.put(
   authMiddleware,
   taskControllers.completelyUpdateTheTask.bind(taskControllers)
 );
+
+// delete
+router.delete('/:taskId', authMiddleware, taskControllers.destroyTaskById.bind(taskControllers));
 export default router;

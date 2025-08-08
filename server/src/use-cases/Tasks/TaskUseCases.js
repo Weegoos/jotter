@@ -106,4 +106,20 @@ export class TaskUseCases {
 
     return await this.taskRepository.save(taskId, task_data, userId);
   }
+
+  async deleteTaskById(userId, taskId) {
+    if (!userId) {
+      throw new Error(USER_NOT_FOUND);
+    }
+
+    if (!taskId) {
+      throw new Error(TASK_NOT_FOUND);
+    }
+
+    const deletedTask = await this.taskRepository.destroy(taskId, userId);
+    if (!deletedTask) {
+      throw new Error(TASK_NOT_FOUND);
+    }
+    return await deletedTask;
+  }
 }

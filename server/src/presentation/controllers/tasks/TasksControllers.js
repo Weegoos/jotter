@@ -82,7 +82,7 @@ export class TaskControllers {
       );
       return res.status(201).json({ message: 'Заметка успешно обновлена', updatedTask });
     } catch (error) {
-      console.error('Ошибка при получении задач по ID:', error);
+      console.error('Ошибка при обвнолении задач по ID:', error);
       if (error.message === 'USER_NOT_FOUND') {
         return res.status(401).json({ message: 'Пользователь не найден' });
       }
@@ -113,7 +113,27 @@ export class TaskControllers {
 
       return res.status(201).json({ message: 'Заметка успешно обновлена', updatedTask });
     } catch (error) {
-      console.error('Ошибка при получении задач по ID:', error);
+      console.error('Ошибка при обновлении задач по ID:', error);
+      if (error.message === 'USER_NOT_FOUND') {
+        return res.status(401).json({ message: 'Пользователь не найден' });
+      }
+
+      if (error.message === 'TASK_NOT_FOUND') {
+        return res.status(401).json({ message: 'Задача не найдена или доступ запрещен' });
+      }
+      return res.status(500).json({ message: 'Ошибка сервера' });
+    }
+  }
+
+  async destroyTaskById(req, res) {
+    try {
+      const userId = req.user.id;
+      const { taskId } = req.params;
+
+      const deletedTask = await this.taskUseCase.deleteTaskById(userId, taskId);
+      return res.status(201).json({ message: 'Заметка успешно удалена', deletedTask });
+    } catch (error) {
+      console.error('Ошибка при удалении задач по ID:', error);
       if (error.message === 'USER_NOT_FOUND') {
         return res.status(401).json({ message: 'Пользователь не найден' });
       }

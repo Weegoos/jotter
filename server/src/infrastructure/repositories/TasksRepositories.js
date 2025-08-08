@@ -56,4 +56,16 @@ export class SequelizeTasksRepositories extends ITasksRepository {
 
     return task;
   }
+
+  async destroy(taskId, userId) {
+    const task = this.taskDatabaseModel.destroy({
+      where: { userId: userId, id: taskId },
+    });
+
+    if (!task) {
+      throw new Error('TASK_NOT_FOUND'); // или твоя константа
+    }
+
+    return task;
+  }
 }

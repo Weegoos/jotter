@@ -9,7 +9,7 @@ export class ITasksRepository {
   }
 
   /**
-   *
+   * Найти все задачи этого пользователя
    * @param {Number} userId
    */
 
@@ -19,7 +19,7 @@ export class ITasksRepository {
   }
 
   /**
-   *
+   * Найти задачу этого пользователя
    * @param {Number} userId
    * @param {Number} taskId
    */
@@ -30,13 +30,37 @@ export class ITasksRepository {
   }
 
   /**
-   *
+   * Частично обновить задачу
    * @param {Object} taskData
    * @param {Number} taskId
+   * @param {Number} userId
    */
 
-  async update(taskData, taskId) {
-    console.log(taskData, taskId);
+  async update(taskData, taskId, userId) {
+    console.log(taskData, taskId, userId);
     throw new Error('The function update must be implemented');
+  }
+
+  /**
+   * Обновить полностью задачу
+   * @param {Number} taskId 
+   * @param {Object} taskData 
+   * @param {Number} userId 
+   */
+
+  async save(taskId, taskData, userId) {
+    console.log(taskId, taskData, userId);
+    throw new Error('The function save must be implemented');
+  }
+
+  /**
+   * Удалить задачу
+   * @param {Number} taskId 
+   * @param {Number} userId 
+   */
+
+  async destroy(taskId, userId) {
+    console.log(taskId, userId);
+     throw new Error('The function destroy must be implemented');
   }
 }

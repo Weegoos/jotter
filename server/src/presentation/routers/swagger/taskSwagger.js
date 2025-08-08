@@ -298,3 +298,38 @@
  *       500:
  *         description: Ошибка сервера
  */
+
+// ----------------- DELETE /tasks/{taskId} --------------------
+/**
+ * @swagger
+ * /tasks/{taskId}:
+ *   delete:
+ *     summary: Удалить задачу по ID
+ *     description: Удаляет задачу по её ID для авторизованного пользователя. Требуется авторизация.
+ *     tags:
+ *       - Tasks
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID задачи, которую нужно удалить
+ *     responses:
+ *       201:
+ *         description: Задача успешно удалена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Заметка успешно удалена"
+ *       401:
+ *         description: Пользователь не найден или задача не найдена/нет доступа
+ *       500:
+ *         description: Ошибка сервера
+ */
