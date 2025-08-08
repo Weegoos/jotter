@@ -64,6 +64,29 @@ export class TaskControllers {
     }
   }
 
+  async getCalendarView(req, res) {
+    try {
+      const userId = req.user.id;
+      const { target_date } = req.query;
+
+      if (!target_date) {
+        return res.status(404).json({ message: 'Задачи не найдены' });
+      }
+
+      const tasks = await this.taskUseCase.findAllWithOpUseCase(userId, target_date);
+      return res.status(200).json({ message: 'Задачи успешно получены', tasks });
+    } catch (error) {
+      console.error('Ошибка при получении задач по ID:', error);
+      if (error.message === 'USER_NOT_FOUND') {
+        return res.status(401).json({ message: 'Пользователь не найден' });
+      }
+      if (error.message === 'Tasks not found') {
+        return res.status(401).json({ message: 'Задачи не найдены' });
+      }
+      return res.status(500).json({ message: 'Ошибка сервера' });
+    }
+  }
+
   async partialTaskUpdate(req, res) {
     try {
       const userId = req.user.id;

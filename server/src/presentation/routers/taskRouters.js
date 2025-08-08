@@ -6,11 +6,12 @@ import { TaskUseCases } from '../../use-cases/Tasks/TaskUseCases.js';
 import { TaskControllers } from '../controllers/tasks/TasksControllers.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
 import Tasks from '../../infrastructure/database/models/taskSchemas.js';
+import { Op } from 'sequelize';
 
 const router = express.Router();
 
 // DI Solid
-const taskRepository = new SequelizeTasksRepositories(Tasks, User);
+const taskRepository = new SequelizeTasksRepositories(Tasks, User, Op);
 const taskUseCase = new TaskUseCases(taskRepository);
 const taskControllers = new TaskControllers(taskUseCase);
 
@@ -19,6 +20,7 @@ router.post('/', authMiddleware, taskControllers.createTask.bind(taskControllers
 
 // get
 router.get('/', authMiddleware, taskControllers.getAllTasks.bind(taskControllers));
+router.get('/calendar-view', authMiddleware, taskControllers.getCalendarView.bind(taskControllers));
 router.get('/:taskId', authMiddleware, taskControllers.getTaskById.bind(taskControllers));
 
 // patch

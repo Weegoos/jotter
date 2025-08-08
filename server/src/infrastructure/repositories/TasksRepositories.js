@@ -1,10 +1,11 @@
 import { ITasksRepository } from '../../domain/repositories/ITasksRepository.js';
 
 export class SequelizeTasksRepositories extends ITasksRepository {
-  constructor(taskDatabaseModel, userDatabaseModel) {
+  constructor(taskDatabaseModel, userDatabaseModel, opModel) {
     super();
     this.taskDatabaseModel = taskDatabaseModel;
     this.userDatabaseModel = userDatabaseModel;
+    this.opModel = opModel;
   }
 
   async create(taskData) {
@@ -14,6 +15,20 @@ export class SequelizeTasksRepositories extends ITasksRepository {
   async findAll(whereConditions) {
     return await this.taskDatabaseModel.findAll({
       where: whereConditions,
+    });
+  }
+
+  async findAllWithOp(userId, target_date) {
+    return await this.taskDatabaseModel.findAll({
+      where: {
+        userId: userId,
+        target_date: {
+          [this.opModel.between]: [
+            new Date(`${target_date}T00:00:00`),
+            new Date(`${target_date}T23:59:59`),
+          ],
+        },
+      },
     });
   }
 

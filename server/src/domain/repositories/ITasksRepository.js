@@ -19,6 +19,17 @@ export class ITasksRepository {
   }
 
   /**
+   * Найти задачи по дня
+   * @param {Number} userId
+   * @param {Date} target_date
+   */
+
+  async findAllWithOp(userId, target_date) {
+    console.log(userId, target_date);
+    throw new Error('The function findAllWithOp must be implemented');
+  }
+
+  /**
    * Найти задачу этого пользователя
    * @param {Number} userId
    * @param {Number} taskId
