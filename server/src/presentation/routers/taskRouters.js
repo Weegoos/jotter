@@ -23,6 +23,11 @@ router.get('/:taskId', authMiddleware, taskControllers.getTaskById.bind(taskCont
 
 // patch
 router.patch('/:taskId', authMiddleware, taskControllers.partialTaskUpdate.bind(taskControllers));
+router.patch(
+  '/:taskId/status',
+  authMiddleware,
+  taskControllers.updateTaskStatus.bind(taskControllers)
+);
 
 // put
 router.put(

@@ -144,4 +144,29 @@ export class TaskControllers {
       return res.status(500).json({ message: 'Ошибка сервера' });
     }
   }
+
+  async updateTaskStatus(req, res) {
+    try {
+      const userId = req.user.id;
+      const { status } = req.body;
+      const { taskId } = req.params;
+
+      if (!status) {
+        return res.status(401).json({ message: 'Статус не найден' });
+      }
+
+      const updatedTask = await this.taskUseCase.updateTask(userId, taskId, { status });
+      return res.status(200).json({ message: 'Статус задачи успешно обновлена', updatedTask });
+    } catch (error) {
+      console.error('Ошибка при обновлении статуса задачи по ID:', error);
+      if (error.message === 'USER_NOT_FOUND') {
+        return res.status(401).json({ message: 'Пользователь не найден' });
+      }
+
+      if (error.message === 'TASK_NOT_FOUND') {
+        return res.status(401).json({ message: 'Задача не найдена или доступ запрещен' });
+      }
+      return res.status(500).json({ message: 'Ошибка сервера' });
+    }
+  }
 }

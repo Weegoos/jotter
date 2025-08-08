@@ -55,15 +55,15 @@ export class TaskUseCases {
     if (!userId) {
       throw new Error(USER_NOT_FOUND);
     }
-    const task_data = {
-      ...taskData,
-    };
 
-    if (!taskId || !task_data) {
+    const task_data = { ...taskData };
+
+    if (!taskId || Object.keys(task_data).length === 0) {
       throw new Error(TASK_NOT_FOUND);
     }
 
-    return await this.taskRepository.update(task_data, taskId, userId);
+    const updatedTask = await this.taskRepository.update(task_data, taskId, userId);
+    return updatedTask;
   }
 
   async updateTaskThroughSaveMethod(
