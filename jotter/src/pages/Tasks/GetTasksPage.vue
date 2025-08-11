@@ -79,7 +79,6 @@
                     <q-item-section side top>
                       <q-btn
                         flat
-                        align=""
                         icon="mdi-dots-horizontal"
                         @click="
                           (e) => {
@@ -92,7 +91,7 @@
                             <q-item-section avatar>
                               <q-icon color="orange" name="mdi-pin" />
                             </q-item-section>
-                            <q-item-section>Изменить статус</q-item-section>
+                            <q-item-section>Change the status</q-item-section>
                           </q-item>
                           <q-item clickable @click="emit('edit', note)">
                             <q-item-section avatar>
@@ -100,11 +99,11 @@
                             </q-item-section>
                             <q-item-section>Edit</q-item-section>
                           </q-item>
-                          <q-item clickable @click="emit('delete', note)">
+                          <q-item clickable @click="deleteTask(task)">
                             <q-item-section avatar>
                               <q-icon color="red" name="mdi-delete" />
                             </q-item-section>
-                            <q-item-section>Move to the trash</q-item-section>
+                            <q-item-section>Delete</q-item-section>
                           </q-item>
                         </q-menu>
                       </q-btn>
@@ -145,6 +144,7 @@ import { useWebSocket } from 'src/composables/javascript-function/websocket';
 import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue';
 import CreateTasksPage from './CreateTasksPage.vue';
 import { patchMethod } from 'src/composables/api-method/patch';
+import { deleteMethod } from 'src/composables/api-method/delete';
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
@@ -164,15 +164,15 @@ console.log(currentDay.value);
 
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
-  if (data.event === 'getCalendarView') {
-    // getTasksCalendarView();
-  }
-
   if (data.event === 'createTask') {
-    // getTasksCalendarView();
+    getTasksCalendarView();
   }
 
   if (data.event === 'updateTaskStatus') {
+    getTasksCalendarView();
+  }
+
+  if (data.event === 'deleteTask') {
     getTasksCalendarView();
   }
 };
@@ -226,6 +226,14 @@ const changeTaskStatus = async (taskInfo) => {
     console.log(status);
 
     await patchMethod('http://localhost:3000/', `tasks/${taskInfo.id}/status`, statusData, $q, {});
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const deleteTask = async (taskInfo) => {
+  try {
+    await deleteMethod(serverURL, `tasks`, taskInfo.id);
   } catch (error) {
     console.error(error);
   }
