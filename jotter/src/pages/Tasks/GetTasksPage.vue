@@ -62,7 +62,7 @@
                         icon="mdi-plus"
                         color="white"
                         class="text-black"
-                        @emitClick="searchTasks"
+                        @emitClick="openCreateWindow"
                       />
                     </div>
                   </div>
@@ -109,21 +109,31 @@
 import { useQuasar } from 'quasar';
 import { Button } from 'src/components/atoms';
 import { getMethod } from 'src/composables/api-method/get';
+import { useWebSocket } from 'src/composables/javascript-function/websocket';
 import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue';
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
 const $q = useQuasar();
 const date = new Date();
+const webSocketURL = proxy.$webSocketURL;
+const socket = new WebSocket(webSocketURL);
 
 const tab = ref('dailyTasks');
 const chosenDate = ref('');
+useWebSocket(webSocketURL);
 
 const tasks = ref([]);
 const currentMonth = ref(date.getMonth() + 1);
 const currentDay = ref(date.getDate());
 console.log(currentDay.value);
 
+socket.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  if (data.event === 'getCalendarView' || data.event === 'createTask') {
+    getTasksCalendarView();
+  }
+};
 const currentDate = computed(() => {
   const year = date.getFullYear();
   const monthStr = String(currentMonth.value).padStart(2, '0');
@@ -140,11 +150,15 @@ const getTasksCalendarView = async () => {
       $q,
       'Задачи успешно получены'
     );
-    tasks.value = response.tasks;
+    tasks.value = response.tasks.filter((task) => task.time_period === 'daily');
   } catch (error) {
     console.error(error);
   }
 };
+
+const openCreateWindow = () => {
+
+}
 
 const searchTasks = () => {
   getTasksCalendarView();
