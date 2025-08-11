@@ -31,7 +31,34 @@
               <q-card class="my-card">
                 <q-list bordered separator class="q-pa-md">
                   <q-chip dense size="18px" icon="mdi-circle"> To Do </q-chip>
-
+                  <div class="flex gap-2">
+                    <q-input
+                    dense
+                      filled
+                      class="flex-1"
+                      v-model="chosenDate"
+                      mask="####-##-##"
+                      :rules="[
+                        (val) =>
+                          /^\d{4}-\d{2}-\d{2}$/.test(val) || 'Введите дату в формате YYYY-MM-DD',
+                      ]"
+                    >
+                      <template v-slot:append>
+                        <q-icon name="event" class="cursor-pointer">
+                          <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                            <q-date v-model="chosenDate" mask="YYYY-MM-DD">
+                              <div class="row items-center justify-end">
+                                <q-btn v-close-popup label="Close" color="primary" flat />
+                              </div>
+                            </q-date>
+                          </q-popup-proxy>
+                        </q-icon>
+                      </template>
+                    </q-input>
+                   <div class="flex-2">
+                    <Button label="Search" color="white" class="text-black" @emitClick="searchTasks"/>
+                   </div>
+                  </div>
                   <q-item clickable v-ripple v-for="(task, index) in tasks" :key="index">
                     <q-item-section>
                       <q-item-label
@@ -73,22 +100,36 @@
 
 <script setup>
 import { useQuasar } from 'quasar';
+import { Button } from 'src/components/atoms';
 import { getMethod } from 'src/composables/api-method/get';
-import { getCurrentInstance, onMounted, ref } from 'vue';
-
+import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue';
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
 const $q = useQuasar();
+const date = new Date();
 
 const tab = ref('dailyTasks');
+const chosenDate = ref('');
 
 const tasks = ref([]);
+const currentMonth = ref(date.getMonth() + 1);
+const currentDay = ref(date.getDate());
+console.log(currentDay.value);
+
+const currentDate = computed(() => {
+  const year = date.getFullYear();
+  const monthStr = String(currentMonth.value).padStart(2, '0');
+  const dayStr = String(currentDay.value).padStart(2, '0');
+  return `${year}-${monthStr}-${dayStr}`;
+});
+
+console.log(currentDate.value);
 const getTasksCalendarView = async () => {
   try {
     const response = await getMethod(
       serverURL,
-      `tasks/calendar-view?target_date=2025-08-31`,
+      `tasks/calendar-view?target_date=${chosenDate.value || currentDate.value}`,
       $q,
       'Задачи успешно получены'
     );
@@ -97,6 +138,10 @@ const getTasksCalendarView = async () => {
     console.error(error);
   }
 };
+
+const searchTasks = () => {
+  getTasksCalendarView()
+}
 
 onMounted(() => {
   getTasksCalendarView();
