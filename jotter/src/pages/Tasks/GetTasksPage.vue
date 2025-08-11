@@ -132,7 +132,11 @@ console.log(currentDay.value);
 
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
-  if (data.event === 'getCalendarView' || data.event === 'createTask') {
+  if (data.event === 'getCalendarView') {
+    getTasksCalendarView();
+  }
+
+  if (data.event === 'createTask') {
     getTasksCalendarView();
   }
 };

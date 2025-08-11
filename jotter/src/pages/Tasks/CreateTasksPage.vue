@@ -17,9 +17,32 @@
             :options="periodOptions"
             class="q-mb-sm"
           />
+          <q-input
+            dense
+            outlined
+            placeholder="Choose Date"
+            v-model="chosenDate"
+            mask="####-##-##"
+            :rules="[
+              (val) => /^\d{4}-\d{2}-\d{2}$/.test(val) || 'Введите дату в формате YYYY-MM-DD',
+            ]"
+          >
+            <template v-slot:append>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                  <q-date v-model="chosenDate" mask="YYYY-MM-DD" v-close-popup>
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Close" color="primary" flat />
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn flat label="Cancel" color="primary" @click="closeCreatePage" />
+          <Button label="Create" color="positive" @emitClick="createTask" />
+          <Button label="Cancel" color="black" @emitClick="closeCreatePage" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -27,13 +50,19 @@
 </template>
 
 <script setup>
-import { Input, Select } from 'src/components/atoms';
-import { ref, watch } from 'vue';
-Select;
+import { useQuasar } from 'quasar';
+import { Button, Input, Select } from 'src/components/atoms';
+import { postMethod } from 'src/composables/api-method/post';
+import { getCurrentInstance, ref, watch } from 'vue';
 
+// global variables
 const props = defineProps({
   isOpenCreatePage: Boolean,
 });
+const { proxy } = getCurrentInstance();
+const serverURL = proxy.$serverURL;
+const $q = useQuasar();
+
 const isCreatePage = ref(props.isOpenCreatePage);
 watch(
   () => props.isOpenCreatePage,
@@ -49,9 +78,28 @@ const closeCreatePage = () => {
 
 const priorityOptions = ['high', 'medium', 'low'];
 const periodOptions = ['daily', 'weekly', 'monthly', 'yearly'];
+const description = ref('');
+const title = ref('');
+const chosenDate = ref('');
 
 const timePeriod = ref("Task's time period");
 const priority = ref("Task's priority");
+
+const createTask = async () => {
+  try {
+    const data = {
+      title: title.value,
+      description: description.value,
+      status: 'pending',
+      priority: priority.value,
+      target_date: chosenDate.value,
+      time_period: timePeriod.value,
+    };
+    await postMethod(serverURL, 'tasks', data, $q, 'The task was created successfully');
+  } catch (error) {
+    console.error(error);
+  }
+};
 </script>
 
 <style></style>
