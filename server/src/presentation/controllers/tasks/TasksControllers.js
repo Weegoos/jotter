@@ -214,6 +214,7 @@ export class TaskControllers {
       }
 
       const updatedTask = await this.taskUseCase.updateTask(userId, taskId, { status });
+      wssSend('updateTaskStatus', updatedTask);
       return res.status(200).json({ message: 'Статус задачи успешно обновлен', updatedTask });
     } catch (error) {
       console.error('Ошибка при обновлении статуса задачи по ID:', error);

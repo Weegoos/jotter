@@ -5,7 +5,7 @@
       <p>Short description will be placed here</p>
     </div>
     <div>
-      <q-tabs v-model="tab" inline-label class="text-green-8 text-font" align="left">
+      <q-tabs v-model="tab" inline-label class="text-green-8 text-font">
         <q-tab name="dailyTasks" icon="mail" label="Tasks of the day" no-caps class="w-[450px]" />
         <q-tab
           name="periodTasks"
@@ -77,6 +77,37 @@
                     </q-item-section>
 
                     <q-item-section side top>
+                      <q-btn
+                        flat
+                        align=""
+                        icon="mdi-dots-horizontal"
+                        @click="
+                          (e) => {
+                            e.stopPropagation();
+                          }
+                        "
+                      >
+                        <q-menu anchor="bottom right" self="top right">
+                          <q-item clickable @click="changeTaskStatus(task)">
+                            <q-item-section avatar>
+                              <q-icon color="orange" name="mdi-pin" />
+                            </q-item-section>
+                            <q-item-section>Изменить статус</q-item-section>
+                          </q-item>
+                          <q-item clickable @click="emit('edit', note)">
+                            <q-item-section avatar>
+                              <q-icon color="amber-5" name="mdi-pencil" />
+                            </q-item-section>
+                            <q-item-section>Edit</q-item-section>
+                          </q-item>
+                          <q-item clickable @click="emit('delete', note)">
+                            <q-item-section avatar>
+                              <q-icon color="red" name="mdi-delete" />
+                            </q-item-section>
+                            <q-item-section>Move to the trash</q-item-section>
+                          </q-item>
+                        </q-menu>
+                      </q-btn>
                       <q-item-label caption>{{ task.priority }}</q-item-label>
                     </q-item-section>
                   </q-item>
@@ -113,6 +144,7 @@ import { getMethod } from 'src/composables/api-method/get';
 import { useWebSocket } from 'src/composables/javascript-function/websocket';
 import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue';
 import CreateTasksPage from './CreateTasksPage.vue';
+import { patchMethod } from 'src/composables/api-method/patch';
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
@@ -133,10 +165,14 @@ console.log(currentDay.value);
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
   if (data.event === 'getCalendarView') {
-    getTasksCalendarView();
+    // getTasksCalendarView();
   }
 
   if (data.event === 'createTask') {
+    // getTasksCalendarView();
+  }
+
+  if (data.event === 'updateTaskStatus') {
     getTasksCalendarView();
   }
 };
@@ -173,6 +209,26 @@ const closeCreatePage = () => {
 
 const searchTasks = () => {
   getTasksCalendarView();
+};
+
+const changeTaskStatus = async (taskInfo) => {
+  try {
+    let status;
+    if (taskInfo.status == 'done') {
+      status = 'pending';
+    } else {
+      status = 'done';
+    }
+
+    const statusData = {
+      status: status,
+    };
+    console.log(status);
+
+    await patchMethod('http://localhost:3000/', `tasks/${taskInfo.id}/status`, statusData, $q, {});
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 onMounted(() => {
