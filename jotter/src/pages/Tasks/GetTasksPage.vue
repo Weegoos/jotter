@@ -27,92 +27,16 @@
         <q-tab-panel name="dailyTasks">
           <div class="text-h4 q-mb-md">Tasks</div>
           <div class="grid grid-cols-2 gap-4">
-            <div class="flex-1">
-              <q-card class="my-card">
-                <q-list bordered separator class="q-pa-md">
-                  <q-chip dense size="18px" icon="mdi-circle"> Daily To Do List </q-chip>
-                  <div class="flex gap-2">
-                    <q-input
-                      dense
-                      filled
-                      class="flex-1"
-                      placeholder="Choose date..."
-                      v-model="chosenDate"
-                      mask="####-##-##"
-                      :rules="[
-                        (val) =>
-                          /^\d{4}-\d{2}-\d{2}$/.test(val) || 'Введите дату в формате YYYY-MM-DD',
-                      ]"
-                    >
-                      <template v-slot:append>
-                        <q-icon name="event" class="cursor-pointer">
-                          <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                            <q-date v-model="chosenDate" mask="YYYY-MM-DD" v-close-popup>
-                              <div class="row items-center justify-end">
-                                <q-btn v-close-popup label="Close" color="primary" flat />
-                              </div>
-                            </q-date>
-                          </q-popup-proxy>
-                        </q-icon>
-                        <q-icon name="mdi-magnify" class="cursor-pointer" @click="searchTasks" />
-                      </template>
-                    </q-input>
-                    <div class="flex-2">
-                      <Button
-                        icon="mdi-plus"
-                        color="white"
-                        class="text-black"
-                        @emitClick="openCreateWindow"
-                      />
-                    </div>
-                  </div>
-                  <q-item clickable v-ripple v-for="(task, index) in tasks" :key="index">
-                    <q-item-section>
-                      <q-item-label
-                        :class="task.status === 'done' ? 'text-green' : 'text-orange'"
-                        >{{ task.status }}</q-item-label
-                      >
-                      <q-item-label>{{ task.title }}</q-item-label>
-                      <q-item-label caption lines="2">{{ task.description }}</q-item-label>
-                    </q-item-section>
+            <OrganismToGetTasks
+              :tasks="tasks"
+              @changeTaskStatus="changeTaskStatus"
+              @deleteTask="deleteTask"
+              :isInput="true"
+              v-model="chosenDate"
+              @searchTasks="searchTasks"
+              @openCreateWindow="openCreateWindow"
+            />
 
-                    <q-item-section side top>
-                      <q-btn
-                        flat
-                        icon="mdi-dots-horizontal"
-                        @click="
-                          (e) => {
-                            e.stopPropagation();
-                          }
-                        "
-                      >
-                        <q-menu anchor="bottom right" self="top right">
-                          <q-item clickable @click="changeTaskStatus(task)">
-                            <q-item-section avatar>
-                              <q-icon color="orange" name="mdi-pin" />
-                            </q-item-section>
-                            <q-item-section>Change the status</q-item-section>
-                          </q-item>
-                          <q-item clickable @click="emit('edit', note)">
-                            <q-item-section avatar>
-                              <q-icon color="amber-5" name="mdi-pencil" />
-                            </q-item-section>
-                            <q-item-section>Edit</q-item-section>
-                          </q-item>
-                          <q-item clickable @click="deleteTask(task)">
-                            <q-item-section avatar>
-                              <q-icon color="red" name="mdi-delete" />
-                            </q-item-section>
-                            <q-item-section>Delete</q-item-section>
-                          </q-item>
-                        </q-menu>
-                      </q-btn>
-                      <q-item-label caption>{{ task.priority }}</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-              </q-card>
-            </div>
             <div class="flex-2">
               <q-card class="my-card">
                 <q-card-section>
@@ -141,234 +65,20 @@
                     transition-next="jump-up"
                   >
                     <q-tab-panel name="weekPlans">
-                      <div>
-                        <div>
-                          <q-card class="my-card">
-                            <q-list bordered separator class="q-pa-md">
-                              <div class="flex gap-2">
-                                <q-input
-                                  dense
-                                  filled
-                                  class="flex-1"
-                                  placeholder="Choose date..."
-                                  v-model="chosenDate"
-                                  mask="####-##-##"
-                                  :rules="[
-                                    (val) =>
-                                      /^\d{4}-\d{2}-\d{2}$/.test(val) ||
-                                      'Введите дату в формате YYYY-MM-DD',
-                                  ]"
-                                >
-                                  <template v-slot:append>
-                                    <q-icon name="event" class="cursor-pointer">
-                                      <q-popup-proxy
-                                        cover
-                                        transition-show="scale"
-                                        transition-hide="scale"
-                                      >
-                                        <q-date
-                                          v-model="chosenDate"
-                                          mask="YYYY-MM-DD"
-                                          v-close-popup
-                                        >
-                                          <div class="row items-center justify-end">
-                                            <q-btn
-                                              v-close-popup
-                                              label="Close"
-                                              color="primary"
-                                              flat
-                                            />
-                                          </div>
-                                        </q-date>
-                                      </q-popup-proxy>
-                                    </q-icon>
-                                    <q-icon
-                                      name="mdi-magnify"
-                                      class="cursor-pointer"
-                                      @click="searchTasks"
-                                    />
-                                  </template>
-                                </q-input>
-                                <div class="flex-2">
-                                  <Button
-                                    icon="mdi-plus"
-                                    color="white"
-                                    class="text-black"
-                                    @emitClick="openCreateWindow"
-                                  />
-                                </div>
-                              </div>
-                              <q-item
-                                clickable
-                                v-ripple
-                                v-for="(task, index) in weeklyTasks"
-                                :key="index"
-                              >
-                                <q-item-section>
-                                  <q-item-label
-                                    :class="task.status === 'done' ? 'text-green' : 'text-orange'"
-                                    >{{ task.status }}</q-item-label
-                                  >
-                                  <q-item-label>{{ task.title }}</q-item-label>
-                                  <q-item-label caption lines="2">{{
-                                    task.description
-                                  }}</q-item-label>
-                                </q-item-section>
-
-                                <q-item-section side top>
-                                  <q-btn
-                                    flat
-                                    icon="mdi-dots-horizontal"
-                                    @click="
-                                      (e) => {
-                                        e.stopPropagation();
-                                      }
-                                    "
-                                  >
-                                    <q-menu anchor="bottom right" self="top right">
-                                      <q-item clickable @click="changeTaskStatus(task)">
-                                        <q-item-section avatar>
-                                          <q-icon color="orange" name="mdi-pin" />
-                                        </q-item-section>
-                                        <q-item-section>Change the status</q-item-section>
-                                      </q-item>
-                                      <q-item clickable @click="emit('edit', note)">
-                                        <q-item-section avatar>
-                                          <q-icon color="amber-5" name="mdi-pencil" />
-                                        </q-item-section>
-                                        <q-item-section>Edit</q-item-section>
-                                      </q-item>
-                                      <q-item clickable @click="deleteTask(task)">
-                                        <q-item-section avatar>
-                                          <q-icon color="red" name="mdi-delete" />
-                                        </q-item-section>
-                                        <q-item-section>Delete</q-item-section>
-                                      </q-item>
-                                    </q-menu>
-                                  </q-btn>
-                                  <q-item-label caption>{{ task.priority }}</q-item-label>
-                                </q-item-section>
-                              </q-item>
-                            </q-list>
-                          </q-card>
-                        </div>
-                      </div>
+                      <OrganismToGetTasks
+                        :tasks="weeklyTasks"
+                        @changeTaskStatus="changeTaskStatus"
+                        @deleteTask="deleteTask"
+                      />
                     </q-tab-panel>
 
                     <q-tab-panel name="monthPlans">
                       <div class="text-h4 q-mb-md">Month Tasks</div>
-                      <div>
-                        <div>
-                          <q-card class="my-card">
-                            <q-list bordered separator class="q-pa-md">
-                              <div class="flex gap-2">
-                                <q-input
-                                  dense
-                                  filled
-                                  class="flex-1"
-                                  placeholder="Choose date..."
-                                  v-model="chosenDate"
-                                  mask="####-##-##"
-                                  :rules="[
-                                    (val) =>
-                                      /^\d{4}-\d{2}-\d{2}$/.test(val) ||
-                                      'Введите дату в формате YYYY-MM-DD',
-                                  ]"
-                                >
-                                  <template v-slot:append>
-                                    <q-icon name="event" class="cursor-pointer">
-                                      <q-popup-proxy
-                                        cover
-                                        transition-show="scale"
-                                        transition-hide="scale"
-                                      >
-                                        <q-date
-                                          v-model="chosenDate"
-                                          mask="YYYY-MM-DD"
-                                          v-close-popup
-                                        >
-                                          <div class="row items-center justify-end">
-                                            <q-btn
-                                              v-close-popup
-                                              label="Close"
-                                              color="primary"
-                                              flat
-                                            />
-                                          </div>
-                                        </q-date>
-                                      </q-popup-proxy>
-                                    </q-icon>
-                                    <q-icon
-                                      name="mdi-magnify"
-                                      class="cursor-pointer"
-                                      @click="searchTasks"
-                                    />
-                                  </template>
-                                </q-input>
-                                <div class="flex-2">
-                                  <Button
-                                    icon="mdi-plus"
-                                    color="white"
-                                    class="text-black"
-                                    @emitClick="openCreateWindow"
-                                  />
-                                </div>
-                              </div>
-                              <q-item
-                                clickable
-                                v-ripple
-                                v-for="(task, index) in monthTasks"
-                                :key="index"
-                              >
-                                <q-item-section>
-                                  <q-item-label
-                                    :class="task.status === 'done' ? 'text-green' : 'text-orange'"
-                                    >{{ task.status }}</q-item-label
-                                  >
-                                  <q-item-label>{{ task.title }}</q-item-label>
-                                  <q-item-label caption lines="2">{{
-                                    task.description
-                                  }}</q-item-label>
-                                </q-item-section>
-
-                                <q-item-section side top>
-                                  <q-btn
-                                    flat
-                                    icon="mdi-dots-horizontal"
-                                    @click="
-                                      (e) => {
-                                        e.stopPropagation();
-                                      }
-                                    "
-                                  >
-                                    <q-menu anchor="bottom right" self="top right">
-                                      <q-item clickable @click="changeTaskStatus(task)">
-                                        <q-item-section avatar>
-                                          <q-icon color="orange" name="mdi-pin" />
-                                        </q-item-section>
-                                        <q-item-section>Change the status</q-item-section>
-                                      </q-item>
-                                      <q-item clickable @click="emit('edit', note)">
-                                        <q-item-section avatar>
-                                          <q-icon color="amber-5" name="mdi-pencil" />
-                                        </q-item-section>
-                                        <q-item-section>Edit</q-item-section>
-                                      </q-item>
-                                      <q-item clickable @click="deleteTask(task)">
-                                        <q-item-section avatar>
-                                          <q-icon color="red" name="mdi-delete" />
-                                        </q-item-section>
-                                        <q-item-section>Delete</q-item-section>
-                                      </q-item>
-                                    </q-menu>
-                                  </q-btn>
-                                  <q-item-label caption>{{ task.priority }}</q-item-label>
-                                </q-item-section>
-                              </q-item>
-                            </q-list>
-                          </q-card>
-                        </div>
-                      </div>
+                      <OrganismToGetTasks
+                        :tasks="monthTasks"
+                        @changeTaskStatus="changeTaskStatus"
+                        @deleteTask="deleteTask"
+                      />
                     </q-tab-panel>
                   </q-tab-panels>
                 </q-card-section>
@@ -395,6 +105,8 @@ import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue';
 import CreateTasksPage from './CreateTasksPage.vue';
 import { patchMethod } from 'src/composables/api-method/patch';
 import { deleteMethod } from 'src/composables/api-method/delete';
+import OrganismToGetTasks from 'src/components/organism /OrganismToGetTasks.vue';
+
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
@@ -508,6 +220,7 @@ const closeCreatePage = () => {
 
 const searchTasks = () => {
   getTasksCalendarView();
+  console.log(chosenDate.value);
 };
 
 const changeTaskStatus = async (taskInfo) => {
@@ -544,5 +257,3 @@ onMounted(() => {
   getMonthlyTasks();
 });
 </script>
-
-<style></style>
