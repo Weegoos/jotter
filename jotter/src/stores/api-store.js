@@ -22,7 +22,7 @@ export const useApiStore = defineStore('api', {
         });
         this.userData = response.data;
       } catch (error) {
-        // console.error(error);
+        console.error(error);
       }
     },
     async getFileName(serverURL, $q) {

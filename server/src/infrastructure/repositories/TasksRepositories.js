@@ -12,9 +12,9 @@ export class SequelizeTasksRepositories extends ITasksRepository {
     return await this.taskDatabaseModel.create({ ...taskData });
   }
 
-  async findAll(whereConditions) {
+  async findAll(userId) {
     return await this.taskDatabaseModel.findAll({
-      where: whereConditions,
+      where: { userId: userId },
     });
   }
 
@@ -29,6 +29,7 @@ export class SequelizeTasksRepositories extends ITasksRepository {
           ],
         },
       },
+      order: [['status', 'DESC']],
     });
   }
 

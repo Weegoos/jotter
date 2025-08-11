@@ -1,3 +1,5 @@
+import { wssSend } from '../wssSend.js';
+
 export class TaskControllers {
   constructor(taskUseCase) {
     this.taskUseCase = taskUseCase;
@@ -16,6 +18,7 @@ export class TaskControllers {
         target_date,
         time_period
       );
+      wssSend('createTask', newTask);
       return res.status(201).json({ message: 'Задача успешно создана', newTask });
     } catch (error) {
       console.error('Ошибка при создании задач:', error);
@@ -33,6 +36,8 @@ export class TaskControllers {
   async getAllTasks(req, res) {
     try {
       const { id } = req.user;
+      console.log(id);
+
       const allTasks = await this.taskUseCase.findAllTasks(id, { userId: id });
       return res.status(200).json({ message: 'Все задачи успешно получены', allTasks });
     } catch (error) {
@@ -70,6 +75,7 @@ export class TaskControllers {
       const { target_date } = req.query;
 
       const tasks = await this.taskUseCase.findAllWithOpUseCase(userId, target_date, target_date);
+      wssSend('getCalendarView', tasks);
       return res.status(200).json({ message: 'Задачи успешно получены', tasks });
     } catch (error) {
       console.error('Ошибка при получении задач по дням:', error);
@@ -95,17 +101,15 @@ export class TaskControllers {
       const in_progress = tasks.filter((task) => task.status === 'in_progress').length;
       const avg_completion_percent = Math.round((completed / total) * 100);
 
-      return res
-        .status(200)
-        .json({
-          message: 'Задачи успешно получены',
-          total: total,
-          pending: pending,
-          completed: completed,
-          in_progress: in_progress,
-          avg_completion_percent: avg_completion_percent,
-          tasks,
-        });
+      return res.status(200).json({
+        message: 'Задачи успешно получены',
+        total: total,
+        pending: pending,
+        completed: completed,
+        in_progress: in_progress,
+        avg_completion_percent: avg_completion_percent,
+        tasks,
+      });
     } catch (error) {
       console.error('Ошибка при получении задач по календарю:', error);
       if (error.message === 'USER_NOT_FOUND') {

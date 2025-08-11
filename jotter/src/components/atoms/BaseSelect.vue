@@ -7,6 +7,7 @@
     :type="type"
     :dense="dense"
     :outlined="outlined"
+    :placeholder="placeholder"
   />
 </template>
 

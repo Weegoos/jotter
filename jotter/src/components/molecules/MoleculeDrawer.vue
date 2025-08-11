@@ -1,5 +1,5 @@
 <template>
-  <div class="w-screen">
+  <div class="w-screen" v-if="props.fullname">
     <q-drawer class="drawer" v-model="drawer" :width="250" :breakpoint="500" persistent>
       <q-toolbar class="h-[100px] q-my-xl text-white">
         <q-item clickable v-ripple>
@@ -46,19 +46,12 @@
 import { ref, watch } from 'vue';
 import { Icon } from '../atoms';
 
-// const props = defineProps({
-//   drawer: {
-//     type: Boolean,
-//   },
-// });
+const props = defineProps({
+  fullname: {
+    type: String,
+  },
+});
 const drawer = ref(true);
-
-// watch(
-//   () => props.drawer,
-//   (newValue) => {
-//     drawer.value = newValue;
-//   }
-// );
 
 const drawerOptions = [
   {
@@ -75,6 +68,11 @@ const drawerOptions = [
     name: 'Trash',
     icon: 'mdi-delete-empty',
     url: '/trash',
+  },
+  {
+    name: 'Tasks',
+    icon: 'mdi-calendar-check',
+    url: '/tasks',
   },
 ];
 </script>
