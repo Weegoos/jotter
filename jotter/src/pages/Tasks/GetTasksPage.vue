@@ -25,12 +25,12 @@
         transition-next="jump-up"
       >
         <q-tab-panel name="dailyTasks">
-          <div class="text-h4 q-mb-md">Daily Tasks</div>
+          <div class="text-h4 q-mb-md">Tasks</div>
           <div class="grid grid-cols-2 gap-4">
             <div class="flex-1">
               <q-card class="my-card">
                 <q-list bordered separator class="q-pa-md">
-                  <q-chip dense size="18px" icon="mdi-circle"> To Do </q-chip>
+                  <q-chip dense size="18px" icon="mdi-circle"> Daily To Do List </q-chip>
                   <div class="flex gap-2">
                     <q-input
                       dense
@@ -113,17 +113,155 @@
                 </q-list>
               </q-card>
             </div>
-            <!-- <div class="flex-2">
+            <div class="flex-2">
               <q-card class="my-card">
                 <q-card-section>
-                  <div class="text-h6">Our Changing Planet</div>
-                  <div class="text-subtitle2">by John Doe</div>
-                </q-card-section>
-                <q-card-section>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                  <q-tabs v-model="dailyTab" inline-label class="text-green-8 text-font">
+                    <q-tab
+                      name="weekPlans"
+                      icon="mdi-calendar-weekend"
+                      label="Plans for the week"
+                      no-caps
+                      class="w-[450px]"
+                    />
+                    <q-tab
+                      name="monthPlans"
+                      icon="mdi-calendar-month"
+                      label="Plans for the month"
+                      no-caps
+                      class="w-[450px]"
+                    />
+                  </q-tabs>
+                  <q-tab-panels
+                    v-model="dailyTab"
+                    class="text-font"
+                    animated
+                    swipeable
+                    transition-prev="jump-up"
+                    transition-next="jump-up"
+                  >
+                    <q-tab-panel name="weekPlans">
+                      <div>
+                        <div>
+                          <q-card class="my-card">
+                            <q-list bordered separator class="q-pa-md">
+                              <div class="flex gap-2">
+                                <q-input
+                                  dense
+                                  filled
+                                  class="flex-1"
+                                  placeholder="Choose date..."
+                                  v-model="chosenDate"
+                                  mask="####-##-##"
+                                  :rules="[
+                                    (val) =>
+                                      /^\d{4}-\d{2}-\d{2}$/.test(val) ||
+                                      'Введите дату в формате YYYY-MM-DD',
+                                  ]"
+                                >
+                                  <template v-slot:append>
+                                    <q-icon name="event" class="cursor-pointer">
+                                      <q-popup-proxy
+                                        cover
+                                        transition-show="scale"
+                                        transition-hide="scale"
+                                      >
+                                        <q-date
+                                          v-model="chosenDate"
+                                          mask="YYYY-MM-DD"
+                                          v-close-popup
+                                        >
+                                          <div class="row items-center justify-end">
+                                            <q-btn
+                                              v-close-popup
+                                              label="Close"
+                                              color="primary"
+                                              flat
+                                            />
+                                          </div>
+                                        </q-date>
+                                      </q-popup-proxy>
+                                    </q-icon>
+                                    <q-icon
+                                      name="mdi-magnify"
+                                      class="cursor-pointer"
+                                      @click="searchTasks"
+                                    />
+                                  </template>
+                                </q-input>
+                                <div class="flex-2">
+                                  <Button
+                                    icon="mdi-plus"
+                                    color="white"
+                                    class="text-black"
+                                    @emitClick="openCreateWindow"
+                                  />
+                                </div>
+                              </div>
+                              <q-item
+                                clickable
+                                v-ripple
+                                v-for="(task, index) in weeklyTasks"
+                                :key="index"
+                              >
+                                <q-item-section>
+                                  <q-item-label
+                                    :class="task.status === 'done' ? 'text-green' : 'text-orange'"
+                                    >{{ task.status }}</q-item-label
+                                  >
+                                  <q-item-label>{{ task.title }}</q-item-label>
+                                  <q-item-label caption lines="2">{{
+                                    task.description
+                                  }}</q-item-label>
+                                </q-item-section>
+
+                                <q-item-section side top>
+                                  <q-btn
+                                    flat
+                                    icon="mdi-dots-horizontal"
+                                    @click="
+                                      (e) => {
+                                        e.stopPropagation();
+                                      }
+                                    "
+                                  >
+                                    <q-menu anchor="bottom right" self="top right">
+                                      <q-item clickable @click="changeTaskStatus(task)">
+                                        <q-item-section avatar>
+                                          <q-icon color="orange" name="mdi-pin" />
+                                        </q-item-section>
+                                        <q-item-section>Change the status</q-item-section>
+                                      </q-item>
+                                      <q-item clickable @click="emit('edit', note)">
+                                        <q-item-section avatar>
+                                          <q-icon color="amber-5" name="mdi-pencil" />
+                                        </q-item-section>
+                                        <q-item-section>Edit</q-item-section>
+                                      </q-item>
+                                      <q-item clickable @click="deleteTask(task)">
+                                        <q-item-section avatar>
+                                          <q-icon color="red" name="mdi-delete" />
+                                        </q-item-section>
+                                        <q-item-section>Delete</q-item-section>
+                                      </q-item>
+                                    </q-menu>
+                                  </q-btn>
+                                  <q-item-label caption>{{ task.priority }}</q-item-label>
+                                </q-item-section>
+                              </q-item>
+                            </q-list>
+                          </q-card>
+                        </div>
+                      </div>
+                    </q-tab-panel>
+
+                    <q-tab-panel name="monthPlans">
+                      <div class="text-h4 q-mb-md">Month Tasks</div>
+                    </q-tab-panel>
+                  </q-tab-panels>
                 </q-card-section>
               </q-card>
-            </div> -->
+            </div>
           </div>
         </q-tab-panel>
 
@@ -154,6 +292,7 @@ const webSocketURL = proxy.$webSocketURL;
 const socket = new WebSocket(webSocketURL);
 
 const tab = ref('dailyTasks');
+const dailyTab = ref('weekPlans');
 const chosenDate = ref('');
 useWebSocket(webSocketURL);
 
@@ -183,7 +322,8 @@ const currentDate = computed(() => {
   return `${year}-${monthStr}-${dayStr}`;
 });
 
-console.log(currentDate.value);
+const monthTasks = ref([]);
+const weeklyTasks = ref([]);
 const getTasksCalendarView = async () => {
   try {
     const response = await getMethod(
@@ -193,6 +333,8 @@ const getTasksCalendarView = async () => {
       'Задачи успешно получены'
     );
     tasks.value = response.tasks.filter((task) => task.time_period === 'daily');
+    weeklyTasks.value = response.tasks.filter((task) => task.time_period === 'weekly');
+    monthTasks.value = response.tasks.filter((task) => task.time_period === 'monthly');
   } catch (error) {
     console.error(error);
   }

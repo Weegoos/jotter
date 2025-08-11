@@ -72,23 +72,50 @@ export class TaskControllers {
   async getCalendarView(req, res) {
     try {
       const userId = req.user.id;
-      const { target_date } = req.query;
+      const { target_date, week_start, week_end, year, month } = req.query;
 
-      const tasks = await this.taskUseCase.findAllWithOpUseCase(userId, target_date, target_date);
+      let startDate, endDate;
+
+      if (target_date) {
+        // Задачи за конкретный день
+        startDate = target_date;
+        endDate = target_date;
+      } else if (week_start) {
+        // Задачи за неделю
+        const start = new Date(week_start);
+        const end = week_end ? new Date(week_end) : new Date(start.setDate(start.getDate() + 6));
+
+        startDate = week_start;
+        endDate = end.toISOString().slice(0, 10);
+      } else if (year && month) {
+        // Задачи за месяц
+        startDate = `${year}-${String(month).padStart(2, '0')}-01`;
+        endDate = new Date(year, month, 0).toISOString().slice(0, 10);
+      } else if (year) {
+        // Задачи за год
+        startDate = `${year}-01-01`;
+        endDate = `${year}-12-31`;
+      } else {
+        // Всё время
+        startDate = '1970-01-01';
+        endDate = '9999-12-31';
+      }
+
+      const tasks = await this.taskUseCase.findAllWithOpUseCase(userId, startDate, endDate);
+
       wssSend('getCalendarView', tasks);
       return res.status(200).json({ message: 'Задачи успешно получены', tasks });
     } catch (error) {
-      console.error('Ошибка при получении задач по дням:', error);
+      console.error('Ошибка при получении задач:', error);
       if (error.message === 'USER_NOT_FOUND') {
         return res.status(401).json({ message: 'Пользователь не найден' });
       }
       if (error.message === 'Tasks not found') {
-        return res.status(401).json({ message: 'Задачи не найдены' });
+        return res.status(404).json({ message: 'Задачи не найдены' });
       }
       return res.status(500).json({ message: 'Ошибка сервера' });
     }
   }
-
   async getTaskSummary(req, res) {
     try {
       const userId = req.user.id;
@@ -189,7 +216,7 @@ export class TaskControllers {
       const { taskId } = req.params;
 
       const deletedTask = await this.taskUseCase.deleteTaskById(userId, taskId);
-      wssSend('deleteTask', deletedTask)
+      wssSend('deleteTask', deletedTask);
       return res.status(201).json({ message: 'Заметка успешно удалена', deletedTask });
     } catch (error) {
       console.error('Ошибка при удалении задач по ID:', error);
