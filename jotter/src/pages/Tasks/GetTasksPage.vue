@@ -305,14 +305,17 @@ socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
   if (data.event === 'createTask') {
     getTasksCalendarView();
+    getWeekRange();
   }
 
   if (data.event === 'updateTaskStatus') {
     getTasksCalendarView();
+    getWeekRange();
   }
 
   if (data.event === 'deleteTask') {
     getTasksCalendarView();
+    getWeekRange();
   }
 };
 const currentDate = computed(() => {
@@ -333,11 +336,38 @@ const getTasksCalendarView = async () => {
       'Задачи успешно получены'
     );
     tasks.value = response.tasks.filter((task) => task.time_period === 'daily');
-    weeklyTasks.value = response.tasks.filter((task) => task.time_period === 'weekly');
     monthTasks.value = response.tasks.filter((task) => task.time_period === 'monthly');
   } catch (error) {
     console.error(error);
   }
+};
+
+const getWeekRange = async (date = new Date()) => {
+  const current = new Date(date);
+
+  // Находим понедельник (0 — воскресенье, 1 — понедельник)
+  const dayOfWeek = current.getDay();
+  const diffToMonday = (dayOfWeek === 0 ? -6 : 1) - dayOfWeek;
+
+  const monday = new Date(current);
+  monday.setDate(current.getDate() + diffToMonday);
+
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+
+  const format = (d) => d.toISOString().slice(0, 10);
+
+  const week_start = format(monday);
+  const week_end = format(sunday);
+  console.log(week_start, week_end);
+
+  const response = await getMethod(
+    serverURL,
+    `tasks/calendar-view?week_start=${week_start}&week_end=${week_end}`,
+    $q,
+    'Задачи успешно получены'
+  );
+  weeklyTasks.value = response.tasks.filter((task) => task.time_period === 'weekly');
 };
 
 const isOpenCreatePage = ref(false);
@@ -383,6 +413,7 @@ const deleteTask = async (taskInfo) => {
 
 onMounted(() => {
   getTasksCalendarView();
+  getWeekRange();
 });
 </script>
 
