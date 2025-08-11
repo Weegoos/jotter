@@ -33,9 +33,10 @@
                   <q-chip dense size="18px" icon="mdi-circle"> To Do </q-chip>
                   <div class="flex gap-2">
                     <q-input
-                    dense
+                      dense
                       filled
                       class="flex-1"
+                      placeholder="Choose date..."
                       v-model="chosenDate"
                       mask="####-##-##"
                       :rules="[
@@ -46,18 +47,24 @@
                       <template v-slot:append>
                         <q-icon name="event" class="cursor-pointer">
                           <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                            <q-date v-model="chosenDate" mask="YYYY-MM-DD">
+                            <q-date v-model="chosenDate" mask="YYYY-MM-DD" v-close-popup>
                               <div class="row items-center justify-end">
                                 <q-btn v-close-popup label="Close" color="primary" flat />
                               </div>
                             </q-date>
                           </q-popup-proxy>
                         </q-icon>
+                        <q-icon name="mdi-magnify" class="cursor-pointer" @click="searchTasks" />
                       </template>
                     </q-input>
-                   <div class="flex-2">
-                    <Button label="Search" color="white" class="text-black" @emitClick="searchTasks"/>
-                   </div>
+                    <div class="flex-2">
+                      <Button
+                        icon="mdi-plus"
+                        color="white"
+                        class="text-black"
+                        @emitClick="searchTasks"
+                      />
+                    </div>
                   </div>
                   <q-item clickable v-ripple v-for="(task, index) in tasks" :key="index">
                     <q-item-section>
@@ -140,8 +147,8 @@ const getTasksCalendarView = async () => {
 };
 
 const searchTasks = () => {
-  getTasksCalendarView()
-}
+  getTasksCalendarView();
+};
 
 onMounted(() => {
   getTasksCalendarView();
