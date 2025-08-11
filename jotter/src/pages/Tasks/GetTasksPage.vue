@@ -102,6 +102,7 @@
         </q-tab-panel>
       </q-tab-panels>
     </div>
+    <CreateTasksPage :isOpenCreatePage="isOpenCreatePage" @closeCreatePage="closeCreatePage" />
   </section>
 </template>
 
@@ -111,6 +112,7 @@ import { Button } from 'src/components/atoms';
 import { getMethod } from 'src/composables/api-method/get';
 import { useWebSocket } from 'src/composables/javascript-function/websocket';
 import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue';
+import CreateTasksPage from './CreateTasksPage.vue';
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
@@ -156,9 +158,14 @@ const getTasksCalendarView = async () => {
   }
 };
 
+const isOpenCreatePage = ref(false);
 const openCreateWindow = () => {
+  isOpenCreatePage.value = true;
+};
 
-}
+const closeCreatePage = () => {
+  isOpenCreatePage.value = false;
+};
 
 const searchTasks = () => {
   getTasksCalendarView();
