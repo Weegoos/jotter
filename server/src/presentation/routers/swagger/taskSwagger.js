@@ -150,11 +150,12 @@
  */
 
 // --------------------- GET /tasks/calendar-view -------------------
+// --------------------- GET /tasks/calendar-view -------------------
 /**
  * @swagger
  * /tasks/calendar-view:
  *   get:
- *     summary: Получить задачи пользователя за конкретную дату (вид календаря)
+ *     summary: Получить задачи пользователя за день, неделю, месяц, год или всё время
  *     tags:
  *       - Tasks
  *     security:
@@ -162,15 +163,42 @@
  *     parameters:
  *       - in: query
  *         name: target_date
- *         required: true
  *         schema:
  *           type: string
  *           format: date
  *           example: 2025-08-21
- *         description: Дата, за которую нужно получить задачи
+ *         description: Дата, за которую нужно получить задачи (приоритетнее года/месяца/недели)
+ *       - in: query
+ *         name: week_start
+ *         schema:
+ *           type: string
+ *           format: date
+ *           example: 2025-08-04
+ *         description: Дата начала недели. Если указана, вернёт задачи за неделю.
+ *       - in: query
+ *         name: week_end
+ *         schema:
+ *           type: string
+ *           format: date
+ *           example: 2025-08-10
+ *         description: Дата конца недели. Если не указана, берётся +6 дней от week_start.
+ *       - in: query
+ *         name: year
+ *         schema:
+ *           type: integer
+ *           example: 2025
+ *         description: Год, за который нужно получить задачи. Работает совместно с month или отдельно.
+ *       - in: query
+ *         name: month
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 12
+ *           example: 8
+ *         description: Месяц (1-12). Работает только вместе с year.
  *     responses:
  *       200:
- *         description: Список задач за указанную дату
+ *         description: Список задач за указанный период
  *         content:
  *           application/json:
  *             schema:
@@ -181,26 +209,12 @@
  *                   example: Задачи успешно получены
  *                 tasks:
  *                   type: array
+ *                   items:
+ *                     type: object
  *       401:
- *         description: Пользователь не найден или задачи не найдены
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Пользователь не найден
+ *         description: Пользователь не найден
  *       404:
- *         description: Параметр target_date не передан или задачи не найдены
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Задачи не найдены
+ *         description: Задачи не найдены
  *       500:
  *         description: Ошибка сервера
  */
