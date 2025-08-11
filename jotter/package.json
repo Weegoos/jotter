@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@intlify/unplugin-vue-i18n": "^6.0.8",
-    "@quasar/app-vite": "^2.2.1",
+    "@quasar/app-vite": "^2.3.0",
     "@quasar/quasar-app-extension-testing-unit-vitest": "^1.2.3",
     "@quasar/vite-plugin": "^1.9.0",
     "@testing-library/vue": "^8.1.0",
@@ -61,5 +61,8 @@
     "node": "^20 || ^18 || ^16",
     "npm": ">= 6.13.4",
     "yarn": ">= 1.21.1"
+  },
+  "overrides": {
+    "tmp": "0.2.4"
   }
 }

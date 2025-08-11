@@ -189,6 +189,7 @@ export class TaskControllers {
       const { taskId } = req.params;
 
       const deletedTask = await this.taskUseCase.deleteTaskById(userId, taskId);
+      wssSend('deleteTask', deletedTask)
       return res.status(201).json({ message: 'Заметка успешно удалена', deletedTask });
     } catch (error) {
       console.error('Ошибка при удалении задач по ID:', error);
@@ -214,6 +215,7 @@ export class TaskControllers {
       }
 
       const updatedTask = await this.taskUseCase.updateTask(userId, taskId, { status });
+      wssSend('updateTaskStatus', updatedTask);
       return res.status(200).json({ message: 'Статус задачи успешно обновлен', updatedTask });
     } catch (error) {
       console.error('Ошибка при обновлении статуса задачи по ID:', error);

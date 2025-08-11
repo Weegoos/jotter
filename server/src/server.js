@@ -41,7 +41,7 @@ const PORT = process.env.PORT || 3001;
     cors({
       credentials: true,
       origin: 'http://localhost:9000', // без слэша в конце
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     })
   );
 
