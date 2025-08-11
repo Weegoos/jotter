@@ -69,6 +69,11 @@ const drawerOptions = [
     icon: 'mdi-delete-empty',
     url: '/trash',
   },
+  {
+    name: 'Tasks',
+    icon: 'mdi-calendar-check',
+    url: '/tasks',
+  },
 ];
 </script>
 

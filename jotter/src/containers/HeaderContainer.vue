@@ -19,7 +19,7 @@ const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
 const apiStore = useApiStore();
 const $q = useQuasar();
-const router = useRouter()
+const router = useRouter();
 
 const header = ref(true);
 const drawer = ref(false);
@@ -38,7 +38,7 @@ const getUserInfo = async () => {
     userFullname.value = apiStore.userData.fullname;
   } catch (error) {
     console.error('Error fetching user info:', error);
-    router.push('/register')
+    router.push('/register');
   }
 };
 
