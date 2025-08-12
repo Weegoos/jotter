@@ -196,7 +196,7 @@ export class TaskControllers {
         taskId
       );
 
-      wssSend('completelyUpdateTheTask', updatedTask)
+      wssSend('completelyUpdateTheTask', updatedTask);
       return res.status(201).json({ message: 'Заметка успешно обновлена', updatedTask });
     } catch (error) {
       console.error('Ошибка при обновлении задач по ID:', error);

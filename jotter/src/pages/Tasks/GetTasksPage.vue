@@ -5,93 +5,95 @@
       <p>Short description will be placed here</p>
     </div>
     <div>
-      <q-tabs v-model="tab" inline-label class="text-green-8 text-font">
-        <q-tab name="dailyTasks" icon="mail" label="Tasks of the day" no-caps class="w-[450px]" />
-        <q-tab
-          name="periodTasks"
-          icon="alarm"
-          label="Tasks for the period"
-          no-caps
-          class="w-[450px]"
-        />
-      </q-tabs>
+      <q-scroll-area style="width: 100%; height: 85vh">
+        <q-tabs v-model="tab" inline-label class="text-green-8 text-font">
+          <q-tab name="dailyTasks" icon="mail" label="Tasks of the day" no-caps class="w-[450px]" />
+          <q-tab
+            name="periodTasks"
+            icon="alarm"
+            label="Tasks for the period"
+            no-caps
+            class="w-[450px]"
+          />
+        </q-tabs>
 
-      <q-tab-panels
-        v-model="tab"
-        class="text-font"
-        animated
-        swipeable
-        transition-prev="jump-up"
-        transition-next="jump-up"
-      >
-        <q-tab-panel name="dailyTasks">
-          <div class="text-h4 q-mb-md">Tasks</div>
-          <div class="grid grid-cols-2 gap-4">
-            <OrganismToGetTasks
-              :tasks="tasks"
-              @changeTaskStatus="changeTaskStatus"
-              @deleteTask="deleteTask"
-              :isInput="true"
-              v-model="chosenDate"
-              @searchTasks="searchTasks"
-              @openCreateWindow="openCreateWindow"
-              @edit="editTask"
-            />
+        <q-tab-panels
+          v-model="tab"
+          class="text-font"
+          animated
+          swipeable
+          transition-prev="jump-up"
+          transition-next="jump-up"
+        >
+          <q-tab-panel name="dailyTasks">
+            <div class="text-h4 q-mb-md">Tasks</div>
+            <div class="grid grid-cols-2 gap-4">
+              <OrganismToGetTasks
+                :tasks="tasks"
+                @changeTaskStatus="changeTaskStatus"
+                @deleteTask="deleteTask"
+                :isInput="true"
+                v-model="chosenDate"
+                @searchTasks="searchTasks"
+                @openCreateWindow="openCreateWindow"
+                @edit="editTask"
+              />
 
-            <div class="flex-2">
-              <q-card class="my-card">
-                <q-card-section>
-                  <q-tabs v-model="dailyTab" inline-label class="text-green-8 text-font">
-                    <q-tab
-                      name="weekPlans"
-                      icon="mdi-calendar-weekend"
-                      label="Plans for the week"
-                      no-caps
-                      class="w-[450px]"
-                    />
-                    <q-tab
-                      name="monthPlans"
-                      icon="mdi-calendar-month"
-                      label="Plans for the month"
-                      no-caps
-                      class="w-[450px]"
-                    />
-                  </q-tabs>
-                  <q-tab-panels
-                    v-model="dailyTab"
-                    class="text-font"
-                    animated
-                    swipeable
-                    transition-prev="jump-up"
-                    transition-next="jump-up"
-                  >
-                    <q-tab-panel name="weekPlans">
-                      <OrganismToGetTasks
-                        :tasks="weeklyTasks"
-                        @changeTaskStatus="changeTaskStatus"
-                        @deleteTask="deleteTask"
+              <div class="flex-2">
+                <q-card class="my-card">
+                  <q-card-section>
+                    <q-tabs v-model="dailyTab" inline-label class="text-green-8 text-font">
+                      <q-tab
+                        name="weekPlans"
+                        icon="mdi-calendar-weekend"
+                        label="Plans for the week"
+                        no-caps
+                        class="w-[450px]"
                       />
-                    </q-tab-panel>
-
-                    <q-tab-panel name="monthPlans">
-                      <div class="text-h4 q-mb-md">Month Tasks</div>
-                      <OrganismToGetTasks
-                        :tasks="monthTasks"
-                        @changeTaskStatus="changeTaskStatus"
-                        @deleteTask="deleteTask"
+                      <q-tab
+                        name="monthPlans"
+                        icon="mdi-calendar-month"
+                        label="Plans for the month"
+                        no-caps
+                        class="w-[450px]"
                       />
-                    </q-tab-panel>
-                  </q-tab-panels>
-                </q-card-section>
-              </q-card>
+                    </q-tabs>
+                    <q-tab-panels
+                      v-model="dailyTab"
+                      class="text-font"
+                      animated
+                      swipeable
+                      transition-prev="jump-up"
+                      transition-next="jump-up"
+                    >
+                      <q-tab-panel name="weekPlans">
+                        <OrganismToGetTasks
+                          :tasks="weeklyTasks"
+                          @changeTaskStatus="changeTaskStatus"
+                          @deleteTask="deleteTask"
+                        />
+                      </q-tab-panel>
+
+                      <q-tab-panel name="monthPlans">
+                        <div class="text-h4 q-mb-md">Month Tasks</div>
+                        <OrganismToGetTasks
+                          :tasks="monthTasks"
+                          @changeTaskStatus="changeTaskStatus"
+                          @deleteTask="deleteTask"
+                        />
+                      </q-tab-panel>
+                    </q-tab-panels>
+                  </q-card-section>
+                </q-card>
+              </div>
             </div>
-          </div>
-        </q-tab-panel>
+          </q-tab-panel>
 
-        <q-tab-panel name="periodTasks">
-          <div class="text-h4 q-mb-md">Period Tasks</div>
-        </q-tab-panel>
-      </q-tab-panels>
+          <q-tab-panel name="periodTasks">
+            <div class="text-h4 q-mb-md">Period Tasks</div>
+          </q-tab-panel>
+        </q-tab-panels>
+      </q-scroll-area>
     </div>
     <CreateTasksPage :isOpenCreatePage="isOpenCreatePage" @closeCreatePage="closeCreatePage" />
     <EditTasksPage
@@ -133,12 +135,7 @@ console.log(currentDay.value);
 
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
-  const updateEvents = [
-    'createTask',
-    'updateTaskStatus',
-    'deleteTask',
-    'completelyUpdateTheTask'
-  ];
+  const updateEvents = ['createTask', 'updateTaskStatus', 'deleteTask', 'completelyUpdateTheTask'];
 
   if (updateEvents.includes(data.event)) {
     getTasksCalendarView();
