@@ -7,10 +7,16 @@
     <div>
       <q-scroll-area style="width: 100%; height: 85vh">
         <q-tabs v-model="tab" inline-label class="text-green-8 text-font">
-          <q-tab name="dailyTasks" icon="mail" label="Tasks of the day" no-caps class="w-[450px]" />
+          <q-tab
+            name="dailyTasks"
+            icon="mdi-calendar-check"
+            label="Tasks of the day"
+            no-caps
+            class="w-[450px]"
+          />
           <q-tab
             name="periodTasks"
-            icon="alarm"
+            icon="mdi-clock-time-three-outline"
             label="Tasks for the period"
             no-caps
             class="w-[450px]"
@@ -125,7 +131,7 @@
 
 <script setup>
 import { useQuasar } from 'quasar';
-import { Button } from 'src/components/atoms';
+import { Button, Tabs } from 'src/components/atoms';
 import { getMethod } from 'src/composables/api-method/get';
 import { useWebSocket } from 'src/composables/javascript-function/websocket';
 import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue';
@@ -134,6 +140,7 @@ import { patchMethod } from 'src/composables/api-method/patch';
 import { deleteMethod } from 'src/composables/api-method/delete';
 import OrganismToGetTasks from 'src/components/organism /OrganismToGetTasks.vue';
 import EditTasksPage from './EditTasksPage.vue';
+
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
