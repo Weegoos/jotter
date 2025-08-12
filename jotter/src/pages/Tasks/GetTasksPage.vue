@@ -5,94 +5,105 @@
       <p>Short description will be placed here</p>
     </div>
     <div>
-      <q-tabs v-model="tab" inline-label class="text-green-8 text-font">
-        <q-tab name="dailyTasks" icon="mail" label="Tasks of the day" no-caps class="w-[450px]" />
-        <q-tab
-          name="periodTasks"
-          icon="alarm"
-          label="Tasks for the period"
-          no-caps
-          class="w-[450px]"
-        />
-      </q-tabs>
+      <q-scroll-area style="width: 100%; height: 85vh">
+        <q-tabs v-model="tab" inline-label class="text-green-8 text-font">
+          <q-tab name="dailyTasks" icon="mail" label="Tasks of the day" no-caps class="w-[450px]" />
+          <q-tab
+            name="periodTasks"
+            icon="alarm"
+            label="Tasks for the period"
+            no-caps
+            class="w-[450px]"
+          />
+        </q-tabs>
 
-      <q-tab-panels
-        v-model="tab"
-        class="text-font"
-        animated
-        swipeable
-        transition-prev="jump-up"
-        transition-next="jump-up"
-      >
-        <q-tab-panel name="dailyTasks">
-          <div class="text-h4 q-mb-md">Tasks</div>
-          <div class="grid grid-cols-2 gap-4">
-            <OrganismToGetTasks
-              :tasks="tasks"
-              @changeTaskStatus="changeTaskStatus"
-              @deleteTask="deleteTask"
-              :isInput="true"
-              v-model="chosenDate"
-              @searchTasks="searchTasks"
-              @openCreateWindow="openCreateWindow"
-            />
+        <q-tab-panels
+          v-model="tab"
+          class="text-font"
+          animated
+          swipeable
+          transition-prev="jump-up"
+          transition-next="jump-up"
+        >
+          <q-tab-panel name="dailyTasks">
+            <div class="text-h4 q-mb-md">Tasks</div>
+            <div class="grid grid-cols-2 gap-4">
+              <OrganismToGetTasks
+                :tasks="tasks"
+                @changeTaskStatus="changeTaskStatus"
+                @deleteTask="deleteTask"
+                :isInput="true"
+                v-model="chosenDate"
+                @searchTasks="searchTasks"
+                @openCreateWindow="openCreateWindow"
+                @edit="editTask"
+                :dailyPercent="dailyPercent"
+              />
 
-            <div class="flex-2">
-              <q-card class="my-card">
-                <q-card-section>
-                  <q-tabs v-model="dailyTab" inline-label class="text-green-8 text-font">
-                    <q-tab
-                      name="weekPlans"
-                      icon="mdi-calendar-weekend"
-                      label="Plans for the week"
-                      no-caps
-                      class="w-[450px]"
-                    />
-                    <q-tab
-                      name="monthPlans"
-                      icon="mdi-calendar-month"
-                      label="Plans for the month"
-                      no-caps
-                      class="w-[450px]"
-                    />
-                  </q-tabs>
-                  <q-tab-panels
-                    v-model="dailyTab"
-                    class="text-font"
-                    animated
-                    swipeable
-                    transition-prev="jump-up"
-                    transition-next="jump-up"
-                  >
-                    <q-tab-panel name="weekPlans">
-                      <OrganismToGetTasks
-                        :tasks="weeklyTasks"
-                        @changeTaskStatus="changeTaskStatus"
-                        @deleteTask="deleteTask"
+              <div class="flex-2">
+                <q-card class="my-card">
+                  <q-card-section>
+                    <q-tabs v-model="dailyTab" inline-label class="text-green-8 text-font">
+                      <q-tab
+                        name="weekPlans"
+                        icon="mdi-calendar-weekend"
+                        label="Plans for the week"
+                        no-caps
+                        class="w-[450px]"
                       />
-                    </q-tab-panel>
-
-                    <q-tab-panel name="monthPlans">
-                      <div class="text-h4 q-mb-md">Month Tasks</div>
-                      <OrganismToGetTasks
-                        :tasks="monthTasks"
-                        @changeTaskStatus="changeTaskStatus"
-                        @deleteTask="deleteTask"
+                      <q-tab
+                        name="monthPlans"
+                        icon="mdi-calendar-month"
+                        label="Plans for the month"
+                        no-caps
+                        class="w-[450px]"
                       />
-                    </q-tab-panel>
-                  </q-tab-panels>
-                </q-card-section>
-              </q-card>
+                    </q-tabs>
+                    <q-tab-panels
+                      v-model="dailyTab"
+                      class="text-font"
+                      animated
+                      swipeable
+                      transition-prev="jump-up"
+                      transition-next="jump-up"
+                    >
+                      <q-tab-panel name="weekPlans">
+                        <OrganismToGetTasks
+                          :tasks="weeklyTasks"
+                          @changeTaskStatus="changeTaskStatus"
+                          @deleteTask="deleteTask"
+                          :weeklyPercent="weeklyPercent"
+                        />
+                      </q-tab-panel>
+
+                      <q-tab-panel name="monthPlans">
+                        <div class="text-h4 q-mb-md">Month Tasks</div>
+                        <OrganismToGetTasks
+                          :tasks="monthTasks"
+                          @changeTaskStatus="changeTaskStatus"
+                          @deleteTask="deleteTask"
+                          :monthlyPercent="monthlyPercent"
+                        />
+                      </q-tab-panel>
+                    </q-tab-panels>
+                  </q-card-section>
+                </q-card>
+              </div>
             </div>
-          </div>
-        </q-tab-panel>
+          </q-tab-panel>
 
-        <q-tab-panel name="periodTasks">
-          <div class="text-h4 q-mb-md">Period Tasks</div>
-        </q-tab-panel>
-      </q-tab-panels>
+          <q-tab-panel name="periodTasks">
+            <div class="text-h4 q-mb-md">Period Tasks</div>
+          </q-tab-panel>
+        </q-tab-panels>
+      </q-scroll-area>
     </div>
     <CreateTasksPage :isOpenCreatePage="isOpenCreatePage" @closeCreatePage="closeCreatePage" />
+    <EditTasksPage
+      :taskInformation="taskInformation"
+      :isOpenEditTaskPage="isOpenEditTaskPage"
+      @closeEditPage="closeEditPage"
+    />
   </section>
 </template>
 
@@ -106,7 +117,7 @@ import CreateTasksPage from './CreateTasksPage.vue';
 import { patchMethod } from 'src/composables/api-method/patch';
 import { deleteMethod } from 'src/composables/api-method/delete';
 import OrganismToGetTasks from 'src/components/organism /OrganismToGetTasks.vue';
-
+import EditTasksPage from './EditTasksPage.vue';
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
@@ -127,24 +138,15 @@ console.log(currentDay.value);
 
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
-  if (data.event === 'createTask') {
-    getTasksCalendarView();
-    getWeekRange();
-    getMonthlyTasks();
-  }
+  const updateEvents = ['createTask', 'updateTaskStatus', 'deleteTask', 'completelyUpdateTheTask'];
 
-  if (data.event === 'updateTaskStatus') {
-    getTasksCalendarView();
-    getWeekRange();
-    getMonthlyTasks();
-  }
-
-  if (data.event === 'deleteTask') {
+  if (updateEvents.includes(data.event)) {
     getTasksCalendarView();
     getWeekRange();
     getMonthlyTasks();
   }
 };
+
 const currentDate = computed(() => {
   const year = date.getFullYear();
   const monthStr = String(currentMonth.value).padStart(2, '0');
@@ -154,6 +156,7 @@ const currentDate = computed(() => {
 
 const monthTasks = ref([]);
 const weeklyTasks = ref([]);
+const dailyPercent = ref('');
 const getTasksCalendarView = async () => {
   try {
     const response = await getMethod(
@@ -163,11 +166,15 @@ const getTasksCalendarView = async () => {
       'Задачи успешно получены'
     );
     tasks.value = response.tasks.filter((task) => task.time_period === 'daily');
+    dailyPercent.value = Math.round(
+      (tasks.value.filter((task) => task.status === 'done').length / tasks.value.length) * 100
+    );
   } catch (error) {
     console.error(error);
   }
 };
 
+const weeklyPercent = ref('');
 const getWeekRange = async (date = new Date()) => {
   const current = new Date(date);
 
@@ -194,8 +201,12 @@ const getWeekRange = async (date = new Date()) => {
     'Задачи успешно получены'
   );
   weeklyTasks.value = response.tasks.filter((task) => task.time_period === 'weekly');
+  weeklyPercent.value = Math.round(
+    (weeklyTasks.value.filter((task) => task.status === 'done').length / tasks.value.length) * 100
+  );
 };
 
+const monthlyPercent = ref('');
 const getMonthlyTasks = async (date = new Date()) => {
   const currentMonth = date.getMonth() + 1;
   const currentYear = date.getFullYear();
@@ -207,6 +218,9 @@ const getMonthlyTasks = async (date = new Date()) => {
   );
 
   monthTasks.value = response.tasks.filter((task) => task.time_period === 'monthly');
+  monthlyPercent.value = Math.round(
+    (monthTasks.value.filter((task) => task.status === 'done').length / tasks.value.length) * 100
+  );
 };
 
 const isOpenCreatePage = ref(false);
@@ -237,7 +251,7 @@ const changeTaskStatus = async (taskInfo) => {
     };
     console.log(status);
 
-    await patchMethod('http://localhost:3000/', `tasks/${taskInfo.id}/status`, statusData, $q, {});
+    await patchMethod(serverURL, `tasks/${taskInfo.id}/status`, statusData, $q, {});
   } catch (error) {
     console.error(error);
   }
@@ -249,6 +263,18 @@ const deleteTask = async (taskInfo) => {
   } catch (error) {
     console.error(error);
   }
+};
+
+const taskInformation = ref([]);
+const isOpenEditTaskPage = ref(false);
+
+const editTask = async (taskInfo) => {
+  taskInformation.value = taskInfo;
+  isOpenEditTaskPage.value = true;
+};
+
+const closeEditPage = () => {
+  isOpenEditTaskPage.value = false;
 };
 
 onMounted(() => {
