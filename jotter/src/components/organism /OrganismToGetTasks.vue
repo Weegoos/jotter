@@ -24,7 +24,6 @@
                         :model-value="modelValue"
                         @update:model-value="(val) => emit('update:modelValue', val)"
                         mask="YYYY-MM-DD"
-                        v-close-popup
                       >
                         <div class="row items-center justify-end">
                           <q-btn v-close-popup label="Close" color="primary" flat />
@@ -46,7 +45,8 @@
               </div>
             </div>
             <p align="right" class="text-h6">
-              {{ props.dailyPercent }}{{ props.weeklyPercent }}{{ props.monthlyPercent }}%
+              {{ props.dailyPercent }}{{ props.weeklyPercent }}{{ props.monthlyPercent
+              }}{{ annualPercentage }}%
             </p>
             <q-item clickable v-ripple v-for="(task, index) in props.tasks" :key="index">
               <q-item-section>
@@ -111,6 +111,7 @@ const props = defineProps({
   dailyPercent: [Number, String],
   weeklyPercent: [Number, String],
   monthlyPercent: [Number, String],
+  annualPercentage: [Number, String],
 });
 
 const emit = defineEmits([

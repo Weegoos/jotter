@@ -58,6 +58,13 @@
                         no-caps
                         class="w-[450px]"
                       />
+                      <q-tab
+                        name="annualPlan"
+                        icon="mdi-calendar-month-outline"
+                        label="Plans for the year"
+                        no-caps
+                        class="w-[450px]"
+                      />
                     </q-tabs>
                     <q-tab-panels
                       v-model="dailyTab"
@@ -83,6 +90,15 @@
                           @changeTaskStatus="changeTaskStatus"
                           @deleteTask="deleteTask"
                           :monthlyPercent="monthlyPercent"
+                        />
+                      </q-tab-panel>
+                      <q-tab-panel name="annualPlan">
+                        <div class="text-h4 q-mb-md">Plans for the year</div>
+                        <OrganismToGetTasks
+                          :tasks="annualTasks"
+                          @changeTaskStatus="changeTaskStatus"
+                          @deleteTask="deleteTask"
+                          :annualPercentage="annualPercentage"
                         />
                       </q-tab-panel>
                     </q-tab-panels>
@@ -144,6 +160,7 @@ socket.onmessage = (event) => {
     getTasksCalendarView();
     getWeekRange();
     getMonthlyTasks();
+    getAnnualTasks();
   }
 };
 
@@ -202,7 +219,8 @@ const getWeekRange = async (date = new Date()) => {
   );
   weeklyTasks.value = response.tasks.filter((task) => task.time_period === 'weekly');
   weeklyPercent.value = Math.round(
-    (weeklyTasks.value.filter((task) => task.status === 'done').length / tasks.value.length) * 100
+    (weeklyTasks.value.filter((task) => task.status === 'done').length / weeklyTasks.value.length) *
+      100
   );
 };
 
@@ -219,7 +237,26 @@ const getMonthlyTasks = async (date = new Date()) => {
 
   monthTasks.value = response.tasks.filter((task) => task.time_period === 'monthly');
   monthlyPercent.value = Math.round(
-    (monthTasks.value.filter((task) => task.status === 'done').length / tasks.value.length) * 100
+    (monthTasks.value.filter((task) => task.status === 'done').length / monthTasks.value.length) *
+      100
+  );
+};
+
+const annualTasks = ref([]);
+const annualPercentage = ref('');
+const getAnnualTasks = async (date = new Date()) => {
+  const currentYear = date.getFullYear();
+  const response = await getMethod(
+    serverURL,
+    `tasks/calendar-view?year=${currentYear}`,
+    $q,
+    'Задачи успешно получены'
+  );
+
+  annualTasks.value = response.tasks.filter((task) => task.time_period === 'yearly');
+  annualPercentage.value = Math.round(
+    (annualTasks.value.filter((task) => task.status === 'done').length / annualTasks.value.length) *
+      100
   );
 };
 
@@ -281,5 +318,6 @@ onMounted(() => {
   getTasksCalendarView();
   getWeekRange();
   getMonthlyTasks();
+  getAnnualTasks();
 });
 </script>
