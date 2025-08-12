@@ -45,6 +45,9 @@
                 />
               </div>
             </div>
+            <p align="right" class="text-h6">
+              {{ props.dailyPercent }}{{ props.weeklyPercent }}{{ props.monthlyPercent }}%
+            </p>
             <q-item clickable v-ripple v-for="(task, index) in props.tasks" :key="index">
               <q-item-section>
                 <q-item-label :class="task.status === 'done' ? 'text-green' : 'text-orange'">{{
@@ -105,6 +108,9 @@ const props = defineProps({
   isInput: Boolean,
   chosenDate: [String, Boolean],
   modelValue: [String, Number],
+  dailyPercent: [Number, String],
+  weeklyPercent: [Number, String],
+  monthlyPercent: [Number, String],
 });
 
 const emit = defineEmits([

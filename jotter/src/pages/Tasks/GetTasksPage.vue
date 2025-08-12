@@ -37,6 +37,7 @@
                 @searchTasks="searchTasks"
                 @openCreateWindow="openCreateWindow"
                 @edit="editTask"
+                :dailyPercent="dailyPercent"
               />
 
               <div class="flex-2">
@@ -71,6 +72,7 @@
                           :tasks="weeklyTasks"
                           @changeTaskStatus="changeTaskStatus"
                           @deleteTask="deleteTask"
+                          :weeklyPercent="weeklyPercent"
                         />
                       </q-tab-panel>
 
@@ -80,6 +82,7 @@
                           :tasks="monthTasks"
                           @changeTaskStatus="changeTaskStatus"
                           @deleteTask="deleteTask"
+                          :monthlyPercent="monthlyPercent"
                         />
                       </q-tab-panel>
                     </q-tab-panels>
@@ -153,6 +156,7 @@ const currentDate = computed(() => {
 
 const monthTasks = ref([]);
 const weeklyTasks = ref([]);
+const dailyPercent = ref('');
 const getTasksCalendarView = async () => {
   try {
     const response = await getMethod(
@@ -162,11 +166,15 @@ const getTasksCalendarView = async () => {
       'Задачи успешно получены'
     );
     tasks.value = response.tasks.filter((task) => task.time_period === 'daily');
+    dailyPercent.value = Math.round(
+      (tasks.value.filter((task) => task.status === 'done').length / tasks.value.length) * 100
+    );
   } catch (error) {
     console.error(error);
   }
 };
 
+const weeklyPercent = ref('');
 const getWeekRange = async (date = new Date()) => {
   const current = new Date(date);
 
@@ -193,8 +201,12 @@ const getWeekRange = async (date = new Date()) => {
     'Задачи успешно получены'
   );
   weeklyTasks.value = response.tasks.filter((task) => task.time_period === 'weekly');
+  weeklyPercent.value = Math.round(
+    (weeklyTasks.value.filter((task) => task.status === 'done').length / tasks.value.length) * 100
+  );
 };
 
+const monthlyPercent = ref('');
 const getMonthlyTasks = async (date = new Date()) => {
   const currentMonth = date.getMonth() + 1;
   const currentYear = date.getFullYear();
@@ -206,6 +218,9 @@ const getMonthlyTasks = async (date = new Date()) => {
   );
 
   monthTasks.value = response.tasks.filter((task) => task.time_period === 'monthly');
+  monthlyPercent.value = Math.round(
+    (monthTasks.value.filter((task) => task.status === 'done').length / tasks.value.length) * 100
+  );
 };
 
 const isOpenCreatePage = ref(false);
@@ -236,7 +251,7 @@ const changeTaskStatus = async (taskInfo) => {
     };
     console.log(status);
 
-    await patchMethod('http://localhost:3000/', `tasks/${taskInfo.id}/status`, statusData, $q, {});
+    await patchMethod(serverURL, `tasks/${taskInfo.id}/status`, statusData, $q, {});
   } catch (error) {
     console.error(error);
   }
