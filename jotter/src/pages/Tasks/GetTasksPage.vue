@@ -35,6 +35,7 @@
               v-model="chosenDate"
               @searchTasks="searchTasks"
               @openCreateWindow="openCreateWindow"
+              @edit="editTask"
             />
 
             <div class="flex-2">
@@ -93,6 +94,11 @@
       </q-tab-panels>
     </div>
     <CreateTasksPage :isOpenCreatePage="isOpenCreatePage" @closeCreatePage="closeCreatePage" />
+    <EditTasksPage
+      :taskInformation="taskInformation"
+      :isOpenEditTaskPage="isOpenEditTaskPage"
+      @closeEditPage="closeEditPage"
+    />
   </section>
 </template>
 
@@ -106,7 +112,7 @@ import CreateTasksPage from './CreateTasksPage.vue';
 import { patchMethod } from 'src/composables/api-method/patch';
 import { deleteMethod } from 'src/composables/api-method/delete';
 import OrganismToGetTasks from 'src/components/organism /OrganismToGetTasks.vue';
-
+import EditTasksPage from './EditTasksPage.vue';
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
@@ -127,24 +133,20 @@ console.log(currentDay.value);
 
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
-  if (data.event === 'createTask') {
-    getTasksCalendarView();
-    getWeekRange();
-    getMonthlyTasks();
-  }
+  const updateEvents = [
+    'createTask',
+    'updateTaskStatus',
+    'deleteTask',
+    'completelyUpdateTheTask'
+  ];
 
-  if (data.event === 'updateTaskStatus') {
-    getTasksCalendarView();
-    getWeekRange();
-    getMonthlyTasks();
-  }
-
-  if (data.event === 'deleteTask') {
+  if (updateEvents.includes(data.event)) {
     getTasksCalendarView();
     getWeekRange();
     getMonthlyTasks();
   }
 };
+
 const currentDate = computed(() => {
   const year = date.getFullYear();
   const monthStr = String(currentMonth.value).padStart(2, '0');
@@ -249,6 +251,18 @@ const deleteTask = async (taskInfo) => {
   } catch (error) {
     console.error(error);
   }
+};
+
+const taskInformation = ref([]);
+const isOpenEditTaskPage = ref(false);
+
+const editTask = async (taskInfo) => {
+  taskInformation.value = taskInfo;
+  isOpenEditTaskPage.value = true;
+};
+
+const closeEditPage = () => {
+  isOpenEditTaskPage.value = false;
 };
 
 onMounted(() => {

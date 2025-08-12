@@ -70,7 +70,7 @@
                     </q-item-section>
                     <q-item-section>Change the status</q-item-section>
                   </q-item>
-                  <q-item clickable @click="emit('edit', note)">
+                  <q-item clickable @click="emit('edit', task)">
                     <q-item-section avatar>
                       <q-icon color="amber-5" name="mdi-pencil" />
                     </q-item-section>
