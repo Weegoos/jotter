@@ -195,6 +195,19 @@ const dailyTab = ref('weekPlans');
 const chosenDate = ref('');
 useWebSocket(webSocketURL);
 
+socket.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  const updateEvents = ['createTask', 'updateTaskStatus', 'deleteTask', 'completelyUpdateTheTask'];
+
+  if (updateEvents.includes(data.event)) {
+    getTasksCalendarView();
+    getWeekRange();
+    getMonthlyTasks();
+    getAnnualTasks();
+    searchTasksSummary();
+  }
+};
+
 const dateFrom = ref(null);
 const selectedDate = ref({});
 
@@ -256,10 +269,6 @@ async function handleDateSelect(selectInfo) {
     end: selectInfo.endStr,
     allDay: selectInfo.allDay,
   };
-
-  // if (role.value !== employee) {
-  //   dialogOpen.value = true;
-  // }
 }
 
 function handleEventClick(clickInfo) {
@@ -290,18 +299,6 @@ const currentMonth = ref(date.getMonth() + 1);
 const currentDay = ref(date.getDate());
 console.log(currentDay.value);
 
-socket.onmessage = (event) => {
-  const data = JSON.parse(event.data);
-  const updateEvents = ['createTask', 'updateTaskStatus', 'deleteTask', 'completelyUpdateTheTask'];
-
-  if (updateEvents.includes(data.event)) {
-    getTasksCalendarView();
-    getWeekRange();
-    getMonthlyTasks();
-    getAnnualTasks();
-  }
-};
-
 const currentDate = computed(() => {
   const year = date.getFullYear();
   const monthStr = String(currentMonth.value).padStart(2, '0');
@@ -320,7 +317,9 @@ const getTasksCalendarView = async () => {
       $q,
       'Задачи успешно получены'
     );
-    tasks.value = response.tasks.filter((task) => task.time_period === 'daily');
+    tasks.value = response.tasks.filter(
+      (task) => task.time_period === 'daily' || task.time_period === 'recurring'
+    );
     dailyPercent.value = Math.round(
       (tasks.value.filter((task) => task.status === 'done').length / tasks.value.length) * 100
     );
@@ -457,7 +456,6 @@ onMounted(() => {
   getWeekRange();
   getMonthlyTasks();
   getAnnualTasks();
-  // searchTasksSummary();
 });
 </script>
 
