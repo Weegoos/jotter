@@ -5,3 +5,4 @@ export { default as PopoverItem } from './BasePopover.vue';
 export { default as BadgeVersion } from './BaseBadgeVersion.vue';
 export { default as Select } from './BaseSelect.vue';
 export { default as Tooltip } from './BaseTooltip.vue';
+export { default as Tabs } from './BaseQtabs.vue';

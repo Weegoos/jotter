@@ -5,9 +5,7 @@
         <div class="column">
           <q-list bordered separator class="q-pa-md">
             <div class="flex gap-2" v-if="props.isInput">
-              <q-input
-                dense
-                filled
+              <Input
                 class="flex-1"
                 placeholder="Choose date..."
                 :model-value="modelValue"
@@ -24,7 +22,6 @@
                         :model-value="modelValue"
                         @update:model-value="(val) => emit('update:modelValue', val)"
                         mask="YYYY-MM-DD"
-                        v-close-popup
                       >
                         <div class="row items-center justify-end">
                           <q-btn v-close-popup label="Close" color="primary" flat />
@@ -35,7 +32,7 @@
 
                   <q-icon name="mdi-magnify" class="cursor-pointer" @click="emit('searchTasks')" />
                 </template>
-              </q-input>
+              </Input>
               <div class="flex-2">
                 <Button
                   icon="mdi-plus"
@@ -46,7 +43,8 @@
               </div>
             </div>
             <p align="right" class="text-h6">
-              {{ props.dailyPercent }}{{ props.weeklyPercent }}{{ props.monthlyPercent }}%
+              {{ props.dailyPercent || '' }}{{ props.weeklyPercent || ''
+              }}{{ props.monthlyPercent || '' }}{{ annualPercentage || '' }}%
             </p>
             <q-item clickable v-ripple v-for="(task, index) in props.tasks" :key="index">
               <q-item-section>
@@ -99,7 +97,7 @@
 </template>
 
 <script setup>
-import { Button } from '../atoms';
+import { Button, Input } from '../atoms';
 
 const props = defineProps({
   tasks: {
@@ -111,6 +109,7 @@ const props = defineProps({
   dailyPercent: [Number, String],
   weeklyPercent: [Number, String],
   monthlyPercent: [Number, String],
+  annualPercentage: [Number, String],
 });
 
 const emit = defineEmits([

@@ -3,8 +3,8 @@
     <q-dialog v-model="isCreatePage" persistent>
       <q-card>
         <q-card-section>
-          <Input v-model="title" placeholder="Task's title" class="q-mb-sm" />
-          <Input v-model="description" placeholder="Task's description" class="q-mb-sm" />
+          <Input v-model="title" autogrow placeholder="Task's title" class="q-mb-sm" />
+          <Input v-model="description" autogrow placeholder="Task's description" class="q-mb-sm" />
           <Select
             v-model="priority"
             placeholder="Task's priority"
