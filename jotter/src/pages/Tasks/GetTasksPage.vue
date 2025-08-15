@@ -151,6 +151,34 @@
                   </template>
                 </FullCalendar>
               </div>
+
+              <q-dialog v-model="detailedInformation" persistent>
+                <q-card>
+                  <q-card-section class="row items-center">
+                    <span class="q-ml-sm text-bold text-h6">Подробная информация о задачи</span>
+                  </q-card-section>
+                  <q-card-section class="q-ml-sm">
+                    <span>Название задачи</span>
+                    <p class="detailedInfo">
+                      {{ detailedInformationTitle }}
+                    </p>
+                    <span>Статус</span>
+                    <p class="detailedInfo">
+                      {{ detailedInformationStatus }}
+                    </p>
+                  </q-card-section>
+                  <q-card-actions align="right">
+                    <q-btn
+                      color="red"
+                      flat
+                      no-caps
+                      label="Удалить"
+                      @click="deleteTask(currentClickInfo.event._def.publicId)"
+                    />
+                    <q-btn flat no-caps label="Закрыть" color="primary" v-close-popup />
+                  </q-card-actions>
+                </q-card>
+              </q-dialog>
             </div>
           </q-tab-panel>
         </q-tab-panels>
@@ -182,6 +210,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import ruLocale from '@fullcalendar/core/locales/ru';
+import { useDateFormat } from 'src/composables/javascript-function/formatDate';
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
@@ -216,21 +245,22 @@ const INITIAL_EVENTS = ref([]);
 const searchTasksSummary = async () => {
   console.log(dateFrom.value);
 
-  const response = await getMethod(
-    serverURL,
-    `tasks/summary?from_date=${dateFrom.value.from}&to_date=${dateFrom.value.to}`,
-    $q,
-    'Задачи успешно получены'
-  );
-  INITIAL_EVENTS.value = response.tasks.map((task) => ({
-    id: task.id,
-    title: task.title,
-    start: task.target_date.split('T')[0], // "2025-08-12"
-    description: task.description,
-    status: task.status,
-    priority: task.priority,
-  }));
-  console.log(response);
+  if (dateFrom.value.from) {
+    const response = await getMethod(
+      serverURL,
+      `tasks/summary?from_date=${dateFrom.value.from}&to_date=${dateFrom.value.to}`,
+      $q,
+      'Задачи успешно получены'
+    );
+    INITIAL_EVENTS.value = response.tasks.map((task) => ({
+      id: task.id,
+      title: task.title,
+      start: task.target_date.split('T')[0], // "2025-08-12"
+      description: task.description,
+      status: task.status,
+      priority: task.priority,
+    }));
+  }
 };
 
 const currentEvents = ref([]);
@@ -271,16 +301,19 @@ async function handleDateSelect(selectInfo) {
   };
 }
 
+const detailedInformation = ref(false);
+const detailedInformationTitle = ref('');
+const detailedInformationStatus = ref('');
+const currentClickInfo = ref(null);
+
 function handleEventClick(clickInfo) {
   console.log(clickInfo);
 
-  // detailedInformation.value = true;
-  // detailedInformationTitle.value = clickInfo.event.title;
-  const eventTime = clickInfo.event.start;
-  detailedInformationTime.value = eventTime;
-  detailedInformationLocation.value = clickInfo.event.extendedProps.location;
-  detailedInformationClass.value = clickInfo.event.extendedProps.class;
+  detailedInformation.value = true;
+  detailedInformationTitle.value = clickInfo.event.title;
+  detailedInformationStatus.value = clickInfo.event.extendedProps.status;
   currentClickInfo.value = clickInfo;
+  console.log(currentClickInfo.value.event._def.publicId);
 }
 
 function handleEvents(events) {
@@ -431,9 +464,9 @@ const changeTaskStatus = async (taskInfo) => {
   }
 };
 
-const deleteTask = async (taskInfo) => {
+const deleteTask = async (taskInfoId) => {
   try {
-    await deleteMethod(serverURL, `tasks`, taskInfo.id);
+    await deleteMethod(serverURL, `tasks`, taskInfoId);
   } catch (error) {
     console.error(error);
   }

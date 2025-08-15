@@ -78,7 +78,7 @@
                       </q-item-section>
                       <q-item-section>Edit</q-item-section>
                     </q-item>
-                    <q-item clickable @click="emit('deleteTask', task)">
+                    <q-item clickable @click="emit('deleteTask', task.id)">
                       <q-item-section avatar>
                         <q-icon color="red" name="mdi-delete" />
                       </q-item-section>
