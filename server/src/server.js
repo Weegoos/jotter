@@ -54,7 +54,6 @@ const PORT = process.env.PORT || 3001;
   app.use('/friend', friendRouters);
   app.use('/hashtag', hashtagsRouters);
   app.use('/tasks', taskRouters);
-
   setupGoogleAuth(app);
 
   initializeTypes();
