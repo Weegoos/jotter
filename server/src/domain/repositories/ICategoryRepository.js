@@ -28,4 +28,15 @@ export class ICategoryRepository {
     console.log(categoryId, userId);
     throw new Error('destroy function should be used');
   }
+
+  /**
+   * Частично обновить категорию
+   * @param {Object} categoryData
+   * @param {Number} categoryId
+   * @param {Number} userId
+   */
+  async update(categoryData, categoryId, userId) {
+    console.log(categoryData, categoryId, userId);
+    throw new Error('update function should be used');
+  }
 }

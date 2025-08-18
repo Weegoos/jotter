@@ -19,4 +19,10 @@ router.get('/', authMiddleware, categoryController.findAllCategories.bind(catego
 
 router.delete('/:id', authMiddleware, categoryController.deleteCategory.bind(categoryController));
 
+router.patch(
+  '/:id',
+  authMiddleware,
+  categoryController.partialCategoryUpdate.bind(categoryController)
+);
+
 export default router;

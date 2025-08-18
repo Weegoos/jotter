@@ -27,4 +27,18 @@ export class SequelizeCategory extends ICategoryRepository {
 
     return category;
   }
+
+  async update(categoryData, categoryId, userId) {
+    const [updatedCount] = await this.categoryModel.update(categoryData, {
+      where: { userId, id: categoryId },
+    });
+
+    if (updatedCount === 0) {
+      throw new Error('CATEGORY_NOT_FOUND');
+    }
+
+    return await this.categoryModel.findOne({
+      where: { userId, id: categoryId },
+    });
+  }
 }

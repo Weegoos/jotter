@@ -52,4 +52,23 @@ export class CategoryUseCase {
     }
     return deletedCategory;
   }
+
+  async updateCategory(userId, categoryID, categoryData) {
+    if (!userId) {
+      throw new Error(USER_NOT_FOUND);
+    }
+
+    const updatedCategoryData = { ...categoryData };
+
+    if (!categoryID || Object.keys(updatedCategoryData).length === 0) {
+      throw new Error(CATEGORY_NOT_FOUND);
+    }
+
+    const updatedCategory = await this.categoryRepository.update(
+      updatedCategoryData,
+      categoryID,
+      userId
+    );
+    return updatedCategory;
+  }
 }

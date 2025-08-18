@@ -61,4 +61,30 @@ export class CategoryController {
       }
     }
   }
+
+  async partialCategoryUpdate(req, res) {
+    try {
+      const userId = req.user.id;
+      const { id } = req.params;
+      const { name, icon, type } = req.body;
+
+      const category_data = {
+        name,
+        icon,
+        type,
+      };
+
+      const updatedCategory = await this.categoryUseCase.updateCategory(userId, id, category_data);
+      return res.status(201).json({ message: 'Категория успешно обновлена', updatedCategory });
+    } catch (error) {
+      console.error('Ошибка при создании задач:', error);
+      if (error.message === 'USER_NOT_FOUND') {
+        return res.status(401).json({ message: 'Пользователь не найден' });
+      }
+
+      if (error.message === 'CATEGORY_NOT_FOUND') {
+        return res.status(401).json({ message: 'Категория не найдена' });
+      }
+    }
+  }
 }

@@ -190,3 +190,76 @@
  *       500:
  *         description: Ошибка сервера
  */
+
+// --------------------- PATCH /categories/{id} -----------------
+/**
+ * @swagger
+ * /categories/{id}:
+ *   patch:
+ *     summary: Частичное обновление категории
+ *     tags: [Categories]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID категории для обновления
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: Новый заголовок
+ *               icon:
+ *                 type: string
+ *                 example: star
+ *               type:
+ *                 type: string
+ *                 enum: [income, expense]
+ *                 example: expense
+ *     responses:
+ *       200:
+ *         description: Категория успешно обновлена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Категория успешно обновлена
+ *                 updatedCategory:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 3
+ *                     name:
+ *                       type: string
+ *                       example: Новый заголовок
+ *                     type:
+ *                       type: string
+ *                       example: expense
+ *                     icon:
+ *                       type: string
+ *                       example: star
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2025-08-18T12:00:00.000Z
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2025-08-18T12:10:00.000Z
+ *       401:
+ *         description: Пользователь не найден или категория не найдена
+ *       500:
+ *         description: Ошибка сервера
+ */
