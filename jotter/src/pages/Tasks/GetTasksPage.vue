@@ -82,11 +82,15 @@
                     >
                       <q-tab-panel name="weekPlans">
                         <OrganismToGetTasks
+                          :isInput="true"
                           :tasks="weeklyTasks"
                           @changeTaskStatus="changeTaskStatus"
                           @deleteTask="deleteTask"
                           :weeklyPercent="weeklyPercent"
                           @edit="editTask"
+                          @openCreateWindow="openCreateWindow"
+                          v-model="weeklyChosenDate"
+                          @searchTasks="searchTasks"
                         />
                       </q-tab-panel>
 
@@ -342,11 +346,12 @@ const currentDate = computed(() => {
 const monthTasks = ref([]);
 const weeklyTasks = ref([]);
 const dailyPercent = ref('');
+const weeklyChosenDate  =ref('')
 const getTasksCalendarView = async () => {
   try {
     const response = await getMethod(
       serverURL,
-      `tasks/calendar-view?target_date=${chosenDate.value || currentDate.value}`,
+      `tasks/calendar-view?target_date=${chosenDate.value  || currentDate.value}`,
       $q,
       'Задачи успешно получены'
     );
@@ -441,7 +446,8 @@ const closeCreatePage = () => {
 
 const searchTasks = () => {
   getTasksCalendarView();
-  console.log(chosenDate.value);
+  console.log(weeklyChosenDate.value);
+
 };
 
 const changeTaskStatus = async (taskInfo) => {
