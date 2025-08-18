@@ -22,4 +22,24 @@ export class CategoryController {
       return res.status(500).json({ message: 'Ошибка сервера' });
     }
   }
+
+  async findAllCategories(req, res) {
+    try {
+      const userId = req.user.id;
+      console.log(userId);
+
+      const categories = await this.categoryUseCase.getCategories(userId);
+
+      return res.status(201).json({ message: 'Категории успешно получены', categories });
+    } catch (error) {
+      console.error('Ошибка при создании задач:', error);
+      if (error.message === 'USER_NOT_FOUND') {
+        return res.status(401).json({ message: 'Пользователь не найден' });
+      }
+
+      if (error.message === 'CATEGORY_NOT_FOUND') {
+        return res.status(401).json({ message: 'Категория не найдена' });
+      }
+    }
+  }
 }

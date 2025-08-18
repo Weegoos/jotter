@@ -15,4 +15,6 @@ const categoryController = new CategoryController(categoryUseCase);
 
 router.post('/', authMiddleware, categoryController.createCategory.bind(categoryController));
 
+router.get('/', authMiddleware, categoryController.findAllCategories.bind(categoryController));
+
 export default router;

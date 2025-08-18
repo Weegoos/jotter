@@ -24,4 +24,16 @@ export class CategoryUseCase {
 
     return await this.categoryRepository.create(categoryData);
   }
+
+  async getCategories(userId) {
+    if (!userId) {
+      throw new Error(USER_NOT_FOUND);
+    }
+
+    const categories = await this.categoryRepository.findAll(userId);
+    if (!categories) {
+      throw new Error(CATEGORY_NOT_FOUND);
+    }
+    return categories;
+  }
 }

@@ -9,4 +9,10 @@ export class SequelizeCategory extends ICategoryRepository {
   async create(categoryData) {
     return await this.categoryModel.create({ ...categoryData });
   }
+
+  async findAll(userId) {
+    return await this.categoryModel.findAll({
+      where: { userId: userId },
+    });
+  }
 }
