@@ -15,4 +15,16 @@ export class SequelizeCategory extends ICategoryRepository {
       where: { userId: userId },
     });
   }
+
+  async destroy(categoryId, userId) {
+    const category = this.categoryModel.destroy({
+      where: { userId: userId, id: categoryId },
+    });
+
+    if (!category) {
+      throw new Error('CATEGORY_NOT_FOUND');
+    }
+
+    return category;
+  }
 }

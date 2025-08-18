@@ -10,11 +10,22 @@ export class ICategoryRepository {
 
   /**
    * Найти все категории пользователя по ID
-   * @param {Number} userId 
+   * @param {Number} userId
    */
 
   async findAll(userId) {
     console.log(userId);
     throw new Error('findAll function should be used');
+  }
+
+  /**
+   * Удалить категорию пользователя по ID
+   * @param {Number} categoryId
+   * @param {Number} userId
+   */
+
+  async destroy(categoryId, userId) {
+    console.log(categoryId, userId);
+    throw new Error('destroy function should be used');
   }
 }

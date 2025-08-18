@@ -134,3 +134,59 @@
  *       500:
  *         description: Ошибка сервера
  */
+
+// --------------- DELETE /categories/{id} ---------------------
+/**
+ * @swagger
+ * /categories/{id}:
+ *   delete:
+ *     summary: Удалить категорию по ID
+ *     tags: [Categories]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID категории для удаления
+ *     responses:
+ *       200:
+ *         description: Категория успешно удалена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Категория успешно удалена
+ *                 deletedCategory:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 5
+ *                     name:
+ *                       type: string
+ *                       example: Продукты
+ *                     type:
+ *                       type: string
+ *                       example: expense
+ *                     icon:
+ *                       type: string
+ *                       example: shopping-cart
+ *       401:
+ *         description: Пользователь не найден или категория не найдена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Категория не найдена
+ *       500:
+ *         description: Ошибка сервера
+ */

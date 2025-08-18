@@ -36,4 +36,20 @@ export class CategoryUseCase {
     }
     return categories;
   }
+
+  async delete(categoryId, userId) {
+    if (!userId) {
+      throw new Error(USER_NOT_FOUND);
+    }
+    if (!categoryId) {
+      throw new Error(CATEGORY_NOT_FOUND);
+    }
+
+    const deletedCategory = await this.categoryRepository.destroy(categoryId, userId);
+
+    if (!deletedCategory) {
+      throw new Error(CATEGORY_NOT_FOUND);
+    }
+    return deletedCategory;
+  }
 }
