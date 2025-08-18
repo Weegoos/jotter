@@ -17,4 +17,4 @@ const Categories = sequelize.define(
 Categories.belongsTo(User, { foreignKey: 'userId', onDelete: 'CASCADE' });
 User.hasMany(Categories, { foreignKey: 'userId' });
 
-export default Categories
+export default Categories;
