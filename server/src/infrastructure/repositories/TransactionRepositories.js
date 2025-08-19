@@ -21,4 +21,10 @@ export class SequelizeTransactionRepositories extends ITransactionRepository {
 
     return newTransaction;
   }
+
+  async findAll(userId) {
+    return await this.transactionModel.findAll({
+      where: { userId: userId },
+    });
+  }
 }

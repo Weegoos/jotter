@@ -15,4 +15,6 @@ const controller = new TransactionController(useCase);
 
 router.post('/', authMiddleware, controller.createTransaction.bind(controller));
 
+router.get('/', authMiddleware, controller.findAllTransaction.bind(controller))
+
 export default router;

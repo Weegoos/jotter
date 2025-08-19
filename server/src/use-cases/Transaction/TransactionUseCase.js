@@ -31,4 +31,16 @@ export class TransactionUseCase {
 
     return await this.transactionRepository.create(transactionData, category_id);
   }
+
+  async getTransaction(userId) {
+    if (!userId) {
+      throw new Error(USER_NOT_FOUND);
+    }
+
+    const transaction = await this.transactionRepository.findAll(userId);
+    if (!transaction) {
+      throw new Error(TRANSACTION_NOT_FOUND);
+    }
+    return transaction;
+  }
 }
