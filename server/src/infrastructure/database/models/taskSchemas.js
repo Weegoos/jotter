@@ -32,7 +32,7 @@ const Tasks = sequelize.define(
       allowNull: false,
     },
     time_period: {
-      type: DataTypes.ENUM('daily', 'weekly', 'monthly', 'yearly'),
+      type: DataTypes.ENUM('daily', 'weekly', 'monthly', 'yearly', 'recurring'),
     },
   },
   {

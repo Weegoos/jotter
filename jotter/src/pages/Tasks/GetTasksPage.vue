@@ -82,11 +82,15 @@
                     >
                       <q-tab-panel name="weekPlans">
                         <OrganismToGetTasks
+                          :isInput="true"
                           :tasks="weeklyTasks"
                           @changeTaskStatus="changeTaskStatus"
                           @deleteTask="deleteTask"
                           :weeklyPercent="weeklyPercent"
                           @edit="editTask"
+                          @openCreateWindow="openCreateWindow"
+                          v-model="weeklyChosenDate"
+                          @searchTasks="searchTasks"
                         />
                       </q-tab-panel>
 
@@ -151,6 +155,34 @@
                   </template>
                 </FullCalendar>
               </div>
+
+              <q-dialog v-model="detailedInformation" persistent>
+                <q-card>
+                  <q-card-section class="row items-center">
+                    <span class="q-ml-sm text-bold text-h6">Подробная информация о задачи</span>
+                  </q-card-section>
+                  <q-card-section class="q-ml-sm">
+                    <span>Название задачи</span>
+                    <p class="detailedInfo">
+                      {{ detailedInformationTitle }}
+                    </p>
+                    <span>Статус</span>
+                    <p class="detailedInfo">
+                      {{ detailedInformationStatus }}
+                    </p>
+                  </q-card-section>
+                  <q-card-actions align="right">
+                    <q-btn
+                      color="red"
+                      flat
+                      no-caps
+                      label="Удалить"
+                      @click="deleteTask(currentClickInfo.event._def.publicId)"
+                    />
+                    <q-btn flat no-caps label="Закрыть" color="primary" v-close-popup />
+                  </q-card-actions>
+                </q-card>
+              </q-dialog>
             </div>
           </q-tab-panel>
         </q-tab-panels>
@@ -182,6 +214,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import ruLocale from '@fullcalendar/core/locales/ru';
+import { useDateFormat } from 'src/composables/javascript-function/formatDate';
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
@@ -195,6 +228,19 @@ const dailyTab = ref('weekPlans');
 const chosenDate = ref('');
 useWebSocket(webSocketURL);
 
+socket.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  const updateEvents = ['createTask', 'updateTaskStatus', 'deleteTask', 'completelyUpdateTheTask'];
+
+  if (updateEvents.includes(data.event)) {
+    getTasksCalendarView();
+    getWeekRange();
+    getMonthlyTasks();
+    getAnnualTasks();
+    searchTasksSummary();
+  }
+};
+
 const dateFrom = ref(null);
 const selectedDate = ref({});
 
@@ -203,21 +249,22 @@ const INITIAL_EVENTS = ref([]);
 const searchTasksSummary = async () => {
   console.log(dateFrom.value);
 
-  const response = await getMethod(
-    serverURL,
-    `tasks/summary?from_date=${dateFrom.value.from}&to_date=${dateFrom.value.to}`,
-    $q,
-    'Задачи успешно получены'
-  );
-  INITIAL_EVENTS.value = response.tasks.map((task) => ({
-    id: task.id,
-    title: task.title,
-    start: task.target_date.split('T')[0], // "2025-08-12"
-    description: task.description,
-    status: task.status,
-    priority: task.priority,
-  }));
-  console.log(response);
+  if (dateFrom.value.from) {
+    const response = await getMethod(
+      serverURL,
+      `tasks/summary?from_date=${dateFrom.value.from}&to_date=${dateFrom.value.to}`,
+      $q,
+      'Задачи успешно получены'
+    );
+    INITIAL_EVENTS.value = response.tasks.map((task) => ({
+      id: task.id,
+      title: task.title,
+      start: task.target_date.split('T')[0], // "2025-08-12"
+      description: task.description,
+      status: task.status,
+      priority: task.priority,
+    }));
+  }
 };
 
 const currentEvents = ref([]);
@@ -256,22 +303,21 @@ async function handleDateSelect(selectInfo) {
     end: selectInfo.endStr,
     allDay: selectInfo.allDay,
   };
-
-  // if (role.value !== employee) {
-  //   dialogOpen.value = true;
-  // }
 }
+
+const detailedInformation = ref(false);
+const detailedInformationTitle = ref('');
+const detailedInformationStatus = ref('');
+const currentClickInfo = ref(null);
 
 function handleEventClick(clickInfo) {
   console.log(clickInfo);
 
-  // detailedInformation.value = true;
-  // detailedInformationTitle.value = clickInfo.event.title;
-  const eventTime = clickInfo.event.start;
-  detailedInformationTime.value = eventTime;
-  detailedInformationLocation.value = clickInfo.event.extendedProps.location;
-  detailedInformationClass.value = clickInfo.event.extendedProps.class;
+  detailedInformation.value = true;
+  detailedInformationTitle.value = clickInfo.event.title;
+  detailedInformationStatus.value = clickInfo.event.extendedProps.status;
   currentClickInfo.value = clickInfo;
+  console.log(currentClickInfo.value.event._def.publicId);
 }
 
 function handleEvents(events) {
@@ -290,18 +336,6 @@ const currentMonth = ref(date.getMonth() + 1);
 const currentDay = ref(date.getDate());
 console.log(currentDay.value);
 
-socket.onmessage = (event) => {
-  const data = JSON.parse(event.data);
-  const updateEvents = ['createTask', 'updateTaskStatus', 'deleteTask', 'completelyUpdateTheTask'];
-
-  if (updateEvents.includes(data.event)) {
-    getTasksCalendarView();
-    getWeekRange();
-    getMonthlyTasks();
-    getAnnualTasks();
-  }
-};
-
 const currentDate = computed(() => {
   const year = date.getFullYear();
   const monthStr = String(currentMonth.value).padStart(2, '0');
@@ -312,15 +346,18 @@ const currentDate = computed(() => {
 const monthTasks = ref([]);
 const weeklyTasks = ref([]);
 const dailyPercent = ref('');
+const weeklyChosenDate  =ref('')
 const getTasksCalendarView = async () => {
   try {
     const response = await getMethod(
       serverURL,
-      `tasks/calendar-view?target_date=${chosenDate.value || currentDate.value}`,
+      `tasks/calendar-view?target_date=${chosenDate.value  || currentDate.value}`,
       $q,
       'Задачи успешно получены'
     );
-    tasks.value = response.tasks.filter((task) => task.time_period === 'daily');
+    tasks.value = response.tasks.filter(
+      (task) => task.time_period === 'daily' || task.time_period === 'recurring'
+    );
     dailyPercent.value = Math.round(
       (tasks.value.filter((task) => task.status === 'done').length / tasks.value.length) * 100
     );
@@ -409,7 +446,8 @@ const closeCreatePage = () => {
 
 const searchTasks = () => {
   getTasksCalendarView();
-  console.log(chosenDate.value);
+  console.log(weeklyChosenDate.value);
+
 };
 
 const changeTaskStatus = async (taskInfo) => {
@@ -432,9 +470,9 @@ const changeTaskStatus = async (taskInfo) => {
   }
 };
 
-const deleteTask = async (taskInfo) => {
+const deleteTask = async (taskInfoId) => {
   try {
-    await deleteMethod(serverURL, `tasks`, taskInfo.id);
+    await deleteMethod(serverURL, `tasks`, taskInfoId);
   } catch (error) {
     console.error(error);
   }
@@ -457,7 +495,6 @@ onMounted(() => {
   getWeekRange();
   getMonthlyTasks();
   getAnnualTasks();
-  // searchTasksSummary();
 });
 </script>
 

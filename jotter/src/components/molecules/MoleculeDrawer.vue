@@ -74,6 +74,11 @@ const drawerOptions = [
     icon: 'mdi-calendar-check',
     url: '/tasks',
   },
+  {
+    name: 'Tasks Stats',
+    icon: 'mdi-chart-pie',
+    url: '/tasks-stats',
+  },
 ];
 </script>
 

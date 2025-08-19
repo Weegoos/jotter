@@ -1,5 +1,5 @@
 import { wssSend } from '../wssSend.js';
-
+import { startOfWeek, addDays, format } from 'date-fns'; // npm install date-fns
 export class TaskControllers {
   constructor(taskUseCase) {
     this.taskUseCase = taskUseCase;
@@ -9,25 +9,65 @@ export class TaskControllers {
     try {
       const userId = req.user.id;
       const { title, description, status, priority, target_date, time_period } = req.body;
-      const newTask = await this.taskUseCase.execute(
-        userId,
-        title,
-        description,
-        status,
-        priority,
-        target_date,
-        time_period
-      );
-      wssSend('createTask', newTask);
-      return res.status(201).json({ message: 'Задача успешно создана', newTask });
+
+      if (!title || !description || !status || !priority || !target_date || !time_period) {
+        return res.status(400).json({ message: 'Все поля обязательны' });
+      }
+
+      let tasksToCreate = [];
+
+      if (time_period === 'recurring') {
+        // Начало недели (понедельник)
+        const weekStart = startOfWeek(new Date(target_date), { weekStartsOn: 1 });
+
+        // Генерируем даты для всей недели
+        for (let i = 0; i < 7; i++) {
+          const date = addDays(weekStart, i);
+          const formattedDate = format(date, 'yyyy-MM-dd');
+
+          tasksToCreate.push({
+            userId,
+            title,
+            description,
+            status,
+            priority,
+            target_date: formattedDate,
+            time_period,
+          });
+        }
+      } else {
+        tasksToCreate.push({
+          userId,
+          title,
+          description,
+          status,
+          priority,
+          target_date,
+          time_period,
+        });
+      }
+
+      // Создаём задачи в цикле
+      const createdTasks = [];
+      for (const taskData of tasksToCreate) {
+        const newTask = await this.taskUseCase.execute(
+          taskData.userId,
+          taskData.title,
+          taskData.description,
+          taskData.status,
+          taskData.priority,
+          taskData.target_date,
+          taskData.time_period
+        );
+        createdTasks.push(newTask);
+      }
+
+      wssSend('createTask', createdTasks);
+      return res.status(201).json({ message: 'Задачи успешно созданы', tasks: createdTasks });
     } catch (error) {
       console.error('Ошибка при создании задач:', error);
       if (error.message === 'USER_NOT_FOUND') {
         return res.status(401).json({ message: 'Пользователь не найден' });
-      }
-
-      if (error.message === 'All fields are required') {
-        return res.status(400).json({ message: 'Все поля обязательны' });
       }
       return res.status(500).json({ message: 'Ошибка сервера' });
     }
@@ -127,7 +167,15 @@ export class TaskControllers {
       const completed = tasks.filter((task) => task.status === 'done').length;
       const in_progress = tasks.filter((task) => task.status === 'in_progress').length;
       const avg_completion_percent = Math.round((completed / total) * 100);
-
+      wssSend('summary', {
+        message: 'Задачи успешно получены',
+        total: total,
+        pending: pending,
+        completed: completed,
+        in_progress: in_progress,
+        avg_completion_percent: avg_completion_percent,
+        tasks,
+      });
       return res.status(200).json({
         message: 'Задачи успешно получены',
         total: total,

@@ -55,7 +55,7 @@
                 <q-item-label caption lines="2">{{ task.description }}</q-item-label>
               </q-item-section>
 
-              <q-item-section side top>
+              <q-item-section side top >
                 <q-btn
                   flat
                   icon="mdi-dots-horizontal"
@@ -78,7 +78,7 @@
                       </q-item-section>
                       <q-item-section>Edit</q-item-section>
                     </q-item>
-                    <q-item clickable @click="emit('deleteTask', task)">
+                    <q-item clickable @click="emit('deleteTask', task.id)">
                       <q-item-section avatar>
                         <q-icon color="red" name="mdi-delete" />
                       </q-item-section>
