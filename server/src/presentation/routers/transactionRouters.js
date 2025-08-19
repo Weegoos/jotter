@@ -18,4 +18,6 @@ router.post('/', authMiddleware, controller.createTransaction.bind(controller));
 router.get('/', authMiddleware, controller.findAllTransaction.bind(controller));
 router.get('/:id', authMiddleware, controller.findTransactionById.bind(controller));
 
+router.delete('/:id', authMiddleware, controller.deleteTransaction.bind(controller));
+
 export default router;

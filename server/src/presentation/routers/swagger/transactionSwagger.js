@@ -222,3 +222,55 @@
  *       500:
  *         description: Внутренняя ошибка сервера
  */
+
+// ---------------- DELETE /transactions/{id} ----------
+/**
+ * @swagger
+ * /transactions/{id}:
+ *   delete:
+ *     summary: Удаление транзакции
+ *     description: Удаляет транзакцию по ID для текущего пользователя.
+ *     tags:
+ *       - Transactions
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID транзакции для удаления
+ *     responses:
+ *       201:
+ *         description: Транзакция успешно удалена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Категории успешно удалена
+ *                 deletedTransaction:
+ *                   type: object
+ *                   description: Объект удалённой транзакции
+ *       401:
+ *         description: Пользователь не найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Пользователь не найден
+ *       404:
+ *         description: Транзакция не найдена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Операция не найдена
+ */
