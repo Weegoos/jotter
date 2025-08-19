@@ -43,4 +43,22 @@ export class TransactionUseCase {
     }
     return transaction;
   }
+
+  async getTransactionById(userId, transactionId) {
+    if (!userId) {
+      throw new Error(USER_NOT_FOUND);
+    }
+
+    if (!transactionId) {
+      throw new Error(TRANSACTION_NOT_FOUND);
+    }
+
+    const transaction = await this.transactionRepository.findAllById(userId, transactionId);
+
+    if (!transaction || (Array.isArray(transaction) && transaction.length === 0)) {
+      throw new Error(TRANSACTION_NOT_FOUND);
+    }
+
+    return transaction;
+  }
 }

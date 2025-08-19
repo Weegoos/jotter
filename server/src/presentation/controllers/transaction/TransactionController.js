@@ -48,7 +48,27 @@ export class TransactionController {
       }
 
       if (error.message === 'TRANSACTION_NOT_FOUND') {
-        return res.status(401).json({ message: 'Операция не найдена' });
+        return res.status(404).json({ message: 'Операция не найдена' });
+      }
+    }
+  }
+
+  async findTransactionById(req, res) {
+    try {
+      const userId = req.user.id;
+      const { id } = req.params;
+
+      const transactions = await this.transactionUseCase.getTransactionById(userId, id);
+
+      return res.status(201).json({ message: 'Операция успешно получена', transactions });
+    } catch (error) {
+      console.error('Ошибка при создании задач:', error);
+      if (error.message === 'USER_NOT_FOUND') {
+        return res.status(401).json({ message: 'Пользователь не найден' });
+      }
+
+      if (error.message === 'TRANSACTION_NOT_FOUND') {
+        return res.status(404).json({ message: 'Операция не найдена' });
       }
     }
   }
