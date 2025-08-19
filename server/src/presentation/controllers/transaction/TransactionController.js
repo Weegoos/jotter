@@ -91,4 +91,36 @@ export class TransactionController {
       }
     }
   }
+
+  async partialTransactionUpdate(req, res) {
+    try {
+      const userId = req.user.id;
+      const { id } = req.params;
+      const { amount, description, date, type, source } = req.body;
+
+      const transaction_data = {
+        amount,
+        description,
+        type,
+        date,
+        source,
+      };
+
+      const updatedTransaction = await this.transactionUseCase.updateTransaction(
+        userId,
+        id,
+        transaction_data
+      );
+      return res.status(201).json({ message: 'Операция успешно обновлена', updatedTransaction });
+    } catch (error) {
+      console.error('Ошибка при создании задач:', error);
+      if (error.message === 'USER_NOT_FOUND') {
+        return res.status(401).json({ message: 'Пользователь не найден' });
+      }
+
+      if (error.message === 'TRANSACTION_NOT_FOUND') {
+        return res.status(401).json({ message: 'Операция не найдена' });
+      }
+    }
+  }
 }

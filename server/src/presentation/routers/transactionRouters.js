@@ -20,4 +20,6 @@ router.get('/:id', authMiddleware, controller.findTransactionById.bind(controlle
 
 router.delete('/:id', authMiddleware, controller.deleteTransaction.bind(controller));
 
+router.patch('/:id', authMiddleware, controller.partialTransactionUpdate.bind(controller));
+
 export default router;
