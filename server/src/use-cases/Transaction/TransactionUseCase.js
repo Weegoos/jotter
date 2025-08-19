@@ -61,4 +61,23 @@ export class TransactionUseCase {
 
     return transaction;
   }
+
+  async delete(transactionId, userId) {
+    if (!userId) {
+      throw new Error(USER_NOT_FOUND);
+    }
+    if (!transactionId) {
+      throw new Error(TRANSACTION_NOT_FOUND);
+    }
+
+    const deletedTransaction = await this.transactionRepository.destroy(transactionId, userId);
+
+    if (
+      !deletedTransaction ||
+      (Array.isArray(deletedTransaction) && deletedTransaction.length === 0)
+    ) {
+      throw new Error(TRANSACTION_NOT_FOUND);
+    }
+    return deletedTransaction;
+  }
 }

@@ -33,4 +33,16 @@ export class SequelizeTransactionRepositories extends ITransactionRepository {
       where: { userId: userId, id: transaction_id },
     });
   }
+
+  async destroy(transactionId, userId) {
+    const transaction = this.transactionModel.destroy({
+      where: { userId: userId, id: transactionId },
+    });
+
+    if (!transaction) {
+      throw new Error('TRANSACTION_NOT_FOUND');
+    }
+
+    return transaction;
+  }
 }
