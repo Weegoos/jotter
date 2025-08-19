@@ -80,4 +80,23 @@ export class TransactionUseCase {
     }
     return deletedTransaction;
   }
+
+  async updateTransaction(userId, transactionID, transactionData) {
+    if (!userId) {
+      throw new Error(USER_NOT_FOUND);
+    }
+
+    const updatedTransactionData = { ...transactionData };
+
+    if (!transactionID || Object.keys(updatedTransactionData).length === 0) {
+      throw new Error(TRANSACTION_NOT_FOUND);
+    }
+
+    const updatedTransaction = await this.transactionRepository.update(
+      updatedTransactionData,
+      transactionID,
+      userId
+    );
+    return updatedTransaction;
+  }
 }

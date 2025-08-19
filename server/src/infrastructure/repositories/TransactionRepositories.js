@@ -45,4 +45,18 @@ export class SequelizeTransactionRepositories extends ITransactionRepository {
 
     return transaction;
   }
+
+  async update(transactionData, transactionId, userId) {
+    const [updatedCount] = await this.transactionModel.update(transactionData, {
+      where: { userId, id: transactionId },
+    });
+
+    if (updatedCount === 0) {
+      throw new Error('TRANSACTION_NOT_FOUND');
+    }
+
+    return await this.transactionModel.findOne({
+      where: { userId, id: transactionId },
+    });
+  }
 }

@@ -274,3 +274,73 @@
  *                   type: string
  *                   example: Операция не найдена
  */
+
+// ---------- PATCH /transactions/{id} ---------
+/**
+ * @swagger
+ * /transactions/{id}:
+ *   patch:
+ *     summary: Частичное обновление транзакции
+ *     description: Обновляет указанные поля транзакции для текущего пользователя.
+ *     tags:
+ *       - Transactions
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID транзакции для обновления
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               amount:
+ *                 type: number
+ *                 description: Сумма транзакции
+ *                 example: 1500
+ *               description:
+ *                 type: string
+ *                 description: Описание транзакции
+ *                 example: Оплата услуг
+ *               date:
+ *                 type: string
+ *                 format: date
+ *                 description: Дата транзакции
+ *                 example: 2025-08-19
+ *               type:
+ *                 type: string
+ *                 description: Тип транзакции
+ *                 example: expense
+ *               source:
+ *                 type: string
+ *                 description: Источник транзакции
+ *                 example: Kaspi
+ *     responses:
+ *       201:
+ *         description: Транзакция успешно обновлена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Операция успешно обновлена
+ *                 updatedTransaction:
+ *                   type: object
+ *                   description: Объект обновлённой транзакции
+ *       401:
+ *         description: Пользователь не найден или транзакция не найдена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Пользователь не найден
+ */
