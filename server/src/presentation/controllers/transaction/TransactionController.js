@@ -33,4 +33,23 @@ export class TransactionController {
       return res.status(500).json({ message: 'Ошибка сервера' });
     }
   }
+
+  async findAllTransaction(req, res) {
+    try {
+      const userId = req.user.id;
+
+      const transactions = await this.transactionUseCase.getTransaction(userId);
+
+      return res.status(201).json({ message: 'Операции успешно получены', transactions });
+    } catch (error) {
+      console.error('Ошибка при создании задач:', error);
+      if (error.message === 'USER_NOT_FOUND') {
+        return res.status(401).json({ message: 'Пользователь не найден' });
+      }
+
+      if (error.message === 'TRANSACTION_NOT_FOUND') {
+        return res.status(401).json({ message: 'Операция не найдена' });
+      }
+    }
+  }
 }
