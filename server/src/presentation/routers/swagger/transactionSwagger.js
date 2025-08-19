@@ -145,3 +145,80 @@
  *         description: Внутренняя ошибка сервера
  */
 
+// ------------------- GET /transaction/{id} -------
+/**
+ * @swagger
+ * /transactions/{id}:
+ *   get:
+ *     summary: Получить транзакцию по ID
+ *     description: Возвращает данные транзакции по её уникальному идентификатору для текущего пользователя.
+ *     tags:
+ *       - Transactions
+ *     security:
+ *       - bearerAuth: []   # если используешь JWT авторизацию
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Уникальный идентификатор транзакции
+ *     responses:
+ *       200:
+ *         description: Транзакция успешно получена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Операции успешно получены
+ *                 transactions:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: "123"
+ *                     amount:
+ *                       type: number
+ *                       example: 2500
+ *                     type:
+ *                       type: string
+ *                       example: "expense"
+ *                     description:
+ *                       type: string
+ *                       example: "Покупка продуктов"
+ *                     date:
+ *                       type: string
+ *                       format: date
+ *                       example: "2025-08-19"
+ *                     source:
+ *                       type: string
+ *                       example: "Наличные"
+ *                     category_id:
+ *                       type: string
+ *                       example: "5"
+ *       401:
+ *         description: Ошибка авторизации или данные не найдены
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Пользователь не найден
+ *       404:
+ *         description: Транзакция не найдена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Операция не найдена
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ */
