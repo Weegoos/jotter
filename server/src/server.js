@@ -22,7 +22,6 @@ import initializeHashTag from './infrastructure/database/hashtagDB.js';
 
 import setupGoogleAuth from './presentation/controllers/google.js';
 import './infrastructure/database/models/friendSchemas.js';
-
 dotenv.config();
 
 const app = express();
