@@ -32,8 +32,10 @@
 
 ## ⚙️ Запуск проекта
 
-### 📍 Установка зависимостей для front-end
+### 📍 Frontend
 ```bash
 cd jotter
 npm install
-npm run dev
+npm run dev       # запуск в режиме разработки
+npm run build     # сборка для продакшена
+npm run preview   # предпросмотр собранного проекта
