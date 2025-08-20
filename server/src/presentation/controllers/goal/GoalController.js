@@ -28,4 +28,22 @@ export class GoalController {
       return res.status(500).json({ message: 'Ошибка сервера' });
     }
   }
+
+  async findAllGoals(req, res) {
+    try {
+      const userId = req.user.id;
+      const goals = await this.goalUseCase.getGoal(userId);
+
+      return res.status(200).json({ message: 'Цели успешно получены', goals });
+    } catch (error) {
+      console.error('Ошибка при получении целей');
+      if (error.message === 'USER_NOT_FOUND') {
+        return res.status(401).json({ message: 'Пользователь не найден' });
+      }
+
+      if (error.message === 'GOAL_NOT_FOUND') {
+        return res.status(404).json({ message: 'Цель не найдена' });
+      }
+    }
+  }
 }

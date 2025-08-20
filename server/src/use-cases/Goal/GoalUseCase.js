@@ -25,4 +25,17 @@ export class GoalUseCase {
 
     return await this.goalRepository.create(goalData);
   }
+
+  async getGoal(userId) {
+    if (!userId) {
+      throw new Error(USER_NOT_FOUND);
+    }
+
+    const goals = await this.goalRepository.findAll(userId);
+    if (!goals) {
+      throw new Error(GOAL_NOT_FOUND);
+    }
+
+    return goals;
+  }
 }

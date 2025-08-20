@@ -13,4 +13,10 @@ export class SequelizeGoalRepository extends IGoalRepository {
 
     return newGoal;
   }
+
+  async findAll(userId) {
+    return await this.goalModel.findAll({
+      where: { userId: userId },
+    });
+  }
 }

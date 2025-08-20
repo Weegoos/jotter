@@ -58,7 +58,7 @@ const PORT = process.env.PORT || 3001;
   app.use('/tasks', taskRouters);
   app.use('/categories', categoryRouters);
   app.use('/transactions', transactionRouters);
-  app.use('/goals', goalRouters)
+  app.use('/goals', goalRouters);
 
   setupGoogleAuth(app);
 
