@@ -16,6 +16,7 @@ import hashtagsRouters from './presentation/routers/hastagsRouters.js';
 import taskRouters from './presentation/routers/taskRouters.js';
 import categoryRouters from './presentation/routers/categoryRouters.js';
 import transactionRouters from './presentation/routers/transactionRouters.js';
+import goalRouters from './presentation/routers/goalRouters.js';
 
 import initializeTypes from './infrastructure/database/typesDB.js';
 import initializeHashTag from './infrastructure/database/hashtagDB.js';
@@ -57,6 +58,8 @@ const PORT = process.env.PORT || 3001;
   app.use('/tasks', taskRouters);
   app.use('/categories', categoryRouters);
   app.use('/transactions', transactionRouters);
+  app.use('/goals', goalRouters)
+
   setupGoogleAuth(app);
 
   initializeTypes();
