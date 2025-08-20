@@ -46,4 +46,32 @@ export class GoalController {
       }
     }
   }
+
+  async partialGoalUpdate(req, res) {
+    try {
+      const userId = req.user.id;
+      const { id } = req.params;
+      const { name, target_amount, current_amount, deadline } = req.body;
+
+      const goalData = {
+        name,
+        target_amount,
+        current_amount,
+        deadline,
+      };
+
+      const updatedGoal = await this.goalUseCase.updateGoal(goalData, id, userId);
+      return res.status(200).json({ message: 'Цель успешно обновлена', updatedGoal });
+    } catch (error) {
+      console.error(error);
+      if (error.message === 'USER_NOT_FOUND') {
+        return res.status(401).json({ message: 'Пользователь не найден' });
+      }
+      if (error.message === 'GOAL_NOT_FOUND') {
+        return res.status(404).json({ message: 'Цель не найдена' });
+      }
+
+      return res.status(500).json({ message: 'Ошибка', error });
+    }
+  }
 }

@@ -38,4 +38,20 @@ export class GoalUseCase {
 
     return goals;
   }
+
+  async updateGoal(goalData, goalId, userId) {
+    if (!userId) {
+      throw new Error(USER_NOT_FOUND);
+    }
+
+    const updatedGoalData = { ...goalData };
+
+    if (!goalId || Object.keys(updatedGoalData).length === 0) {
+      throw new Error(GOAL_NOT_FOUND);
+    }
+
+    const updatedGoal = await this.goalRepository.update(updatedGoalData, goalId, userId);
+
+    return updatedGoal;
+  }
 }
