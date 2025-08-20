@@ -1,11 +1,11 @@
 # Jotter Project
 
-##  Структура проекта
+## 📂 Структура проекта
 
 
 ---
 
-##  Используемые технологии
+## 🛠 Используемые технологии
 
 ### 🖥️ Frontend (`jotter/`)
 
@@ -15,7 +15,7 @@
 - [TypeScript](https://www.typescriptlang.org/)
 - [Pinia](https://pinia.vuejs.org/) — менеджер состояния
 - [Vue Router](https://router.vuejs.org/)
-- [Storybook](https://storybook.js.org/) — визуальная документация компонентов
+- [VuePress](https://vuepress.vuejs.org/) — документация
 - [Vitest](https://vitest.dev/) — модульные тесты
 - [Playwright](https://playwright.dev/) — e2e тестирование
 
@@ -37,11 +37,3 @@
 cd jotter
 npm install
 npm run dev
-```
-
-### 📍 Установка зависимостей для back-end
-```bash
-cd server
-npm install
-npm run dev
-```
