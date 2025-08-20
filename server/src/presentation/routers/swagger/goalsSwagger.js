@@ -246,3 +246,70 @@
  *                   type: string
  *                   example: "Internal server error"
  */
+
+// ----------- DELETE /goals/{id} -----------
+/**
+ * @swagger
+ * /goals/{id}:
+ *   delete:
+ *     summary: Удалить цель
+ *     description: Удаляет цель пользователя по ID.
+ *     tags:
+ *       - Goals
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID цели для удаления
+ *     responses:
+ *       201:
+ *         description: Цель успешно удалена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Цель успешно удалена"
+ *                 deletedGoal:
+ *                   type: object
+ *                   description: Удалённая цель
+ *       401:
+ *         description: Пользователь не найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Пользователь не найден"
+ *       404:
+ *         description: Цель не найдена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Цель не найдена"
+ *       500:
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка"
+ *                 error:
+ *                   type: string
+ *                   example: "Internal server error"
+ */

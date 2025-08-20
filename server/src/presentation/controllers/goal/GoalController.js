@@ -74,4 +74,24 @@ export class GoalController {
       return res.status(500).json({ message: 'Ошибка', error });
     }
   }
+
+  async deleteGoal(req, res) {
+    try {
+      const userId = req.user.id;
+      const { id } = req.params;
+
+      const deletedGoal = await this.goalUseCase.delete(id, userId);
+      return res.status(201).json({ message: 'Цель успешно удалена', deletedGoal });
+    } catch (error) {
+      console.error(error);
+      if (error.message === 'USER_NOT_FOUND') {
+        return res.status(401).json({ message: 'Пользователь не найден' });
+      }
+      if (error.message === 'GOAL_NOT_FOUND') {
+        return res.status(404).json({ message: 'Цель не найдена' });
+      }
+
+      return res.status(500).json({ message: 'Ошибка', error });
+    }
+  }
 }

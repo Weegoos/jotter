@@ -33,4 +33,12 @@ export class SequelizeGoalRepository extends IGoalRepository {
       where: { userId, id: goalId },
     });
   }
+
+  async destroy(goalId, userId) {
+    const goal = await this.goalModel.destroy({
+      where: { userId: userId, id: goalId },
+    });
+
+    return goal;
+  }
 }
