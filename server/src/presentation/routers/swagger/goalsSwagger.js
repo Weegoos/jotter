@@ -159,3 +159,90 @@
  *                   type: string
  *                   example: "Цель не найдена"
  */
+
+// ------------------ PATCH /goals/{id}
+/**
+ * @swagger
+ * /goals/{id}:
+ *   patch:
+ *     summary: Частичное обновление цели
+ *     description: Обновляет отдельные поля цели пользователя по ID.
+ *     tags:
+ *       - Goals
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID цели для обновления
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Купить новый ноутбук"
+ *               target_amount:
+ *                 type: number
+ *                 example: 200000
+ *               current_amount:
+ *                 type: number
+ *                 example: 80000
+ *               deadline:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2025-12-31T23:59:59Z"
+ *     responses:
+ *       200:
+ *         description: Цель успешно обновлена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Цель успешно обновлена"
+ *                 updatedGoal:
+ *                   type: object
+ *                   description: Обновленная цель
+ *       401:
+ *         description: Пользователь не найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Пользователь не найден"
+ *       404:
+ *         description: Цель не найдена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Цель не найдена"
+ *       500:
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка"
+ *                 error:
+ *                   type: string
+ *                   example: "Internal server error"
+ */

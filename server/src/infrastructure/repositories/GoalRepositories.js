@@ -19,4 +19,18 @@ export class SequelizeGoalRepository extends IGoalRepository {
       where: { userId: userId },
     });
   }
+
+  async update(goalData, goalId, userId) {
+    const [updatedGoal] = await this.goalModel.update(goalData, {
+      where: { userId, id: goalId },
+    });
+
+    if (updatedGoal === 0) {
+      throw new Error('GOAL_NOT_FOUND');
+    }
+
+    return await this.goalModel.findOne({
+      where: { userId, id: goalId },
+    });
+  }
 }
