@@ -16,6 +16,8 @@ router.post('/', authMiddleware, controller.createGoal.bind(controller));
 
 router.get('/', authMiddleware, controller.findAllGoals.bind(controller));
 
-router.patch('/:id', authMiddleware, controller.partialGoalUpdate.bind(controller))
+router.patch('/:id', authMiddleware, controller.partialGoalUpdate.bind(controller));
+
+router.delete('/:id', authMiddleware, controller.deleteGoal.bind(controller));
 
 export default router;

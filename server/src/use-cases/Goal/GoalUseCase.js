@@ -54,4 +54,22 @@ export class GoalUseCase {
 
     return updatedGoal;
   }
+
+  async delete(goalId, userId) {
+    if (!userId) {
+      throw new Error(USER_NOT_FOUND);
+    }
+
+    if (!goalId) {
+      throw new Error(GOAL_NOT_FOUND);
+    }
+
+    const deletedGoal = await this.goalRepository.destroy(goalId, userId);
+
+    if (!deletedGoal || (Array.isArray(deletedGoal) && deletedGoal.length === 0)) {
+      throw new Error(GOAL_NOT_FOUND);
+    }
+
+    return deletedGoal;
+  }
 }
