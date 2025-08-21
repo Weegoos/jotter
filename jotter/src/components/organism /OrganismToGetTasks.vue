@@ -55,7 +55,7 @@
                 <q-item-label caption lines="2">{{ task.description }}</q-item-label>
               </q-item-section>
 
-              <q-item-section side top >
+              <q-item-section side top>
                 <q-btn
                   flat
                   icon="mdi-dots-horizontal"
