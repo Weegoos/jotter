@@ -22,4 +22,6 @@ router.get('/', authMiddleware, controller.getAllBudgets.bind(controller));
 // PATCH
 router.patch('/:id', authMiddleware, controller.partialUpdateBudget.bind(controller));
 
+// DELETE
+router.delete('/:id', authMiddleware, controller.deleteBudget.bind(controller));
 export default router;

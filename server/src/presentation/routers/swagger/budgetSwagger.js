@@ -238,3 +238,57 @@
  *                   type: string
  *                   example: Ошибка
  */
+
+// ------------ DELETE /budget/{id} --------
+/**
+ * @swagger
+ * /budget/{id}:
+ *   delete:
+ *     summary: Удалить бюджет
+ *     description: Удаляет бюджет по ID для авторизованного пользователя.
+ *     tags:
+ *       - Budget
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID бюджета для удаления
+ *     responses:
+ *       201:
+ *         description: Бюджет успешно удален
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Бюджет успешно удалена
+ *                 deletedBudget:
+ *                   type: object
+ *                   description: Данные удаленного бюджета
+ *       401:
+ *         description: Пользователь не найден или не авторизован
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Пользователь не найден
+ *       404:
+ *         description: Бюджет не найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Бюджет не найдена
+ */

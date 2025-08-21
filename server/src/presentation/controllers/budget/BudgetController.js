@@ -75,4 +75,23 @@ export class BudgetController {
       return res.status(500).json({ message: 'Ошибка', error });
     }
   }
+
+  async deleteBudget(req, res) {
+    try {
+      const userId = req.user.id;
+      const { id } = req.params;
+
+      const deletedBudget = await this.budgetUseCase.delete(id, userId);
+      return res.status(201).json({ message: 'Бюджет успешно удален', deletedBudget });
+    } catch (error) {
+      console.error('Ошибка при удалении бюджета:', error);
+      if (error.message === 'USER_NOT_FOUND') {
+        return res.status(401).json({ message: 'Пользователь не найден' });
+      }
+
+      if (error.message === 'BUDGET_NOT_FOUND') {
+        return res.status(404).json({ message: 'Бюджет не найден' });
+      }
+    }
+  }
 }
