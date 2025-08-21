@@ -28,4 +28,17 @@ export class BudgetUseCase {
     };
     return await this.budgetRepository.create(budgetData, category_id);
   }
+
+  async getBudgets(userId) {
+    if (!userId) {
+      throw new Error(USER_NOT_FOUND);
+    }
+
+    const budgets = await this.budgetRepository.findAll(userId);
+    if (Object.keys(budgets).length === 0 || !budgets) {
+      throw new Error(BUDGET_NOT_FOUND);
+    }
+
+    return budgets;
+  }
 }
