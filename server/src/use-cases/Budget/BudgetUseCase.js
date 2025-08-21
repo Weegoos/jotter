@@ -35,10 +35,25 @@ export class BudgetUseCase {
     }
 
     const budgets = await this.budgetRepository.findAll(userId);
-    if (Object.keys(budgets).length === 0 || !budgets) {
+    if ((Array.isArray(budgets) && budgets.length === 0) || !budgets) {
       throw new Error(BUDGET_NOT_FOUND);
     }
 
     return budgets;
+  }
+
+  async updateBudget(userId, budgetId, budgetData) {
+    if (!userId) {
+      throw new Error(USER_NOT_FOUND);
+    }
+
+    const updatedBudgetData = { ...budgetData };
+
+    if (!budgetId || Object.keys(updatedBudgetData).length === 0) {
+      throw new Error(BUDGET_NOT_FOUND);
+    }
+
+    const updatedBudget = await this.budgetRepository.update(userId, budgetId, updatedBudgetData);
+    return updatedBudget;
   }
 }

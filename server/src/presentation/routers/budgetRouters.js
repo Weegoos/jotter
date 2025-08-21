@@ -19,4 +19,7 @@ router.post('/', authMiddleware, controller.createBudget.bind(controller));
 // GET
 router.get('/', authMiddleware, controller.getAllBudgets.bind(controller));
 
+// PATCH
+router.patch('/:id', authMiddleware, controller.partialUpdateBudget.bind(controller));
+
 export default router;

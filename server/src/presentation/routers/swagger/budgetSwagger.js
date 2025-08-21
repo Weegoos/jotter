@@ -149,3 +149,92 @@
  *                   type: string
  *                   example: Ошибка
  */
+
+// ------------ PATCH /budget/{id} ---------
+/**
+ * @swagger
+ * /budget/{id}:
+ *   patch:
+ *     summary: Частичное обновление бюджета
+ *     description: Обновляет указанные поля (limit_amount, month, year) бюджета пользователя.
+ *     tags:
+ *       - Budget
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID бюджета
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               limit_amount:
+ *                 type: number
+ *                 example: 120000
+ *               month:
+ *                 type: integer
+ *                 example: 8
+ *               year:
+ *                 type: integer
+ *                 example: 2025
+ *     responses:
+ *       200:
+ *         description: Бюджет успешно обновлён
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   example: "123"
+ *                 limit_amount:
+ *                   type: number
+ *                   example: 120000
+ *                 month:
+ *                   type: integer
+ *                   example: 8
+ *                 year:
+ *                   type: integer
+ *                   example: 2025
+ *                 category_id:
+ *                   type: string
+ *                   example: "45"
+ *       401:
+ *         description: Пользователь не найден или не авторизован
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Пользователь не найден
+ *       404:
+ *         description: Бюджет не найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Бюджеты не найдены
+ *       500:
+ *         description: Внутренняя ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Ошибка
+ */
