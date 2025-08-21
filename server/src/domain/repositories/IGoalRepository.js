@@ -19,23 +19,22 @@ export class IGoalRepository {
 
   /**
    * Частично обновить цель по ID
-   * @param {Object} goalData 
-   * @param {Number} goalId 
-   * @param {Number} userId 
+   * @param {Object} goalData
+   * @param {Number} goalId
+   * @param {Number} userId
    */
 
   async update(goalData, goalId, userId) {
     console.log(goalData, goalId, userId);
-     throw new Error('update function should be used');
+    throw new Error('update function should be used');
   }
   /**
    * Удалить цель по ID
-   * @param {Number} goalId 
-   * @param {Number} userId 
+   * @param {Number} goalId
+   * @param {Number} userId
    */
   async destroy(goalId, userId) {
     console.log(goalId, userId);
-     throw new Error('destroy function should be used');
-    
+    throw new Error('destroy function should be used');
   }
 }
