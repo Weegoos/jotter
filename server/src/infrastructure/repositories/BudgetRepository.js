@@ -26,4 +26,21 @@ export class SequelizeBudgetRepository extends IBudgetRepository {
       where: { userId: userId },
     });
   }
+
+  async update(userId, budgetId, budgetData) {
+    const [updatedCount] = await this.budgetModel.update(budgetData, {
+      where: {
+        userId,
+        id: budgetId,
+      },
+    });
+
+    if (updatedCount === 0) {
+      throw new Error('BUDGET_NOT_FOUND');
+    }
+
+    return await this.budgetModel.findOne({
+      where: { userId, id: budgetId },
+    });
+  }
 }

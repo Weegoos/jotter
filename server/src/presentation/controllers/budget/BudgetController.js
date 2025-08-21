@@ -39,12 +39,38 @@ export class BudgetController {
 
       return res.status(200).json({ message: 'Бюджеты успешно получены', budgets });
     } catch (error) {
-      console.error('Ошибка при создании бюджета:', error);
+      console.error('Ошибка при получении бюджета:', error);
       if (error.message === 'USER_NOT_FOUND') {
         return res.status(401).json({ message: 'Пользователь не найден' });
       }
       if (error.message === 'BUDGET_NOT_FOUND') {
         return res.status(404).json({ message: 'Бюджеты не найдены' });
+      }
+      return res.status(500).json({ message: 'Ошибка', error });
+    }
+  }
+
+  async partialUpdateBudget(req, res) {
+    try {
+      const userId = req.user.id;
+      const { id } = req.params;
+      const { limit_amount, month, year } = req.body;
+
+      const budget_data = {
+        limit_amount,
+        month,
+        year,
+      };
+
+      const updatedBudget = await this.budgetUseCase.updateBudget(userId, id, budget_data);
+      return res.status(200).json({ message: 'Бюджет частично обновлен', updatedBudget });
+    } catch (error) {
+      console.error('Ошибка при частичном изменении бюджета:', error);
+      if (error.message === 'USER_NOT_FOUND') {
+        return res.status(401).json({ message: 'Пользователь не найден' });
+      }
+      if (error.message === 'BUDGET_NOT_FOUND') {
+        return res.status(404).json({ message: 'Бюджет не найден' });
       }
       return res.status(500).json({ message: 'Ошибка', error });
     }
