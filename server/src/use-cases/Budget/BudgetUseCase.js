@@ -56,4 +56,20 @@ export class BudgetUseCase {
     const updatedBudget = await this.budgetRepository.update(userId, budgetId, updatedBudgetData);
     return updatedBudget;
   }
+
+  async delete(budgetId, userId) {
+    if (!userId) {
+      throw new Error(USER_NOT_FOUND);
+    }
+    if (!budgetId) {
+      throw new Error(BUDGET_NOT_FOUND);
+    }
+
+    const deletedBudget = await this.budgetRepository.destroy(budgetId, userId);
+
+    if (!deletedBudget || (Array.isArray(deletedBudget) && deletedBudget.length === 0)) {
+      throw new Error(BUDGET_NOT_FOUND);
+    }
+    return deletedBudget;
+  }
 }

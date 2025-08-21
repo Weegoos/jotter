@@ -43,4 +43,16 @@ export class SequelizeBudgetRepository extends IBudgetRepository {
       where: { userId, id: budgetId },
     });
   }
+
+  async destroy(budgetId, userId) {
+    const budget = await this.budgetModel.destroy({
+      where: { userId: userId, id: budgetId },
+    });
+
+    if (!budget) {
+      throw new Error('BUDGET_NOT_FOUND');
+    }
+
+    return budget;
+  }
 }
