@@ -17,4 +17,5 @@ const Goals = sequelize.define(
 
 Goals.belongsTo(User, { foreignKey: 'userId', onDelete: 'CASCADE' });
 User.hasMany(Goals, { foreignKey: 'userId' });
+
 export default Goals;
