@@ -20,4 +20,10 @@ export class SequelizeBudgetRepository extends IBudgetRepository {
 
     return newBudget;
   }
+
+  async findAll(userId) {
+    return await this.budgetModel.findAll({
+      where: { userId: userId },
+    });
+  }
 }

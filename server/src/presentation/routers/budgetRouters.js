@@ -16,4 +16,7 @@ const controller = new BudgetController(useCase);
 // POST
 router.post('/', authMiddleware, controller.createBudget.bind(controller));
 
+// GET
+router.get('/', authMiddleware, controller.getAllBudgets.bind(controller));
+
 export default router;
