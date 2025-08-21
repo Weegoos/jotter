@@ -346,12 +346,12 @@ const currentDate = computed(() => {
 const monthTasks = ref([]);
 const weeklyTasks = ref([]);
 const dailyPercent = ref('');
-const weeklyChosenDate  =ref('')
+const weeklyChosenDate = ref('');
 const getTasksCalendarView = async () => {
   try {
     const response = await getMethod(
       serverURL,
-      `tasks/calendar-view?target_date=${chosenDate.value  || currentDate.value}`,
+      `tasks/calendar-view?target_date=${chosenDate.value || currentDate.value}`,
       $q,
       'Задачи успешно получены'
     );
@@ -447,7 +447,6 @@ const closeCreatePage = () => {
 const searchTasks = () => {
   getTasksCalendarView();
   console.log(weeklyChosenDate.value);
-
 };
 
 const changeTaskStatus = async (taskInfo) => {
