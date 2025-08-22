@@ -11,6 +11,7 @@
                 :model-value="modelValue"
                 @update:model-value="(val) => emit('update:modelValue', val)"
                 mask="####-##-##"
+                @keypress.enter="emit('searchTasks')"
                 :rules="[
                   (val) => /^\d{4}-\d{2}-\d{2}$/.test(val) || 'Введите дату в формате YYYY-MM-DD',
                 ]"
@@ -43,8 +44,8 @@
               </div>
             </div>
             <p align="right" class="text-h6">
-              {{ props.dailyPercent || '' }}{{ props.weeklyPercent || ''
-              }}{{ props.monthlyPercent || '' }}{{ annualPercentage || '' }}%
+              {{ props.dailyPercent }}{{ props.weeklyPercent }}{{ props.monthlyPercent
+              }}{{ annualPercentage }}%
             </p>
             <q-item clickable v-ripple v-for="(task, index) in props.tasks" :key="index">
               <q-item-section>

@@ -124,7 +124,12 @@
           <q-tab-panel name="periodTasks">
             <div class="text-h4 q-mb-md">Period Tasks</div>
             <div class="">
-              <q-input :model-value="formattedDateFrom" placeholder="Select date range" readonly>
+              <q-input
+                @keypress.enter="searchTasksSummary"
+                :model-value="formattedDateFrom"
+                placeholder="Select date range"
+                readonly
+              >
                 <template v-slot:append>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -247,8 +252,6 @@ const selectedDate = ref({});
 const INITIAL_EVENTS = ref([]);
 
 const searchTasksSummary = async () => {
-  console.log(dateFrom.value);
-
   if (dateFrom.value.from) {
     const response = await getMethod(
       serverURL,
@@ -358,9 +361,10 @@ const getTasksCalendarView = async () => {
     tasks.value = response.tasks.filter(
       (task) => task.time_period === 'daily' || task.time_period === 'recurring'
     );
-    dailyPercent.value = Math.round(
-      (tasks.value.filter((task) => task.status === 'done').length / tasks.value.length) * 100
-    );
+    dailyPercent.value =
+      Math.round(
+        (tasks.value.filter((task) => task.status === 'done').length / tasks.value.length) * 100
+      ) || 0;
   } catch (error) {
     console.error(error);
   }
@@ -393,10 +397,12 @@ const getWeekRange = async (date = new Date()) => {
     'Задачи успешно получены'
   );
   weeklyTasks.value = response.tasks.filter((task) => task.time_period === 'weekly');
-  weeklyPercent.value = Math.round(
-    (weeklyTasks.value.filter((task) => task.status === 'done').length / weeklyTasks.value.length) *
-      100
-  );
+  weeklyPercent.value =
+    Math.round(
+      (weeklyTasks.value.filter((task) => task.status === 'done').length /
+        weeklyTasks.value.length) *
+        100
+    ) || 0;
 };
 
 const monthlyPercent = ref('');
@@ -411,10 +417,11 @@ const getMonthlyTasks = async (date = new Date()) => {
   );
 
   monthTasks.value = response.tasks.filter((task) => task.time_period === 'monthly');
-  monthlyPercent.value = Math.round(
-    (monthTasks.value.filter((task) => task.status === 'done').length / monthTasks.value.length) *
-      100
-  );
+  monthlyPercent.value =
+    Math.round(
+      (monthTasks.value.filter((task) => task.status === 'done').length / monthTasks.value.length) *
+        100
+    ) || 0;
 };
 
 const annualTasks = ref([]);
@@ -429,10 +436,12 @@ const getAnnualTasks = async (date = new Date()) => {
   );
 
   annualTasks.value = response.tasks.filter((task) => task.time_period === 'yearly');
-  annualPercentage.value = Math.round(
-    (annualTasks.value.filter((task) => task.status === 'done').length / annualTasks.value.length) *
-      100
-  );
+  annualPercentage.value =
+    Math.round(
+      (annualTasks.value.filter((task) => task.status === 'done').length /
+        annualTasks.value.length) *
+        100
+    ) || 0;
 };
 
 const isOpenCreatePage = ref(false);
@@ -446,7 +455,6 @@ const closeCreatePage = () => {
 
 const searchTasks = () => {
   getTasksCalendarView();
-  console.log(weeklyChosenDate.value);
 };
 
 const changeTaskStatus = async (taskInfo) => {
@@ -489,11 +497,32 @@ const closeEditPage = () => {
   isOpenEditTaskPage.value = false;
 };
 
+const calendarInitialValue = async () => {
+  const initialValue = await getMethod(
+    serverURL,
+    `tasks/summary?from_date=1800-01-01&to_date=3000-01-01`,
+    $q,
+    'Задачи успешно получены'
+  );
+
+  INITIAL_EVENTS.value = initialValue.tasks.map((task) => ({
+    id: task.id,
+    title: task.title,
+    start: task.target_date.split('T')[0], // "2025-08-12"
+    description: task.description,
+    status: task.status,
+    priority: task.priority,
+  }));
+};
+
 onMounted(() => {
   getTasksCalendarView();
   getWeekRange();
   getMonthlyTasks();
   getAnnualTasks();
+  if (dateFrom.value === null) {
+    calendarInitialValue();
+  }
 });
 </script>
 
