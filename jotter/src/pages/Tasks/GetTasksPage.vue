@@ -2,7 +2,7 @@
   <section>
     <div class="text-font p-[10px]">
       <p class="text-h4">Tasks</p>
-      <p>Short description will be placed here</p>
+      <Button icon="mdi-plus" color="white" class="text-black" @click="openCreateWindow" />
     </div>
     <div>
       <q-scroll-area style="width: 100%; height: 85vh">
@@ -44,7 +44,33 @@
                 @openCreateWindow="openCreateWindow"
                 @edit="editTask"
                 :dailyPercent="dailyPercent"
-              />
+              >
+                <Input
+                  class="flex-1"
+                  placeholder="Choose date..."
+                  v-model="chosenDate"
+                  mask="####-##-##"
+                  @keypress.enter="searchTasks"
+                  :rules="[
+                    (val) => /^\d{4}-\d{2}-\d{2}$/.test(val) || 'Введите дату в формате YYYY-MM-DD',
+                  ]"
+                >
+                  <template v-slot:append>
+                    <q-icon name="event" class="cursor-pointer">
+                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                        <q-date v-model="chosenDate" mask="YYYY-MM-DD">
+                          <div class="row items-center justify-end">
+                            <q-btn v-close-popup label="Close" color="primary" flat />
+                          </div>
+                        </q-date>
+                      </q-popup-proxy>
+                    </q-icon>
+
+                    <q-icon name="mdi-magnify" class="cursor-pointer" @click="searchTasks" />
+                  </template>
+                </Input>
+                <div class="flex-2"></div>
+              </OrganismToGetTasks>
 
               <div class="flex-2">
                 <q-card class="my-card">
@@ -242,7 +268,9 @@ socket.onmessage = (event) => {
     getWeekRange();
     getMonthlyTasks();
     getAnnualTasks();
-    searchTasksSummary();
+    if (dateFrom.value) {
+      searchTasksSummary();
+    }
   }
 };
 
@@ -252,22 +280,20 @@ const selectedDate = ref({});
 const INITIAL_EVENTS = ref([]);
 
 const searchTasksSummary = async () => {
-  if (dateFrom.value.from) {
-    const response = await getMethod(
-      serverURL,
-      `tasks/summary?from_date=${dateFrom.value.from}&to_date=${dateFrom.value.to}`,
-      $q,
-      'Задачи успешно получены'
-    );
-    INITIAL_EVENTS.value = response.tasks.map((task) => ({
-      id: task.id,
-      title: task.title,
-      start: task.target_date.split('T')[0], // "2025-08-12"
-      description: task.description,
-      status: task.status,
-      priority: task.priority,
-    }));
-  }
+  const response = await getMethod(
+    serverURL,
+    `tasks/summary?from_date=${dateFrom.value.from}&to_date=${dateFrom.value.to}`,
+    $q,
+    'Задачи успешно получены'
+  );
+  INITIAL_EVENTS.value = response.tasks.map((task) => ({
+    id: task.id,
+    title: task.title,
+    start: task.target_date.split('T')[0], // "2025-08-12"
+    description: task.description,
+    status: task.status,
+    priority: task.priority,
+  }));
 };
 
 const currentEvents = ref([]);
@@ -428,12 +454,7 @@ const annualTasks = ref([]);
 const annualPercentage = ref('');
 const getAnnualTasks = async (date = new Date()) => {
   const currentYear = date.getFullYear();
-  const response = await getMethod(
-    serverURL,
-    `tasks/calendar-view?year=${currentYear}`,
-    $q,
-    'Задачи успешно получены'
-  );
+  const response = await getMethod(serverURL, `tasks/calendar-view`, $q, 'Задачи успешно получены');
 
   annualTasks.value = response.tasks.filter((task) => task.time_period === 'yearly');
   annualPercentage.value =
@@ -442,6 +463,8 @@ const getAnnualTasks = async (date = new Date()) => {
         annualTasks.value.length) *
         100
     ) || 0;
+
+  console.log(response.tasks.filter((task) => task.id === 279));
 };
 
 const isOpenCreatePage = ref(false);
