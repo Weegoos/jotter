@@ -186,7 +186,15 @@
                           @deleteTask="deleteTask"
                           :annualPercentage="annualPercentage"
                           @edit="editTask"
-                        />
+                        >
+                          <Form @keypress.enter="searchChosenAnnualTasks">
+                            <Input
+                              v-model="chosenYearForAnnualTasks"
+                              mask="####"
+                              min="2000"
+                            ></Input>
+                          </Form>
+                        </OrganismToGetTasks>
                       </q-tab-panel>
                     </q-tab-panels>
                   </q-card-section>
@@ -518,26 +526,49 @@ const getMonthlyTasks = async (date = new Date()) => {
 };
 
 const searchMonthlyTask = () => {
-  console.log(888);
-
   getMonthlyTasks();
 };
 
 const annualTasks = ref([]);
 const annualPercentage = ref('');
+const chosenYearForAnnualTasks = ref(2025);
 const getAnnualTasks = async (date = new Date()) => {
   const currentYear = date.getFullYear();
-  const response = await getMethod(serverURL, `tasks/calendar-view`, $q, 'Задачи успешно получены');
 
-  annualTasks.value = response.tasks.filter((task) => task.time_period === 'yearly');
-  annualPercentage.value =
-    Math.round(
-      (annualTasks.value.filter((task) => task.status === 'done').length /
-        annualTasks.value.length) *
-        100
-    ) || 0;
+  try {
+    const response = await getMethod(
+      serverURL,
+      `tasks/calendar-view?year=${chosenYearForAnnualTasks.value || currentYear}`,
+      $q,
+      'Задачи успешно получены'
+    );
 
-  console.log(response.tasks.filter((task) => task.id === 279));
+    if (!response || !response.tasks) {
+      console.error('Неверный ответ от сервера:', response);
+      annualTasks.value = [];
+      annualPercentage.value = 0;
+      return;
+    } else {
+      annualTasks.value = response.tasks.filter((task) => task.time_period === 'yearly');
+
+      annualPercentage.value =
+        Math.round(
+          (annualTasks.value.filter((task) => task.status === 'done').length /
+            annualTasks.value.length) *
+            100
+        ) || 0;
+    }
+  } catch (err) {
+    // console.error("Ошибка при получении annualTasks:", err);
+    annualTasks.value = [];
+    annualPercentage.value = 0;
+  }
+};
+
+const searchChosenAnnualTasks = () => {
+  if (chosenYearForAnnualTasks.value && chosenYearForAnnualTasks.value.toString().length === 4) {
+    getAnnualTasks();
+  }
 };
 
 const isOpenCreatePage = ref(false);
