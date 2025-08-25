@@ -15,7 +15,6 @@ const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
 const $q = useQuasar();
 
-const totalTasks = ref(0);
 const completedTasks = ref(0);
 const pendingTasks = ref(0);
 const percent = ref(0);
@@ -29,8 +28,6 @@ async function getSummary() {
     `tasks/summary?from_date=1970-01-01&to_date=2100-12-31`,
     $q
   );
-
-  totalTasks.value = response.total;
   completedTasks.value = response.completed;
   pendingTasks.value = response.pending;
   percent.value = response.avg_completion_percent;
@@ -53,7 +50,6 @@ function updateChart() {
         type: 'pie',
         radius: '50%',
         data: [
-          { value: totalTasks.value, name: 'Total Tasks' },
           { value: completedTasks.value, name: 'Completed Tasks' },
           { value: pendingTasks.value, name: 'Pending Tasks' },
         ],

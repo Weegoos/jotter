@@ -4,45 +4,7 @@
       <q-card>
         <div class="column">
           <q-list bordered separator class="q-pa-md">
-            <div class="flex gap-2" v-if="props.isInput">
-              <Input
-                class="flex-1"
-                placeholder="Choose date..."
-                :model-value="modelValue"
-                @update:model-value="(val) => emit('update:modelValue', val)"
-                mask="####-##-##"
-                @keypress.enter="emit('searchTasks')"
-                :rules="[
-                  (val) => /^\d{4}-\d{2}-\d{2}$/.test(val) || 'Введите дату в формате YYYY-MM-DD',
-                ]"
-              >
-                <template v-slot:append>
-                  <q-icon name="event" class="cursor-pointer">
-                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                      <q-date
-                        :model-value="modelValue"
-                        @update:model-value="(val) => emit('update:modelValue', val)"
-                        mask="YYYY-MM-DD"
-                      >
-                        <div class="row items-center justify-end">
-                          <q-btn v-close-popup label="Close" color="primary" flat />
-                        </div>
-                      </q-date>
-                    </q-popup-proxy>
-                  </q-icon>
-
-                  <q-icon name="mdi-magnify" class="cursor-pointer" @click="emit('searchTasks')" />
-                </template>
-              </Input>
-              <div class="flex-2">
-                <Button
-                  icon="mdi-plus"
-                  color="white"
-                  class="text-black"
-                  @emitClick="emit('openCreateWindow')"
-                />
-              </div>
-            </div>
+            <slot></slot>
             <p align="right" class="text-h6">
               {{ props.dailyPercent }}{{ props.weeklyPercent }}{{ props.monthlyPercent
               }}{{ annualPercentage }}%
