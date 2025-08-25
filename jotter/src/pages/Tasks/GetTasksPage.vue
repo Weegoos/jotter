@@ -69,7 +69,6 @@
                     <q-icon name="mdi-magnify" class="cursor-pointer" @click="searchTasks" />
                   </template>
                 </Input>
-                <div class="flex-2"></div>
               </OrganismToGetTasks>
 
               <div class="flex-2">
@@ -117,7 +116,36 @@
                           @openCreateWindow="openCreateWindow"
                           v-model="weeklyChosenDate"
                           @searchTasks="searchTasks"
-                        />
+                        >
+                          <Input
+                            @keypress.enter="searchWeeklyRange"
+                            :model-value="formatWeeklyRange"
+                            placeholder="Select date range"
+                            readonly
+                          >
+                            <template v-slot:append>
+                              <q-icon name="event" class="cursor-pointer">
+                                <q-popup-proxy
+                                  cover
+                                  transition-show="scale"
+                                  transition-hide="scale"
+                                >
+                                  <q-date v-model="weeklyRange" range mask="YYYY-MM-DD">
+                                    <div class="row items-center justify-end">
+                                      <q-btn v-close-popup label="Close" color="primary" flat />
+                                    </div>
+                                  </q-date>
+                                </q-popup-proxy>
+                              </q-icon>
+
+                              <q-icon
+                                name="mdi-magnify"
+                                class="cursor-pointer"
+                                @click="searchWeeklyRange"
+                              />
+                            </template>
+                          </Input>
+                        </OrganismToGetTasks>
                       </q-tab-panel>
 
                       <q-tab-panel name="monthPlans">
@@ -360,6 +388,14 @@ const formattedDateFrom = computed(() => {
   return from || to || '';
 });
 
+const weeklyRange = ref('');
+const formatWeeklyRange = computed(() => {
+  if (!weeklyRange.value) return '';
+  const { from, to } = weeklyRange.value;
+  if (from && to) return `${from} — ${to}`;
+  return from || to || '';
+});
+
 const tasks = ref([]);
 const currentMonth = ref(date.getMonth() + 1);
 const currentDay = ref(date.getDate());
@@ -418,7 +454,9 @@ const getWeekRange = async (date = new Date()) => {
 
   const response = await getMethod(
     serverURL,
-    `tasks/calendar-view?week_start=${week_start}&week_end=${week_end}`,
+    `tasks/calendar-view?week_start=${weeklyRange.value.from || week_start}&week_end=${
+      weeklyRange.value.to || week_end
+    }`,
     $q,
     'Задачи успешно получены'
   );
@@ -430,6 +468,10 @@ const getWeekRange = async (date = new Date()) => {
         100
     ) || 0;
 };
+
+const searchWeeklyRange = () => {
+  getWeekRange()
+}
 
 const monthlyPercent = ref('');
 const getMonthlyTasks = async (date = new Date()) => {
