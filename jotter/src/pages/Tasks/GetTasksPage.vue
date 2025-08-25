@@ -46,7 +46,6 @@
                 :dailyPercent="dailyPercent"
               >
                 <Input
-                  class="flex-1"
                   placeholder="Choose date..."
                   v-model="chosenDate"
                   mask="####-##-##"
@@ -156,7 +155,28 @@
                           @deleteTask="deleteTask"
                           :monthlyPercent="monthlyPercent"
                           @edit="editTask"
-                        />
+                        >
+                          <div>
+                            <Form
+                              class="grid grid-cols-2 gap-4"
+                              @keypress.enter="searchMonthlyTask"
+                            >
+                              <Input
+                                v-model="chosenMonth"
+                                mask="##"
+                                max="12"
+                                min="1"
+                                placeholder="Select a month"
+                              ></Input>
+                              <Input
+                                v-model="chosenYear"
+                                min="2000"
+                                mask="####"
+                                placeholder="Select a year"
+                              ></Input>
+                            </Form>
+                          </div>
+                        </OrganismToGetTasks>
                       </q-tab-panel>
                       <q-tab-panel name="annualPlan">
                         <div class="text-h4 q-mb-md">Plans for the year</div>
@@ -470,16 +490,21 @@ const getWeekRange = async (date = new Date()) => {
 };
 
 const searchWeeklyRange = () => {
-  getWeekRange()
-}
+  getWeekRange();
+};
 
 const monthlyPercent = ref('');
+const chosenMonth = ref('');
+const chosenYear = ref('');
 const getMonthlyTasks = async (date = new Date()) => {
   const currentMonth = date.getMonth() + 1;
   const currentYear = date.getFullYear();
+
   const response = await getMethod(
     serverURL,
-    `tasks/calendar-view?year=${currentYear}&month=${currentMonth}`,
+    `tasks/calendar-view?year=${chosenYear.value || currentYear}&month=${
+      chosenMonth.value || currentMonth
+    }`,
     $q,
     'Задачи успешно получены'
   );
@@ -490,6 +515,12 @@ const getMonthlyTasks = async (date = new Date()) => {
       (monthTasks.value.filter((task) => task.status === 'done').length / monthTasks.value.length) *
         100
     ) || 0;
+};
+
+const searchMonthlyTask = () => {
+  console.log(888);
+
+  getMonthlyTasks();
 };
 
 const annualTasks = ref([]);
