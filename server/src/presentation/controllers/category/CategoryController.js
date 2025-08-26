@@ -1,3 +1,5 @@
+import { wssSend } from '../wssSend.js';
+
 export class CategoryController {
   constructor(categoryUseCase) {
     this.categoryUseCase = categoryUseCase;
@@ -9,7 +11,7 @@ export class CategoryController {
       const { name, type, icon } = req.body;
 
       const newCategory = await this.categoryUseCase.execute(userId, name, type, icon);
-
+      wssSend('categoryCreated', newCategory);
       return res.status(201).json({ message: 'Категория успешно создана', newCategory });
     } catch (error) {
       console.error('Ошибка при создании задач:', error);
@@ -49,6 +51,7 @@ export class CategoryController {
       const { id } = req.params;
 
       const deletedCategory = await this.categoryUseCase.delete(id, userId);
+      wssSend('deletedCategory', deletedCategory);
       return res.status(201).json({ message: 'Категории успешно удалена', deletedCategory });
     } catch (error) {
       console.error('Ошибка при создании задач:', error);
