@@ -7,7 +7,7 @@
         <Button class="text-black" flat icon="mdi-dots-vertical">
           <q-menu transition-show="scale" transition-hide="scale">
             <q-list style="min-width: 100px">
-              <q-item clickable @click="console.log('clicked')">
+              <q-item clickable @click="isManageCategoryOpen = true">
                 <q-item-section>Manage Category</q-item-section>
               </q-item>
               <q-item clickable>
@@ -22,13 +22,19 @@
         </Button>
       </div>
     </div>
+    <ManageCategory
+      :isManageCategoryOpen="isManageCategoryOpen"
+      @closeManageCategory="isManageCategoryOpen = false"
+    />
   </section>
 </template>
 
 <script setup>
 import { Button, Input } from 'src/components/atoms';
+import ManageCategory from './ManageCategory.vue';
+import { ref } from 'vue';
 
-Button;
+const isManageCategoryOpen = ref(false);
 </script>
 
 <style></style>
