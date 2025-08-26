@@ -55,6 +55,10 @@ const routes = [
     path: '/tasks-stats',
     component: () => import('src/pages/Tasks/TaskStatsPage.vue'),
   },
+  {
+    path: '/finance',
+    component: () => import('src/pages/Finance/FinancePage.vue'),
+  },
   // Always leave this as last one,
   // but you can also remove it
   {
