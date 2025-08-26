@@ -3,57 +3,49 @@
     <q-dialog v-model="isCreatePage" persistent>
       <q-card>
         <q-card-section>
-          <Input v-model="title" autogrow placeholder="Task's title" class="q-mb-sm" />
-          <Input v-model="description" autogrow placeholder="Task's description" class="q-mb-sm" />
-          <Select
-            v-model="priority"
-            placeholder="Task's priority"
-            :options="priorityOptions"
-            class="q-mb-sm"
-          />
-          <Select
-            v-model="timePeriod"
-            placeholder="Task's time period"
-            :options="periodOptions"
-            class="q-mb-sm"
-          />
-          <q-input
-            dense
-            outlined
-            placeholder="Choose Date"
-            v-model="chosenDate"
-            mask="####-##-##"
-            :rules="[
-              (val) => /^\d{4}-\d{2}-\d{2}$/.test(val) || 'Введите дату в формате YYYY-MM-DD',
-            ]"
-          >
-            <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-date v-model="chosenDate" mask="YYYY-MM-DD">
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input>
-          <!-- <Input v-if="timePeriod === 'recurring'" :model-value="formattedDateFrom" placeholder="Select date range" readonly>
-            <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-date v-model="dateFrom" range mask="YYYY-MM-DD">
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
-
-              <q-icon name="mdi-magnify" class="cursor-pointer" @click="searchTasksSummary" />
-            </template>
-          </Input> -->
+          <Form @keypress.enter="() => emit('createTask')">
+            <Input v-model="title" autogrow placeholder="Task's title" class="q-mb-sm" />
+            <Input
+              v-model="description"
+              autogrow
+              placeholder="Task's description"
+              class="q-mb-sm"
+            />
+            <Select
+              v-model="priority"
+              placeholder="Task's priority"
+              :options="priorityOptions"
+              class="q-mb-sm"
+            />
+            <Select
+              v-model="timePeriod"
+              placeholder="Task's time period"
+              :options="periodOptions"
+              class="q-mb-sm"
+            />
+            <q-input
+              dense
+              outlined
+              placeholder="Choose Date"
+              v-model="chosenDate"
+              mask="####-##-##"
+              :rules="[
+                (val) => /^\d{4}-\d{2}-\d{2}$/.test(val) || 'Введите дату в формате YYYY-MM-DD',
+              ]"
+            >
+              <template v-slot:append>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-date v-model="chosenDate" mask="YYYY-MM-DD">
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup label="Close" color="primary" flat />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </Form>
         </q-card-section>
         <q-card-actions align="right">
           <Button label="Create" color="positive" @emitClick="createTask" />

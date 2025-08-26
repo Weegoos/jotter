@@ -15,7 +15,7 @@ export class SequelizeTasksRepositories extends ITasksRepository {
   async findAll(userId) {
     return await this.taskDatabaseModel.findAll({
       where: { userId: userId },
-      order: [['id', 'DESC']]
+      order: [['id', 'DESC']],
     });
   }
 
@@ -30,7 +30,10 @@ export class SequelizeTasksRepositories extends ITasksRepository {
           ],
         },
       },
-      order: [['id', 'DESC']],
+      order: [
+        ['status', 'DESC'],
+        ['id', 'DESC'],
+      ],
     });
   }
 
