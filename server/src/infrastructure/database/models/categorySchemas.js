@@ -5,7 +5,7 @@ import User from './userSchemas.js';
 const Categories = sequelize.define(
   'Categories',
   {
-    type: { type: DataTypes.ENUM('income', 'expense'), allowNull: false },
+    type: { type: DataTypes.ENUM('income', 'expense'), allowNull: false, unique: false },
     name: { type: DataTypes.STRING },
     icon: { type: DataTypes.STRING(50) },
   },
