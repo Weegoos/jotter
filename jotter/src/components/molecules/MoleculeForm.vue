@@ -1,32 +1,30 @@
 <template>
-  <section>
-    <q-form @submit.prevent="emit('submit')" @reset="emit('reset')" class="q-gutter-m">
-      <slot />
+  <q-form @submit.prevent="emit('submit')" @reset="emit('reset')" class="q-gutter-m">
+    <slot />
 
-      <slot name="actions">
-        <Button
-          v-if="mainButtonLabel"
-          type="submit"
-          :class="mainButtonClass"
-          :label="mainButtonLabel"
-          @click="emit('mainButton')"
-        />
-        <Button
-          v-if="moveButtonLabel"
-          :class="moveButtonClass"
-          :label="moveButtonLabel"
-          @click="emit('moveButton')"
-        />
-        <Button
-          v-if="additionalButtonLabel"
-          icon="mdi-google"
-          :label="additionalButtonLabel"
-          :class="additionalButtonClass"
-          @click="emit('additionalButtonClick')"
-        />
-      </slot>
-    </q-form>
-  </section>
+    <slot name="actions">
+      <Button
+        v-if="mainButtonLabel"
+        type="submit"
+        :class="mainButtonClass"
+        :label="mainButtonLabel"
+        @click="emit('mainButton')"
+      />
+      <Button
+        v-if="moveButtonLabel"
+        :class="moveButtonClass"
+        :label="moveButtonLabel"
+        @click="emit('moveButton')"
+      />
+      <Button
+        v-if="additionalButtonLabel"
+        icon="mdi-google"
+        :label="additionalButtonLabel"
+        :class="additionalButtonClass"
+        @click="emit('additionalButtonClick')"
+      />
+    </slot>
+  </q-form>
 </template>
 
 <script setup>
