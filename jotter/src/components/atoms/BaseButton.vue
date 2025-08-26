@@ -1,12 +1,7 @@
 <template>
-  <q-btn
-    :color="color"
-    :icon="icon"
-    :label="label"
-    no-caps
-    :flat="flat"
-    @click="emit('emitClick')"
-  />
+  <q-btn :color="color" :icon="icon" :label="label" no-caps :flat="flat" @click="emit('emitClick')">
+    <slot></slot>
+  </q-btn>
 </template>
 
 <script setup>

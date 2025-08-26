@@ -79,6 +79,11 @@ const drawerOptions = [
     icon: 'mdi-chart-pie',
     url: '/tasks-stats',
   },
+  {
+    name: 'Finance',
+    icon: 'mdi-finance',
+    url: '/finance',
+  },
 ];
 </script>
 
