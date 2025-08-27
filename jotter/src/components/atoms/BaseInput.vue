@@ -8,6 +8,7 @@
     :dense="dense"
     :outlined="outlined"
     :label="label"
+    autogrow
   >
     <!-- проброс слотов из родителя -->
     <template v-if="$slots.append" v-slot:append>
