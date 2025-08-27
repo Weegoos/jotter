@@ -25,6 +25,8 @@ export class SequelizeTransactionRepositories extends ITransactionRepository {
   async findAll(userId) {
     return await this.transactionModel.findAll({
       where: { userId: userId },
+      include: [{ model: this.categoryModel }],
+      order: [['createdAt', 'DESC']],
     });
   }
 
