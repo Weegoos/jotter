@@ -7,7 +7,10 @@
           <div class="text-subtitle2">$320.000</div>
         </section>
         <div class="flex justify-end items-center">
-          <Button class="text-white button rounded-full p-[10px] w-[150px]" icon="mdi-plus"
+          <Button
+            @click="openCreateTransactionDialog = true"
+            class="text-white button rounded-full p-[10px] w-[150px]"
+            icon="mdi-plus"
             >Add payment</Button
           >
         </div>
@@ -23,13 +26,16 @@
         virtual-scroll
         :virtual-scroll-item-size="20"
         :virtual-scroll-sticky-size-start="20"
-        :pagination="pagination"
         :rows-per-page-options="[0]"
         @virtual-scroll="onScroll"
         :loading="loading"
       />
     </q-scroll-area>
     <!-- </q-card> -->
+    <AddTransactionComponent
+      :openCreateTransactionDialog="openCreateTransactionDialog"
+      @closeCreateTransactionDialog="openCreateTransactionDialog = false"
+    />
   </div>
 </template>
 
@@ -40,7 +46,7 @@ import { getMethod } from 'src/composables/api-method/get';
 import { useDateFormat } from 'src/composables/javascript-function/formatDate';
 import { useWebSocket } from 'src/composables/javascript-function/websocket';
 import { getCurrentInstance, onMounted, ref } from 'vue';
-
+import AddTransactionComponent from './TransactionComponent/AddTransactionComponent.vue';
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
@@ -60,6 +66,7 @@ socket.onmessage = (event) => {
 };
 
 const pageSize = 20;
+const openCreateTransactionDialog = ref(false);
 
 const columns = [
   {
