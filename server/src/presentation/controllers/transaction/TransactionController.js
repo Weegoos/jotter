@@ -80,6 +80,7 @@ export class TransactionController {
       const { id } = req.params;
 
       const deletedTransaction = await this.transactionUseCase.delete(id, userId);
+         wssSend('deletedTransaction', deletedTransaction);
       return res.status(201).json({ message: 'Оперия успешно удалена', deletedTransaction });
     } catch (error) {
       console.error('Ошибка при создании задач:', error);
