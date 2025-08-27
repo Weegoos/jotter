@@ -4,7 +4,15 @@
       <q-card-section class="grid grid-cols-2">
         <section>
           <div class="text-h6">Total balance</div>
-          <div class="text-subtitle2">$320.000</div>
+          <div class="text-subtitle2">
+            {{
+              rows.reduce((total, row) => {
+                const amount = Number(row.amount) || 0;
+                return row.type === 'income' ? total + amount : total - amount;
+              }, 0)
+            }}
+            tg
+          </div>
         </section>
         <div class="flex justify-end items-center">
           <Button
@@ -29,7 +37,19 @@
         :rows-per-page-options="[0]"
         @virtual-scroll="onScroll"
         :loading="loading"
-      />
+      >
+        <template v-slot:body-cell-delete="props">
+          <q-td align="center">
+            <q-btn
+              color="red"
+              flat
+              dense
+              icon="mdi-delete"
+              @click="console.log(deleteMethod(serverURL, 'transactions', props.row.id))"
+            />
+          </q-td>
+        </template>
+      </q-table>
     </q-scroll-area>
     <!-- </q-card> -->
     <AddTransactionComponent
@@ -47,6 +67,7 @@ import { useDateFormat } from 'src/composables/javascript-function/formatDate';
 import { useWebSocket } from 'src/composables/javascript-function/websocket';
 import { getCurrentInstance, onMounted, ref } from 'vue';
 import AddTransactionComponent from './TransactionComponent/AddTransactionComponent.vue';
+import { deleteMethod } from 'src/composables/api-method/delete';
 // global variables
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
@@ -58,7 +79,7 @@ useWebSocket(webSocketURL);
 
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
-  const updateEvents = ['new_transaction'];
+  const updateEvents = ['new_transaction', 'deletedTransaction'];
 
   if (updateEvents.includes(data.event)) {
     getTransactions();
@@ -99,6 +120,12 @@ const columns = [
     field: (row) => (row.createdAt ? useDateFormat(row.updatedAt, 'YYYY-MM-DD HH:mm:ss') : ''),
     align: 'center',
   },
+  {
+    label: 'Delete',
+    name: 'delete',
+    field: 'delete',
+    align: 'center',
+  },
 ];
 
 const rows = ref([]);
@@ -130,7 +157,6 @@ const onScroll = ({ to, ref }) => {
     }, 500);
   }
 };
-
 onMounted(() => {
   getTransactions();
 });
