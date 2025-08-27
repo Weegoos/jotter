@@ -26,6 +26,7 @@
       :isManageCategoryOpen="isManageCategoryOpen"
       @closeManageCategory="isManageCategoryOpen = false"
     />
+    <TransactionPage class="q-ma-md" />
   </section>
 </template>
 
@@ -33,6 +34,7 @@
 import { Button, Input } from 'src/components/atoms';
 import ManageCategory from './ManageCategory.vue';
 import { ref } from 'vue';
+import TransactionPage from './TransactionPage.vue';
 
 const isManageCategoryOpen = ref(false);
 </script>
