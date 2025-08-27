@@ -1,3 +1,4 @@
+import { wssSend } from '../wssSend.js';
 export class TransactionController {
   constructor(transactionUseCase) {
     this.transactionUseCase = transactionUseCase;
@@ -8,7 +9,7 @@ export class TransactionController {
       const userId = req.user.id;
       const { amount, type, description, date, source, category_id } = req.body;
 
-      const newCategory = await this.transactionUseCase.execute(
+      const newTransaction = await this.transactionUseCase.execute(
         userId,
         amount,
         type,
@@ -17,8 +18,8 @@ export class TransactionController {
         source,
         category_id
       );
-
-      return res.status(201).json({ message: 'Операция успешно создана', newCategory });
+      wssSend('new_transaction', newTransaction);
+      return res.status(201).json({ message: 'Операция успешно создана', newTransaction });
     } catch (error) {
       console.error('Ошибка при создании задач:', error);
       if (error.message === 'USER_NOT_FOUND') {
