@@ -16,7 +16,19 @@
                 <div>Year: {{ budget.year }} Month: {{ budget.month }}</div>
               </q-item-section>
               <q-item-section avatar>
-                <q-icon color="primary" name="bluetooth" />
+                <Button class="text-black" dense flat icon="mdi-dots-vertical">
+                  <q-menu>
+                    <q-list style="min-width: 100px">
+                      <q-separator />
+                      <q-item clickable @click="deleteMethod(serverURL, 'budget', budget.id)">
+                        <q-item-section avatar>
+                          <q-icon color="red" name="mdi-delete" />
+                        </q-item-section>
+                        <q-item-section>Delete</q-item-section>
+                      </q-item>
+                    </q-list>
+                  </q-menu>
+                </Button>
               </q-item-section>
             </q-item>
           </q-list>
@@ -33,6 +45,7 @@
 <script setup>
 import { useQuasar } from 'quasar';
 import { Button, Input, Select } from 'src/components/atoms';
+import { deleteMethod } from 'src/composables/api-method/delete';
 import { getMethod } from 'src/composables/api-method/get';
 import { postMethod } from 'src/composables/api-method/post';
 import { useWebSocket } from 'src/composables/javascript-function/websocket';
@@ -55,7 +68,7 @@ useWebSocket(webSocketURL);
 
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
-  const updateEvents = ['newBudget', 'categoryCreated', 'deletedCategory'];
+  const updateEvents = ['newBudget', 'categoryCreated', 'deletedCategory', 'deletedBudget'];
 
   if (updateEvents.includes(data.event)) {
     getCategory();
@@ -167,7 +180,11 @@ const budgets = ref([]);
 const getBudgets = async () => {
   try {
     const response = await getMethod(serverURL, 'budget', $q);
-    budgets.value = response.budgets;
+    if (response.budgets) {
+      budgets.value = response.budgets;
+    } else {
+      budgets.value = [];
+    }
   } catch (error) {
     console.error(error);
   }
@@ -175,7 +192,9 @@ const getBudgets = async () => {
 
 onMounted(() => {
   getCategory();
-  getBudgets();
+  if (budgets.value.budgets) {
+    getBudgets();
+  }
 });
 </script>
 

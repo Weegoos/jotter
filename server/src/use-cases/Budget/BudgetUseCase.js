@@ -35,9 +35,9 @@ export class BudgetUseCase {
     }
 
     const budgets = await this.budgetRepository.findAll(userId);
-    if ((Array.isArray(budgets) && budgets.length === 0) || !budgets) {
-      throw new Error(BUDGET_NOT_FOUND);
-    }
+    // if ((Array.isArray(budgets) && budgets.length === 0) || !budgets) {
+    //   throw new Error(BUDGET_NOT_FOUND);
+    // }
 
     return budgets;
   }

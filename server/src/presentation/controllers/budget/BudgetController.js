@@ -16,7 +16,7 @@ export class BudgetController {
         year,
         category_id
       );
-      wssSend('newBudget', newBudget)
+      wssSend('newBudget', newBudget);
       return res.status(201).json({ message: 'Бюджет успешно создан', newBudget });
     } catch (error) {
       console.error('Ошибка при создании бюджета:', error);
@@ -83,6 +83,7 @@ export class BudgetController {
       const { id } = req.params;
 
       const deletedBudget = await this.budgetUseCase.delete(id, userId);
+      wssSend('deletedBudget', deletedBudget);
       return res.status(201).json({ message: 'Бюджет успешно удален', deletedBudget });
     } catch (error) {
       console.error('Ошибка при удалении бюджета:', error);
