@@ -25,7 +25,6 @@
  *             required:
  *               - name
  *               - target_amount
- *               - current_amount
  *               - deadline
  *             properties:
  *               name:
@@ -34,9 +33,6 @@
  *               target_amount:
  *                 type: number
  *                 example: 150000
- *               current_amount:
- *                 type: number
- *                 example: 50000
  *               deadline:
  *                 type: string
  *                 format: date-time
@@ -191,9 +187,6 @@
  *               target_amount:
  *                 type: number
  *                 example: 200000
- *               current_amount:
- *                 type: number
- *                 example: 80000
  *               deadline:
  *                 type: string
  *                 format: date-time

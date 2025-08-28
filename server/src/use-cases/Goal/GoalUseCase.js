@@ -6,12 +6,12 @@ export class GoalUseCase {
     this.goalRepository = goalRepository;
   }
 
-  async execute(userId, name, target_amount, current_amount, deadline) {
+  async execute(userId, name, target_amount, deadline) {
     if (!userId) {
       throw new Error(USER_NOT_FOUND);
     }
 
-    if (!name || !target_amount || !current_amount || !deadline) {
+    if (!name || !target_amount || !deadline) {
       throw new Error('All fields are required');
     }
 
@@ -19,7 +19,6 @@ export class GoalUseCase {
       userId,
       name,
       target_amount,
-      current_amount,
       deadline,
     };
 

@@ -6,15 +6,9 @@ export class GoalController {
   async createGoal(req, res) {
     try {
       const userId = req.user.id;
-      const { name, target_amount, current_amount, deadline } = req.body;
+      const { name, target_amount, deadline } = req.body;
 
-      const newGoal = await this.goalUseCase.execute(
-        userId,
-        name,
-        target_amount,
-        current_amount,
-        deadline
-      );
+      const newGoal = await this.goalUseCase.execute(userId, name, target_amount, deadline);
 
       return res.status(201).json({ message: 'Цель успешно создана', newGoal });
     } catch (error) {
@@ -33,10 +27,15 @@ export class GoalController {
     try {
       const userId = req.user.id;
       const goals = await this.goalUseCase.getGoal(userId);
+      console.log(goals.map((g) => Number(g.target_amount)).reduce((a, b) => a + b, 0));
+      const sum_target_amount = goals
+        .map((g) => Number(g.target_amount))
+        .reduce((a, b) => a + b, 0);
+      goals.push({ sum_target_amount: sum_target_amount });
 
       return res.status(200).json({ message: 'Цели успешно получены', goals });
     } catch (error) {
-      console.error('Ошибка при получении целей');
+      console.error('Ошибка при получении целей', error);
       if (error.message === 'USER_NOT_FOUND') {
         return res.status(401).json({ message: 'Пользователь не найден' });
       }
@@ -51,12 +50,11 @@ export class GoalController {
     try {
       const userId = req.user.id;
       const { id } = req.params;
-      const { name, target_amount, current_amount, deadline } = req.body;
+      const { name, target_amount, deadline } = req.body;
 
       const goalData = {
         name,
         target_amount,
-        current_amount,
         deadline,
       };
 

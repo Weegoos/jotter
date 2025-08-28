@@ -40,7 +40,14 @@ export class TransactionController {
       const userId = req.user.id;
 
       const transactions = await this.transactionUseCase.getTransaction(userId);
-
+      const sum_income = transactions
+        .map((t) => (t.type === 'income' ? Number(t.amount) : 0))
+        .reduce((a, b) => a + b, 0);
+      const sum_expense = transactions
+        .map((t) => (t.type === 'expense' ? Number(t.amount) : 0))
+        .reduce((a, b) => a + b, 0);
+      const total_balance = sum_income - sum_expense;
+      transactions.push({ total_balance: total_balance });
       return res.status(201).json({ message: 'Операции успешно получены', transactions });
     } catch (error) {
       console.error('Ошибка при создании задач:', error);
@@ -80,7 +87,7 @@ export class TransactionController {
       const { id } = req.params;
 
       const deletedTransaction = await this.transactionUseCase.delete(id, userId);
-         wssSend('deletedTransaction', deletedTransaction);
+      wssSend('deletedTransaction', deletedTransaction);
       return res.status(201).json({ message: 'Оперия успешно удалена', deletedTransaction });
     } catch (error) {
       console.error('Ошибка при создании задач:', error);
