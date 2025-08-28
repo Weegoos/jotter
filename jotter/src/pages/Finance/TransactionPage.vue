@@ -13,7 +13,7 @@
           <div class="text-h6">Goals</div>
           <div class="text-subtitle2">
             {{ sum_target_amount }}tg
-            {{ Math.round((sum_target_amount / total_balance) * 100) || 0 }}%
+            {{ Math.round((total_balance / sum_target_amount) * 100) || 0 }}%
           </div>
         </div>
         <div class="flex justify-end items-center">

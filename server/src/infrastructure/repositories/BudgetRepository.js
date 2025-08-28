@@ -24,6 +24,7 @@ export class SequelizeBudgetRepository extends IBudgetRepository {
   async findAll(userId) {
     return await this.budgetModel.findAll({
       where: { userId: userId },
+      include: [{ model: this.categoryModel }],
     });
   }
 
