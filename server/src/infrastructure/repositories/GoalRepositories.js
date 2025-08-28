@@ -4,7 +4,7 @@ export class SequelizeGoalRepository extends IGoalRepository {
   constructor(goalModel, transactionModel) {
     super();
     this.goalModel = goalModel;
-    this.transactionModel = transactionModel
+    this.transactionModel = transactionModel;
   }
 
   async create(goalData) {

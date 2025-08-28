@@ -9,7 +9,7 @@ export class GoalController {
       const { name, target_amount, deadline, status = 'in_progress' } = req.body;
 
       const newGoal = await this.goalUseCase.execute(userId, name, target_amount, deadline, status);
-      
+
       return res.status(201).json({ message: 'Цель успешно создана', newGoal });
     } catch (error) {
       console.error('Ошибка при создании задач:', error);
@@ -27,9 +27,9 @@ export class GoalController {
     try {
       const userId = req.user.id;
       const goals = await this.goalUseCase.getGoal(userId);
-      const goals_in_progress = goals.filter(g => g.status === 'in_progress')
+      const goals_in_progress = goals.filter((g) => g.status === 'in_progress');
       console.log(goals_in_progress);
-      
+
       const sum_target_amount = goals_in_progress
         .map((g) => Number(g.target_amount))
         .reduce((a, b) => a + b, 0);
@@ -58,7 +58,7 @@ export class GoalController {
         name,
         target_amount,
         deadline,
-        status
+        status,
       };
 
       const updatedGoal = await this.goalUseCase.updateGoal(goalData, id, userId);

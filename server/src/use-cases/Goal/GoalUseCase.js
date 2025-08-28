@@ -20,7 +20,7 @@ export class GoalUseCase {
       name,
       target_amount,
       deadline,
-      status
+      status,
     };
 
     return await this.goalRepository.create(goalData);
