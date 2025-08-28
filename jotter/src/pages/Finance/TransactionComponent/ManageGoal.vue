@@ -18,12 +18,22 @@
           </div>
           <q-list bordered v-for="(goal, index) in goalsArray" :key="index" class="q-mt-sm">
             <q-item clickable v-ripple>
-              <q-item-section>{{ goal.name }}</q-item-section>
+              <q-item-section>
+                <p class="text-body1">Name: {{ goal.name }}</p>
+                <p class="text-caption" :class="goal.status === 'in_progress' ? 'text-orange-600' : 'text-green-700'">{{ goal.status === 'in_progress' ? 'In progress' : goal.status }}</p>
+
+              </q-item-section>
               <q-item-section avatar>
                 <Button class="text-black" flat icon="mdi-dots-vertical">
                   <q-menu transition-show="scale" transition-hide="scale">
                     <q-list >
-                      <q-item clickable @click="deleteCategory(category.id)">
+                      <q-item clickable @click="deleteMethod(serverURL, 'goals', goal.id)">
+                        <q-item-section avatar>
+                          <q-icon color="red" name="mdi-delete" />
+                        </q-item-section>
+                        <q-item-section>Delete</q-item-section>
+                      </q-item>
+                         <q-item clickable @click="patchMethod(serverURL, 'goals', goal.id)">
                         <q-item-section avatar>
                           <q-icon color="red" name="mdi-delete" />
                         </q-item-section>
@@ -49,7 +59,9 @@
 <script setup>
 import { useQuasar } from 'quasar';
 import { Button, Input } from 'src/components/atoms';
+import { deleteMethod } from 'src/composables/api-method/delete';
 import { getMethod } from 'src/composables/api-method/get';
+import { patchMethod } from 'src/composables/api-method/patch';
 import { postMethod } from 'src/composables/api-method/post';
 import { useWebSocket } from 'src/composables/javascript-function/websocket';
 import { getCurrentInstance, onMounted, ref, watch } from 'vue';
@@ -70,7 +82,7 @@ useWebSocket(webSocketURL);
 
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
-  const updateEvents = ['newGoal'];
+  const updateEvents = ['newGoal', 'deletedGoal'];
 
   if (updateEvents.includes(data.event)) {
     getGoals();
