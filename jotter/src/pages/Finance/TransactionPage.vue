@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-card class="my-card">
-      <q-card-section class="grid grid-cols-2">
+      <q-card-section class="grid grid-cols-3">
         <section>
           <div class="text-h6">Total balance</div>
           <div class="text-subtitle2">
@@ -9,6 +9,13 @@
             tg
           </div>
         </section>
+        <div align="center">
+          <div class="text-h6">Goals</div>
+          <div class="text-subtitle2">
+            {{ sum_target_amount }}tg
+            {{ Math.round((sum_target_amount / total_balance) * 100) || 0 }}%
+          </div>
+        </div>
         <div class="flex justify-end items-center">
           <Button
             @click="openCreateTransactionDialog = true"
@@ -74,10 +81,17 @@ useWebSocket(webSocketURL);
 
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
-  const updateEvents = ['new_transaction', 'deletedTransaction'];
+  const updateEvents = [
+    'new_transaction',
+    'deletedTransaction',
+    'newGoal',
+    'deletedGoal',
+    'updatedGoal',
+  ];
 
   if (updateEvents.includes(data.event)) {
     getTransactions();
+    getGoals();
   }
 };
 
@@ -139,6 +153,16 @@ const getTransactions = async () => {
   }
 };
 
+const sum_target_amount = ref('');
+const getGoals = async () => {
+  try {
+    const response = await getMethod(serverURL, 'goals', $q);
+    sum_target_amount.value = response.sum_target_amount;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const onScroll = ({ to, ref }) => {
   const lastIndex = rows.value.length - 1;
 
@@ -154,8 +178,10 @@ const onScroll = ({ to, ref }) => {
     }, 500);
   }
 };
+
 onMounted(() => {
   getTransactions();
+  getGoals();
 });
 </script>
 
