@@ -47,7 +47,9 @@ export class TransactionController {
         .map((t) => (t.type === 'expense' ? Number(t.amount) : 0))
         .reduce((a, b) => a + b, 0);
       const total_balance = sum_income - sum_expense;
-      return res.status(201).json({ message: 'Операции успешно получены', transactions, total_balance });
+      return res
+        .status(201)
+        .json({ message: 'Операции успешно получены', transactions, total_balance });
     } catch (error) {
       console.error('Ошибка при создании задач:', error);
       if (error.message === 'USER_NOT_FOUND') {

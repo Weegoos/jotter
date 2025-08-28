@@ -5,7 +5,7 @@
         <section>
           <div class="text-h6">Total balance</div>
           <div class="text-subtitle2">
-              {{ total_balance }}
+            {{ total_balance }}
             tg
           </div>
         </section>
@@ -127,13 +127,13 @@ const rows = ref([]);
 const lastPage = Math.ceil(rows.value.length / pageSize);
 const nextPage = ref(2);
 const loading = ref(false);
-const total_balance = ref('')
+const total_balance = ref('');
 const getTransactions = async () => {
   try {
     const response = await getMethod(serverURL, 'transactions', $q);
     console.log(response.transactions);
     rows.value = response.transactions;
-    total_balance.value = response.total_balance
+    total_balance.value = response.total_balance;
   } catch (error) {
     console.error(error);
   }

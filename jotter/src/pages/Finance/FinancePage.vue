@@ -10,8 +10,8 @@
               <q-item clickable @click="isManageCategoryOpen = true">
                 <q-item-section>Manage Category</q-item-section>
               </q-item>
-              <q-item clickable>
-                <q-item-section>Crazy for transitions</q-item-section>
+              <q-item clickable @click="isManageGoalOpen = true">
+                <q-item-section>Goals</q-item-section>
               </q-item>
               <q-separator />
               <q-item clickable>
@@ -27,16 +27,19 @@
       @closeManageCategory="isManageCategoryOpen = false"
     />
     <TransactionPage class="q-ma-md" />
+    <ManageGoal :isManageGoalOpen="isManageGoalOpen" @closeDialog="isManageGoalOpen = false" />
   </section>
 </template>
 
 <script setup>
 import { Button, Input } from 'src/components/atoms';
-import ManageCategory from './ManageCategory.vue';
+import ManageCategory from './TransactionComponent/ManageCategory.vue';
 import { ref } from 'vue';
 import TransactionPage from './TransactionPage.vue';
+import ManageGoal from './TransactionComponent/ManageGoal.vue';
 
 const isManageCategoryOpen = ref(false);
+const isManageGoalOpen = ref(false);
 </script>
 
 <style></style>
