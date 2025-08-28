@@ -83,6 +83,7 @@ export class GoalController {
       const { id } = req.params;
 
       const deletedGoal = await this.goalUseCase.delete(id, userId);
+      wssSend('deletedGoal', deletedGoal);
       return res.status(201).json({ message: 'Цель успешно удалена', deletedGoal });
     } catch (error) {
       console.error(error);
