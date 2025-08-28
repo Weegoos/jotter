@@ -1,3 +1,4 @@
+import { wssSend } from '../wssSend.js';
 export class BudgetController {
   constructor(budgetUseCase) {
     this.budgetUseCase = budgetUseCase;
@@ -15,7 +16,7 @@ export class BudgetController {
         year,
         category_id
       );
-
+      wssSend('newBudget', newBudget)
       return res.status(201).json({ message: 'Бюджет успешно создан', newBudget });
     } catch (error) {
       console.error('Ошибка при создании бюджета:', error);
