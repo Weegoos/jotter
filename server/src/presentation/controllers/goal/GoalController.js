@@ -63,6 +63,7 @@ export class GoalController {
       };
 
       const updatedGoal = await this.goalUseCase.updateGoal(goalData, id, userId);
+      wssSend('updatedGoal', updatedGoal);
       return res.status(200).json({ message: 'Цель успешно обновлена', updatedGoal });
     } catch (error) {
       console.error(error);
