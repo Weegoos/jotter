@@ -37,6 +37,11 @@
  *                 type: string
  *                 format: date-time
  *                 example: "2025-12-31T23:59:59Z"
+ *               status:
+ *                 type: string
+ *                 enum: [in_progress, completed]
+ *                 description: Статус цели (по умолчанию "in_progress")
+ *                 example: "in_progress"
  *     responses:
  *       201:
  *         description: Цель успешно создана
@@ -191,6 +196,10 @@
  *                 type: string
  *                 format: date-time
  *                 example: "2025-12-31T23:59:59Z"
+ *               status:
+ *                 type: string
+ *                 enum: [in_progress, completed]
+ *                 example: "completed"
  *     responses:
  *       200:
  *         description: Цель успешно обновлена

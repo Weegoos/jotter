@@ -8,6 +8,7 @@ const Goals = sequelize.define(
     name: { type: DataTypes.STRING(255), allowNull: false },
     target_amount: { type: DataTypes.DECIMAL(12, 2), allowNull: false },
     deadline: { type: DataTypes.DATE, allowNull: false },
+    status: {type: DataTypes.ENUM('in_progress', 'completed'), allowNull: false}
   },
   {
     timestamps: true,
