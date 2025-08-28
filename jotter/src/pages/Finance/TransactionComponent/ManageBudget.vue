@@ -2,11 +2,24 @@
   <div>
     <q-dialog v-model="isBudgetDialog" persistent>
       <q-card>
-        <q-card-section class="grid grid-cols-4 gap-4">
-          <Input v-model="limit_amount" type="number" placeholder="Limit Amount"></Input>
-          <Select :options="months.map((m) => m.name)" v-model="month"></Select>
-          <Input v-model="year" mask="####" type="number"></Input>
-          <Select :options="categoryOptions" v-model="category"></Select>
+        <q-card-section>
+          <div class="grid grid-cols-4 gap-4">
+            <Input v-model="limit_amount" type="number" placeholder="Limit Amount"></Input>
+            <Select :options="months.map((m) => m.name)" v-model="month"></Select>
+            <Input v-model="year" mask="####" type="number"></Input>
+            <Select :options="categoryOptions" v-model="category"></Select>
+          </div>
+          <q-list bordered class="mt-[10px]" v-for="(budget, index) in budgets" :key="index">
+            <q-item clickable v-ripple>
+              <q-item-section>
+                <div>{{ budget.limit_amount }}</div>
+                <div>Year: {{ budget.year }} Month: {{ budget.month }}</div>
+              </q-item-section>
+              <q-item-section avatar>
+                <q-icon color="primary" name="bluetooth" />
+              </q-item-section>
+            </q-item>
+          </q-list>
         </q-card-section>
         <q-card-actions align="right">
           <Button flat label="Cancel" color="primary" @click="emit('closeBudgetDialog')" />
@@ -22,6 +35,7 @@ import { useQuasar } from 'quasar';
 import { Button, Input, Select } from 'src/components/atoms';
 import { getMethod } from 'src/composables/api-method/get';
 import { postMethod } from 'src/composables/api-method/post';
+import { useWebSocket } from 'src/composables/javascript-function/websocket';
 import { getCurrentInstance, onMounted, ref, watch } from 'vue';
 
 // global variables
@@ -34,6 +48,20 @@ const props = defineProps({
 const { proxy } = getCurrentInstance();
 const serverURL = proxy.$serverURL;
 const $q = useQuasar();
+const webSocketURL = proxy.$webSocketURL;
+const socket = new WebSocket(webSocketURL);
+
+useWebSocket(webSocketURL);
+
+socket.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  const updateEvents = ['newBudget', 'categoryCreated', 'deletedCategory'];
+
+  if (updateEvents.includes(data.event)) {
+    getCategory();
+    getBudgets();
+  }
+};
 
 const isBudgetDialog = ref(props.isOpenBudgetDialog);
 watch(
@@ -135,8 +163,19 @@ const createBudget = async () => {
   }
 };
 
+const budgets = ref([]);
+const getBudgets = async () => {
+  try {
+    const response = await getMethod(serverURL, 'budget', $q);
+    budgets.value = response.budgets;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 onMounted(() => {
   getCategory();
+  getBudgets();
 });
 </script>
 
