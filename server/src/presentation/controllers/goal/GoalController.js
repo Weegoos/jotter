@@ -1,3 +1,5 @@
+import { wssSend } from '../wssSend.js';
+
 export class GoalController {
   constructor(goalUseCase) {
     this.goalUseCase = goalUseCase;
@@ -9,7 +11,7 @@ export class GoalController {
       const { name, target_amount, deadline, status = 'in_progress' } = req.body;
 
       const newGoal = await this.goalUseCase.execute(userId, name, target_amount, deadline, status);
-
+      wssSend('newGoal', newGoal);
       return res.status(201).json({ message: 'Цель успешно создана', newGoal });
     } catch (error) {
       console.error('Ошибка при создании задач:', error);
@@ -33,9 +35,8 @@ export class GoalController {
       const sum_target_amount = goals_in_progress
         .map((g) => Number(g.target_amount))
         .reduce((a, b) => a + b, 0);
-      goals.push({ sum_target_amount: sum_target_amount });
 
-      return res.status(200).json({ message: 'Цели успешно получены', goals });
+      return res.status(200).json({ message: 'Цели успешно получены', goals, sum_target_amount });
     } catch (error) {
       console.error('Ошибка при получении целей', error);
       if (error.message === 'USER_NOT_FOUND') {

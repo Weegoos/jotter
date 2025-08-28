@@ -18,6 +18,7 @@ export class SequelizeGoalRepository extends IGoalRepository {
   async findAll(userId) {
     return await this.goalModel.findAll({
       where: { userId: userId },
+      order: [['createdAt', 'DESC']],
     });
   }
 
