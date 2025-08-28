@@ -4,11 +4,12 @@ import { SequelizeGoalRepository } from '../../infrastructure/repositories/GoalR
 import Goals from '../../infrastructure/database/models/goalSchemas.js';
 import { GoalUseCase } from '../../use-cases/Goal/GoalUseCase.js';
 import { GoalController } from '../controllers/goal/GoalController.js';
+import Transaction from '../../infrastructure/database/models/transactionSchemas.js';
 
 const router = express.Router();
 
 // SOLID DI
-const repository = new SequelizeGoalRepository(Goals);
+const repository = new SequelizeGoalRepository(Goals, Transaction);
 const useCase = new GoalUseCase(repository);
 const controller = new GoalController(useCase);
 
