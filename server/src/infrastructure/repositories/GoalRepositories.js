@@ -1,9 +1,10 @@
 import { IGoalRepository } from '../../domain/repositories/IGoalRepository.js';
 
 export class SequelizeGoalRepository extends IGoalRepository {
-  constructor(goalModel) {
+  constructor(goalModel, transactionModel) {
     super();
     this.goalModel = goalModel;
+    this.transactionModel = transactionModel
   }
 
   async create(goalData) {
