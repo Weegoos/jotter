@@ -12,7 +12,7 @@ import { getCurrentInstance, onMounted, ref } from 'vue';
 import { useApiStore } from 'src/stores/api-store';
 import { useQuasar } from 'quasar';
 import { Button, Icon, PopoverItem } from 'src/components/atoms';
-import { Header } from 'src/components/organism ';
+import { Header } from 'src/components/organism';
 import { useRouter } from 'vue-router';
 // global variables
 const { proxy } = getCurrentInstance();
